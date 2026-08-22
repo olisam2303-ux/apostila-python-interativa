@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a V</title>
+<title>Apostila Python Interativa — Partes I a VI</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a V · Primeiros Passos, Fundamentos, Decisão, Repetições e Estruturas de Dados</span>
+      <span>Partes I a VI · Primeiros Passos até Funções</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -5001,6 +5001,877 @@ const MODULES = [
           'Sei combinar listas e dicionários para representar registros.'
         ],
         finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte VI — Funções, onde aprenderemos a organizar código em blocos reutilizáveis, com parâmetros e retorno.'
+    }}
+  ]
+},
+{
+  id: 'cap32',
+  title: 'Capítulo 32 — Por que utilizar funções?',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Por que repetir blocos de código semelhantes em vários pontos do programa é um problema.',
+          'O que significa "refatorar" um código.',
+          'Uma prévia visual de como uma função resolve esse problema (sem sintaxe nova ainda).'
+        ],
+        antes: 'É necessário conhecer tudo o que foi visto até a Parte V (variáveis, tipos, decisões, repetições e estruturas de dados).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Já usamos, desde o início da apostila, várias funções prontas do Python: print(), input(), len(), type(), int(), range(). A partir deste capítulo, vamos aprender a criar <b>nossas próprias</b> funções — blocos de código nomeados, reutilizáveis, que podemos "chamar" sempre que precisarmos daquele comportamento.',
+          'Antes de ver a sintaxe (que começa no próximo capítulo), vale entender <b>por que</b> isso é necessário: código repetido é repetitivo, difícil de manter (se a fórmula mudar, é necessário alterá-la em vários lugares) e propenso a erros de cópia.'
+        ],
+        glossary: [
+          { term:'refatorar', def:'reorganizar um código já funcional, sem alterar o que ele faz, para torná-lo mais simples, legível ou reutilizável', example:null }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'ANTES (código repetido):\n\ncalcular média de Ana:    (nota1 + nota2) / 2\ncalcular média de Bruno:  (nota1 + nota2) / 2\ncalcular média de Carla:  (nota1 + nota2) / 2\n     ↑\nmesma lógica, escrita três vezes\n\n\nDEPOIS (com uma função, sintaxe completa no próximo capítulo):\n\ndef calcular_media(nota1, nota2):\n    return (nota1 + nota2) / 2\n\ncalcular_media(8.0, 7.5)     ← reutiliza a MESMA lógica\ncalcular_media(6.0, 9.0)     ← sem reescrevê-la\ncalcular_media(10.0, 8.5)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Como este capítulo é preparatório, ainda não vamos escrever def — isso começa no Capítulo 33. Por enquanto, vamos apenas comparar visualmente o "antes" e o "depois" de uma refatoração simples.',
+        problem:'Exibir duas mensagens, cada uma emoldurada por linhas de "=".',
+        algoritmo:null,
+        code:'# Versão SEM função: a "moldura" de "=" é repetida manualmente\nprint("=" * 20)\nprint("Bem-vindo!")\nprint("=" * 20)\n\nprint("=" * 20)\nprint("Até logo!")\nprint("=" * 20)\n\n# Versão COM função: a lógica da moldura existe em um único lugar\ndef exibir_com_moldura(mensagem):\n    print("=" * 20)\n    print(mensagem)\n    print("=" * 20)\n\n# Cada chamada reaproveita a mesma lógica, sem reescrevê-la\nexibir_com_moldura("Bem-vindo!")\nexibir_com_moldura("Até logo!")',
+        codeNote:'Ambas as versões produzem exatamente a mesma saída — mas repare como a segunda evita repetir a lógica da moldura.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'Versão sem função: 6 linhas de print(), escritas manualmente, duas "molduras" idênticas',
+          'def exibir_com_moldura(mensagem): → Python GUARDA essa receita, mas não executa ainda',
+          'exibir_com_moldura("Bem-vindo!") → Python EXECUTA a receita, usando "Bem-vindo!"',
+          'exibir_com_moldura("Até logo!") → Python EXECUTA a receita de novo, usando "Até logo!"'
+        ],
+        after:null
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'====================\nBem-vindo!\n====================\n====================\nAté logo!\n====================',
+        modIntro:'Se, na versão sem função, fosse necessário mudar o caractere da moldura de "=" para "*", seria preciso alterar quatro linhas. Na versão com função, basta alterar uma única linha, dentro da função, e a mudança se aplica automaticamente a todas as chamadas:',
+        modCode:'def exibir_com_moldura(mensagem):\n    print("*" * 20)   # alterado apenas aqui\n    print(mensagem)\n    print("*" * 20)   # e aqui\n\nexibir_com_moldura("Bem-vindo!")\nexibir_com_moldura("Até logo!")',
+        modNote:'Essa é a principal vantagem prática de uma função: centralizar uma lógica em um único lugar, para que ela precise ser escrita (e corrigida) uma única vez.',
+        runnable:true,
+        naoConfunda:'Uma função NÃO é apenas "código dentro de um bloco indentado", como um if ou um for. Uma função tem NOME PRÓPRIO e pode ser CHAMADA (reutilizada) em qualquer ponto do programa, quantas vezes forem necessárias — diferente de um if ou for, que executam apenas no local exato em que foram escritos.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Copiar e colar um trecho de código em vários lugares "só para testar", e esquecer de unificar depois', code:null, body:'Isso é extremamente comum durante o aprendizado, mas gera código difícil de manter. Sempre que um mesmo bloco de lógica aparecer DUAS OU MAIS vezes em um programa, vale considerar transformá-lo em uma função.' },
+          { title:'🐞 Achar que toda repetição de texto (não de lógica) precisa virar função', code:null, body:'Duas linhas parecidas, mas que fazem coisas conceitualmente diferentes, não necessariamente precisam de uma função — o critério é a LÓGICA repetida, não apenas a aparência do código.' }
+        ],
+        howToRead:'Este capítulo não introduz sintaxe nova, portanto não há mensagens de erro específicas aqui. O objetivo é puramente conceitual: reconhecer quando um código está pedindo para ser organizado em uma função.'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Identificar a repetição de lógica no código abaixo, e descrever como ele poderia ser reorganizado.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'1. A lógica repetida é: "calcular 10% de desconto sobre um preço, e devolver o preço final".\n2. Essa lógica poderia se tornar uma função, que recebe um preço como entrada e devolve o preço com desconto como resultado.\n3. Cada vez que um desconto precisar ser calculado, bastaria "chamar" essa função com o preço desejado, em vez de reescrever as três linhas.',
+        code:'preco1 = 100\ndesconto1 = preco1 * 0.10\npreco1_final = preco1 - desconto1\nprint(preco1_final)\n\npreco2 = 250\ndesconto2 = preco2 * 0.10\npreco2_final = preco2 - desconto2\nprint(preco2_final)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Cite dois problemas de repetir a mesma lógica em várias partes de um programa.', gabarito:'Difícil de manter; risco de erro ao copiar/colar.' },
+          { kind:'text', prompt:'O que significa "refatorar" um código?', gabarito:'Reorganizar código já funcional, sem mudar seu comportamento.' },
+          { kind:'text', prompt:'O que uma função tem que um bloco de if ou for não tem?', gabarito:'Um nome próprio, podendo ser chamada (reutilizada) em vários pontos.' },
+          { kind:'text', prompt:'Dê um exemplo (em linguagem natural) de uma lógica que você já escreveu nesta apostila mais de uma vez, e que poderia virar uma função.', gabarito:'Resposta aberta — ex.: exibir uma "moldura" de separação, calcular uma média, validar uma idade.' },
+          { kind:'text', prompt:'Qual é a principal vantagem prática de centralizar uma lógica em uma função?', gabarito:'Mudanças na lógica passam a ser feitas em um único lugar.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'text', prompt:'Observe o código abaixo e descreva, em linguagem natural, qual lógica está sendo repetida, e como ela poderia se tornar uma função:\nidade1 = 20\nif idade1 >= 18: print("Maior de idade")\nelse: print("Menor de idade")\nidade2 = 15\nif idade2 >= 18: print("Maior de idade")\nelse: print("Menor de idade")', gabarito:'A verificação de maioridade está repetida. Poderia virar uma função verificar_maioridade(idade) que recebe a idade e exibe (ou devolve) a classificação.' },
+          { kind:'text', prompt:'Pegue um dos programas que você escreveu em capítulos anteriores que tenha algum trecho repetido, e descreva como ele poderia ser reorganizado.', gabarito:'Resposta aberta.' },
+          { kind:'text', prompt:'Explique por que print(), input() e len() já são exemplos de funções que você usa desde o início da apostila, mesmo sem ainda saber criar as suas próprias.', gabarito:'Elas são funções prontas do Python, que empacotam um comportamento reutilizável, chamado por nome — exatamente como as funções que aprenderemos a criar.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Descreva como um sistema de loja poderia se beneficiar de uma função para "calcular o preço final de um produto com desconto", considerando que essa lógica seria necessária em várias partes do sistema (carrinho, relatório de vendas, tela de promoções).', gabarito:'Resposta aberta — uma única função centralizaria a fórmula do desconto, evitando repetição e erros de inconsistência entre as diferentes telas.' },
+          { kind:'text', prompt:'Desafio: pense em uma tarefa do seu dia a dia que você repete várias vezes, com pequenas variações. Descreva-a como se fosse uma "função": qual seria a entrada (o que varia) e qual seria o resultado final.', gabarito:'Resposta aberta.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'CÓDIGO REPETIDO\n   → difícil de manter\n   → propenso a erros de cópia\n   → mudanças precisam ser feitas em vários lugares\n\nFUNÇÃO\n   → lógica escrita uma única vez\n   → reutilizável, chamada quantas vezes for necessário\n   → mudanças feitas em um único lugar, refletidas em todo o programa\n\nREFATORAR = reorganizar código já funcional para melhorá-lo,\n            sem mudar o que ele faz'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei explicar por que repetir lógica em várias partes do código é problemático.',
+          'Sei o que significa refatorar um código.',
+          'Sei identificar, em um programa, uma lógica que poderia virar uma função.',
+          'Sei explicar a principal vantagem de uma função sobre código repetido.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual é um problema de repetir a mesma lógica em várias partes do código?', options:['O programa fica mais rápido','Mudanças precisam ser feitas em vários lugares, aumentando o risco de erro','Não há nenhum problema','O Python impede esse tipo de repetição automaticamente'], correct:1, explanation:'Aumenta o risco de erro e dificulta a manutenção.' },
+          { q:'O que significa "refatorar" um código?', options:['Apagar o código e recomeçar do zero','Reorganizar um código já funcional, sem mudar o que ele faz','Adicionar mais funcionalidades','Corrigir um erro de sintaxe'], correct:1, explanation:'Reorganizar sem mudar o comportamento.' },
+          { q:'O que uma função permite fazer que um bloco de if sozinho não permite?', options:['Comparar valores','Ser chamada (reutilizada) em vários pontos do programa, por nome','Executar instruções','Usar variáveis'], correct:1, explanation:'Ser chamada por nome, em vários pontos.' },
+          { q:'print(), input() e len() são exemplos de:', options:['Palavras-chave especiais, sem relação com funções','Funções prontas, já existentes no Python','Tipos de dados','Operadores'], correct:1, explanation:'São funções prontas do Python.' },
+          { q:'Qual é o principal sinal de que um trecho de código deveria virar uma função?', options:['Ele usa muitas variáveis','Ele é muito curto','A mesma lógica aparece repetida em mais de um lugar do programa','Ele usa print()'], correct:2, explanation:'A repetição da mesma lógica é o principal sinal.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Definindo Funções (introdução)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap33',
+  title: 'Capítulo 33 — Criando funções',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como definir uma função com def.',
+          'Como chamar (executar) uma função já definida.',
+          'Por que definir uma função não a executa imediatamente.',
+          'A diferença entre método e função (revisão e formalização).'
+        ],
+        antes: 'É necessário entender a motivação para usar funções (Capítulo 32).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Uma função é definida com a palavra-chave <span class="icode">def</span> (de "define"), seguida do nome da função, parênteses e dois-pontos.',
+          'Um ponto essencial: <b>definir</b> uma função (com def) apenas ensina ao Python que aquela função existe e o que ela faz — isso <b>não</b> executa o bloco imediatamente. Para executar de fato, é necessário <b>chamar</b> a função, escrevendo seu nome seguido de parênteses.'
+        ],
+        glossary: [
+          { term:'def', def:'palavra-chave usada para definir uma nova função em Python', example:'a partir dela, é possível chamar essa função quantas vezes for necessário, em qualquer ponto do programa (depois de definida).' },
+          { term:'chamar uma função', def:'executar o código de uma função já definida, escrevendo seu nome seguido de parênteses ()', example:'saudacao() chama a função saudacao.' }
+        ],
+        callout:'NÃO CONFUNDA: definir uma função (def) versus chamar uma função (nome_da_funcao()): definir é como escrever a receita; chamar é como efetivamente segui-la. Uma função pode ser definida uma única vez e chamada várias vezes.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'def saudacao():        ← DEFINIÇÃO: Python "guarda" essa receita\n    print("Olá!")         (o bloco NÃO executa ainda)\n\nsaudacao()              ← CHAMADA: agora o bloco É executado\nsaudacao()              ← CHAMADA de novo: executa novamente\nsaudacao()              ← e mais uma vez',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Definir e chamar uma função simples de saudação.',
+        algoritmo:null,
+        code:'# Define uma função chamada "saudacao", sem nenhum dado de entrada\ndef saudacao():\n    # Este bloco só executa quando a função é CHAMADA\n    print("Olá!")\n\n# Chama a função, executando seu bloco\nsaudacao()',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'def saudacao(): print("Olá!")',
+          'Python lê a definição e GUARDA a função "saudacao" (nada é executado ainda)',
+          'saudacao()',
+          'Python localiza a função "saudacao" e EXECUTA seu bloco',
+          'print("Olá!") → Exibe: Olá!'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'def saudacao():', explanation:'def inicia a definição de uma nova função. saudacao é o nome escolhido para a função. () (vazios, por enquanto) indicam que esta função não recebe nenhum dado de entrada — isso mudará no próximo capítulo, com parâmetros. : indica que um bloco começa na próxima linha.' },
+          { code:'saudacao()', explanation:'Chama a função saudacao, executando seu bloco.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Olá!',
+        modIntro:'Vamos chamar a mesma função várias vezes, para reforçar que ela pode ser reutilizada:',
+        modCode:'def saudacao():\n    print("Olá!")\n    print("Seja bem-vindo(a)!")\n\nsaudacao()\nprint("---")\nsaudacao()',
+        modResult:'Olá!\nSeja bem-vindo(a)!\n---\nOlá!\nSeja bem-vindo(a)!',
+        modNote:null,
+        runnable:true,
+        extraBlocks:[
+          { title:'Formalizando: método × função', intro:'Um método é, na prática, uma função associada a um valor específico — por isso é chamado com um ponto (.) logo depois do valor, enquanto uma função "solta" é chamada diretamente pelo nome, sem estar associada a nenhum valor específico.', code:'print("python".upper())   # método: chamado a partir de uma string específica\nsaudacao()                # função: chamada diretamente, sem valor associado', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer os parênteses ao chamar a função', code:'def saudacao():\n    print("Olá!")\n\nsaudacao', body:'Sem os parênteses, o Python NÃO executa a função — ele apenas "menciona" que ela existe, sem chamá-la. Sempre use () para efetivamente executar uma função.' },
+          { title:'🐞 Chamar a função antes de defini-la', code:'saudacao()\n\ndef saudacao():\n    print("Olá!")', body:'Como o Python executa o arquivo de cima para baixo, tentar chamar saudacao() antes que sua definição tenha sido lida gera erro — a função ainda não existe naquele ponto do programa.' },
+          { title:'🐞 Esquecer os dois-pontos ou a indentação do bloco', code:'def saudacao()\n    print("Olá!")', body:'Assim como if, while e for, def também exige : no final da linha, e um bloco indentado logo abaixo.' }
+        ],
+        howToRead:"Ao chamar uma função antes de defini-la, o Python mostra: <span class=\"icode\">NameError: name 'saudacao' is not defined</span><br><br>O mesmo tipo de erro já visto com variáveis (Capítulo 5): o nome saudacao ainda não existe naquele ponto do programa. A solução é sempre garantir que toda função seja DEFINIDA antes de ser CHAMADA pela primeira vez.",
+        tryIt:true,
+        tryItCode:'saudacao()\n\ndef saudacao():\n    print("Olá!")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar uma função que exibe um separador visual, e usá-la para organizar a saída de um pequeno relatório.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Define uma função que exibe uma linha de separação\ndef exibir_separador():\n    print("------------------------------")\n\n# Usa a função para organizar a saída\nexibir_separador()\nprint("Relatório de vendas")\nexibir_separador()\nprint("Produto: Caderno - Vendidos: 12")\nprint("Produto: Caneta - Vendidos: 30")\nexibir_separador()',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Qual palavra-chave é usada para definir uma função em Python?', gabarito:'def' },
+          { kind:'text', prompt:'O que é necessário fazer para efetivamente executar uma função já definida?', gabarito:'Chamá-la com nome_da_funcao()' },
+          { kind:'text', prompt:'Definir uma função com def já executa seu código? Justifique.', gabarito:'Não, apenas registra a função.' },
+          { kind:'text', prompt:'O que acontece ao chamar uma função antes de ela ser definida?', gabarito:'Gera NameError.' },
+          { kind:'text', prompt:'Qual é a diferença entre um método e uma função?', gabarito:'Método é chamado a partir de um valor (valor.metodo()); função é chamada diretamente pelo nome.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma função chamada exibir_boas_vindas, que exibe três linhas de texto de sua escolha, e chame-a duas vezes no programa.', starter:'', gabarito:'def exibir_boas_vindas():\n    print("Bem-vindo!")\n    print("Esperamos que goste.")\n    print("Aproveite!")\n\nexibir_boas_vindas()\nexibir_boas_vindas()' },
+          { kind:'code', prompt:'Crie uma função exibir_linha_dupla, que exibe duas linhas de "=", e use-a para "emoldurar" uma mensagem qualquer.', starter:'', gabarito:'def exibir_linha_dupla():\n    print("==========")\n    print("==========")\n\nexibir_linha_dupla()\nprint("Mensagem central")\nexibir_linha_dupla()' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nmensagem_de_boas_vindas()\n\ndef mensagem_de_boas_vindas():\n    print("Bem-vindo!")', starter:'mensagem_de_boas_vindas()\n\ndef mensagem_de_boas_vindas():\n    print("Bem-vindo!")', gabarito:'Bug: a função é chamada antes de ser definida.\nCorreção: mover a def para antes da chamada.\ndef mensagem_de_boas_vindas():\n    print("Bem-vindo!")\n\nmensagem_de_boas_vindas()' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie três funções simples, sem parâmetros: exibir_cabecalho(), exibir_corpo() e exibir_rodape(), cada uma exibindo algumas linhas de texto relacionadas a um pequeno "documento". Chame as três, em ordem.', starter:'', gabarito:'def exibir_cabecalho():\n    print("=== Recibo ===")\n\ndef exibir_corpo():\n    print("Produto: Caderno")\n    print("Valor: R$ 20,00")\n\ndef exibir_rodape():\n    print("Obrigado pela compra!")\n\nexibir_cabecalho()\nexibir_corpo()\nexibir_rodape()' },
+          { kind:'code', prompt:'Desafio: reescreva, usando uma função, um programa anterior que continha alguma repetição de código.', starter:'print("=" * 20)\nprint("Item 1")\nprint("=" * 20)\nprint("=" * 20)\nprint("Item 2")\nprint("=" * 20)', gabarito:'def exibir_item(nome):\n    print("=" * 20)\n    print(nome)\n    print("=" * 20)\n\nexibir_item("Item 1")\nexibir_item("Item 2")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'def nome_da_funcao():\n    BLOCO (código a ser executado a cada chamada)\n\nnome_da_funcao()   ← chamada, executa o bloco\n\nDEFINIR ≠ EXECUTAR:\n   def apenas registra a função.\n   () (parênteses) efetivamente a executa.\n\nA função precisa ser DEFINIDA antes de ser CHAMADA pela primeira vez.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei definir uma função com def.',
+          'Sei chamar uma função já definida.',
+          'Sei explicar por que def sozinho não executa o código da função.',
+          'Sei que uma função precisa ser definida antes de chamada.',
+          'Sei diferenciar método de função.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual palavra-chave define uma nova função?', options:['function','def','func','create'], correct:1, explanation:'def define uma função.' },
+          { q:'O que executa o código de uma função já definida?', options:['Apenas escrever def nome_da_funcao():','Chamar a função com nome_da_funcao()','Salvar o arquivo','Nada, funções executam automaticamente'], correct:1, explanation:'Chamar a função com ().' },
+          { q:'O que acontece ao chamar uma função antes de ela ser definida no código?', options:['Funciona normalmente','Gera NameError','A função é criada automaticamente','Gera SyntaxError'], correct:1, explanation:'Gera NameError.' },
+          { q:'O que é obrigatório no final da linha de um def?', options:['Um ponto final','Dois-pontos (:)','Um ponto e vírgula','Parênteses vazios sempre, sem exceção'], correct:1, explanation:'Dois-pontos.' },
+          { q:'Qual é a diferença entre método e função?', options:['Não há diferença','Método é chamado a partir de um valor específico (valor.metodo()); função é chamada diretamente pelo nome','Função sempre recebe parâmetros; método nunca','Método não pode ser criado pelo programador'], correct:1, explanation:'Método é chamado a partir de um valor; função é chamada pelo nome.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Definindo Funções', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions' },
+          { label:'Referência da linguagem — definição de função (def)', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#function-definitions' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap34',
+  title: 'Capítulo 34 — Parâmetros e argumentos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como criar funções que recebem dados de entrada, usando parâmetros.',
+          'A diferença entre parâmetro e argumento.',
+          'Como uma função pode receber múltiplos parâmetros.'
+        ],
+        antes: 'É necessário saber definir e chamar funções simples (Capítulo 33).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'As funções que criamos no capítulo anterior sempre faziam exatamente a mesma coisa, todas as vezes que eram chamadas. Para tornar uma função verdadeiramente reutilizável, geralmente queremos que ela receba <b>dados de entrada</b> diferentes a cada chamada. Isso é feito com <b>parâmetros</b>.'
+        ],
+        glossary: [
+          { term:'parâmetro', def:'uma variável declarada entre os parênteses de uma função, que recebe um valor sempre que a função é chamada', example:'em def saudacao(nome):, nome é o parâmetro.' },
+          { term:'argumento', def:'o valor real, passado dentro dos parênteses no momento de chamar a função', example:'em saudacao("Ana"), "Ana" é o argumento.' }
+        ],
+        callout:'NÃO CONFUNDA: parâmetro versus argumento: parâmetro é o NOME usado dentro da definição da função (def saudacao(nome):); argumento é o VALOR fornecido no momento da chamada (saudacao("Ana")). Parâmetro pertence à definição; argumento pertence à chamada.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'def saudacao(nome):      ← "nome" é o PARÂMETRO\n    print(f"Olá, {nome}!")\n\nsaudacao("Ana")           ← "Ana" é o ARGUMENTO\n        ↓\nDentro da função, nome = "Ana"\n        ↓\nprint(f"Olá, Ana!")\n        ↓\nExibe: Olá, Ana!',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Criar uma função que recebe um nome e cumprimenta a pessoa.',
+        algoritmo:null,
+        code:'# Define uma função que recebe um nome como parâmetro\ndef saudacao(nome):\n    # "nome" recebe o valor passado na chamada, e pode ser usado aqui dentro\n    print(f"Olá, {nome}!")\n\n# Chama a função, passando "Ana" como argumento\nsaudacao("Ana")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'def saudacao(nome): print(f"Olá, {nome}!")',
+          'Python guarda a função, sabendo que ela espera receber um valor (nome)',
+          'saudacao("Ana")',
+          'Python chama a função, associando: nome = "Ana"',
+          'Executa o bloco da função com esse valor',
+          'print(f"Olá, {nome}!") → print(f"Olá, Ana!")',
+          'Exibe: Olá, Ana!'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'def saudacao(nome):', explanation:'nome, dentro dos parênteses da definição, é o PARÂMETRO: uma variável que só existe dentro da função, e que recebe um valor toda vez que a função é chamada.' },
+          { code:'saudacao("Ana")', explanation:'Chama a função, passando "Ana" como ARGUMENTO — esse valor é associado ao parâmetro nome, dentro da função, apenas durante esta chamada específica.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Olá, Ana!',
+        modIntro:'Vamos chamar a mesma função com argumentos diferentes, e criar uma função com mais de um parâmetro. Quando uma função tem vários parâmetros, a ORDEM importa: o primeiro argumento é associado ao primeiro parâmetro, e assim por diante.',
+        modCode:'def apresentar(nome, idade):\n    print(f"{nome} tem {idade} anos.")\n\napresentar("Ana", 16)\napresentar("Bruno", 22)',
+        modResult:'Ana tem 16 anos.\nBruno tem 22 anos.',
+        modNote:null,
+        runnable:true
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Chamar a função sem passar os argumentos necessários', code:'def saudacao(nome):\n    print(f"Olá, {nome}!")\n\nsaudacao()', body:'Como saudacao foi definida esperando UM parâmetro (nome), chamá-la sem nenhum argumento gera erro — falta a informação de que a função precisa para executar.' },
+          { title:'🐞 Passar argumentos na ordem errada', code:'def apresentar(nome, idade):\n    print(f"{nome} tem {idade} anos.")\n\napresentar(16, "Ana")', body:'Isso NÃO gera erro imediatamente, mas produz um resultado sem sentido: nome receberia 16 e idade receberia "Ana", invertendo os valores esperados.' },
+          { title:'🐞 Achar que o parâmetro existe fora da função', code:'def saudacao(nome):\n    print(f"Olá, {nome}!")\n\nsaudacao("Ana")\nprint(nome)', body:'O parâmetro nome só existe DENTRO do corpo da função — tentar acessá-lo fora dela gera NameError (aprofundado no Capítulo 36, sobre escopo).' }
+        ],
+        howToRead:"Ao chamar uma função sem os argumentos necessários, o Python mostra: <span class=\"icode\">TypeError: saudacao() missing 1 required positional argument: 'nome'</span><br><br>Essa mensagem já indica, com precisão, o que precisa ser corrigido: passar o argumento faltante na chamada da função.",
+        tryIt:true,
+        tryItCode:'def saudacao(nome):\n    print(f"Olá, {nome}!")\n\nsaudacao()'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar uma função que calcula e exibe o preço final de um produto, aplicando um percentual de desconto informado.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'exibir_preco_com_desconto(100, 10)\n        ↓\npreco = 100\npercentual_desconto = 10\n        ↓\ndesconto = 100 * (10 / 100) = 10.0\npreco_final = 100 - 10.0 = 90.0\n        ↓\n"Preço final: R$ 90.00"',
+        code:'# Define uma função com dois parâmetros: preço e percentual de desconto\ndef exibir_preco_com_desconto(preco, percentual_desconto):\n    desconto = preco * (percentual_desconto / 100)\n    preco_final = preco - desconto\n    print(f"Preço final: R$ {preco_final:.2f}")\n\n# Chama a função com valores diferentes\nexibir_preco_com_desconto(100, 10)\nexibir_preco_com_desconto(250, 20)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Qual é a diferença entre parâmetro e argumento?', gabarito:'Parâmetro é o nome na definição; argumento é o valor na chamada.' },
+          { kind:'code', prompt:'Escreva uma função dobrar(numero) que exiba o dobro do número recebido.', starter:'', gabarito:'def dobrar(numero):\n    print(numero * 2)' },
+          { kind:'text', prompt:'O que acontece ao chamar uma função sem passar um argumento que ela espera?', gabarito:'Gera TypeError (argumento obrigatório faltando).' },
+          { kind:'text', prompt:'Em uma função com dois parâmetros, a ordem dos argumentos na chamada importa? Justifique.', gabarito:'Sim, a ordem dos argumentos corresponde à ordem dos parâmetros.' },
+          { kind:'text', prompt:'Um parâmetro pode ser acessado fora do corpo da função? Por quê?', gabarito:'Não, ele só existe dentro do corpo da função.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma função exibir_produto(nome, preco) que exiba uma frase formatada combinando as duas informações, e chame-a com pelo menos dois produtos diferentes.', starter:'', gabarito:'def exibir_produto(nome, preco):\n    print(f"{nome}: R$ {preco:.2f}")\n\nexibir_produto("Caderno", 24.9)\nexibir_produto("Caneta", 3.5)' },
+          { kind:'code', prompt:'Crie uma função verificar_aprovacao(nota) que exiba "Aprovado" se a nota for maior ou igual a 6, e "Reprovado" caso contrário.', starter:'', gabarito:'def verificar_aprovacao(nota):\n    if nota >= 6:\n        print("Aprovado")\n    else:\n        print("Reprovado")\n\nverificar_aprovacao(7)' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\ndef apresentar(nome, idade):\n    print(f"{nome} tem {idade} anos.")\n\napresentar(20, "Bruno")', starter:'def apresentar(nome, idade):\n    print(f"{nome} tem {idade} anos.")\n\napresentar(20, "Bruno")', gabarito:'Bug: os argumentos foram passados na ordem errada (nome = 20, idade = "Bruno").\nCorreção: apresentar("Bruno", 20)' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma função calcular_media(nota1, nota2, nota3) que receba três notas e exiba a média delas, formatada com duas casas decimais. Chame com pelo menos três conjuntos diferentes de notas.', starter:'', gabarito:'def calcular_media(nota1, nota2, nota3):\n    media = (nota1 + nota2 + nota3) / 3\n    print(f"{media:.2f}")\n\ncalcular_media(8, 7, 9)\ncalcular_media(5, 6, 7)' },
+          { kind:'code', prompt:'Desafio: crie uma função separada para cada operação de uma calculadora (somar(a, b), subtrair(a, b), etc.), chamando cada uma para exibir o resultado — mesmo sem usar return ainda.', starter:'', gabarito:'def somar(a, b):\n    print(a + b)\n\ndef subtrair(a, b):\n    print(a - b)\n\nsomar(5, 3)\nsubtrair(5, 3)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'def nome_da_funcao(parametro1, parametro2):\n    BLOCO (usa parametro1 e parametro2 aqui dentro)\n\nnome_da_funcao(argumento1, argumento2)\n\nPARÂMETRO → nome usado na DEFINIÇÃO\nARGUMENTO → valor usado na CHAMADA\n\nA ordem dos argumentos deve corresponder à ordem dos parâmetros.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei criar uma função com um ou mais parâmetros.',
+          'Sei diferenciar parâmetro de argumento.',
+          'Sei que a ordem dos argumentos importa.',
+          'Sei que um parâmetro só existe dentro da função.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Em def saudacao(nome):, o que nome representa?', options:['Um argumento','Um parâmetro','Uma variável global','Um método'], correct:1, explanation:'nome é o parâmetro.' },
+          { q:'Em saudacao("Ana"), o que "Ana" representa?', options:['Um parâmetro','Um argumento','Uma função','Um tipo de dado'], correct:1, explanation:'"Ana" é o argumento.' },
+          { q:'O que acontece ao chamar uma função sem um argumento que ela espera?', options:['O Python usa None automaticamente','Gera TypeError','Funciona normalmente','Gera SyntaxError'], correct:1, explanation:'Gera TypeError.' },
+          { q:'Em uma função com dois parâmetros, a ordem dos argumentos na chamada:', options:['Não importa nunca','Importa, pois cada argumento é associado ao parâmetro correspondente pela posição','Só importa se forem números','É decidida automaticamente pelo Python'], correct:1, explanation:'Importa, pela posição.' },
+          { q:'Um parâmetro pode ser acessado fora da função onde foi definido?', options:['Sim, sempre','Não, ele só existe dentro do corpo da função','Sim, mas apenas se for um número','Depende do nome escolhido'], correct:1, explanation:'Só existe dentro da função.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Definindo Funções (parâmetros)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions' },
+          { label:'Documentação Python — Mais sobre Definição de Funções', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#more-on-defining-functions' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap35',
+  title: 'Capítulo 35 — return',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como fazer uma função devolver um valor, usando return.',
+          'A diferença fundamental entre print() (exibir) e return (devolver).',
+          'Como guardar o valor devolvido por uma função em uma variável.',
+          'O que acontece quando uma função não tem return explícito.'
+        ],
+        antes: 'É necessário saber criar funções com parâmetros (Capítulo 34).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, nossas funções apenas exibiam algo na tela, usando print(). Mas muitas vezes queremos que uma função <b>calcule</b> um valor e o <b>devolva</b>, para que ele possa ser usado em outras partes do programa. Isso é feito com <span class="icode">return</span>.'
+        ],
+        glossary: [
+          { term:'return', def:'instrução que encerra a execução da função e devolve um valor para quem a chamou', example:'o valor devolvido pode ser guardado em uma variável, usado em uma expressão, ou simplesmente descartado.' }
+        ],
+        callout:'NÃO CONFUNDA: print() versus return: print() apenas EXIBE um valor na tela — ele não devolve nada que possa ser reaproveitado pelo resto do programa. return DEVOLVE um valor para quem chamou a função, permitindo que esse valor seja guardado, recalculado ou reutilizado.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'def somar(a, b):\n    return a + b\n\nresultado = somar(3, 4)\n        ↓\nPython chama somar, com a = 3, b = 4\n        ↓\nExecuta: return a + b\n        ↓\nCalcula: 3 + 4 = 7\n        ↓\nDEVOLVE o valor 7 para o local de onde a função foi chamada\n        ↓\nresultado = 7',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Criar uma função que soma dois valores e devolve o resultado.',
+        algoritmo:null,
+        code:'# Define uma função que soma dois valores e DEVOLVE o resultado\ndef somar(a, b):\n    return a + b\n\n# Chama a função e guarda o valor devolvido na variável "resultado"\nresultado = somar(3, 4)\n\n# Exibe o valor guardado\nprint(resultado)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'def somar(a, b): return a + b',
+          'Python guarda a função "somar"',
+          'resultado = somar(3, 4)',
+          'Chama somar, com a = 3, b = 4',
+          'Executa: return a + b → a + b → 3 + 4 → 7',
+          'A função DEVOLVE 7 e termina sua execução',
+          'resultado = 7',
+          'print(resultado) → Exibe: 7'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'    return a + b', explanation:'Calcula a soma de a e b, e DEVOLVE esse resultado para quem chamou a função. Assim que return é executado, a função TERMINA imediatamente — nenhuma linha depois dele, dentro da função, é executada.' },
+          { code:'resultado = somar(3, 4)', explanation:'somar(3, 4) chama a função, passando 3 e 4 como argumentos. O valor devolvido por essa chamada (7) é guardado na variável resultado, exatamente como aconteceria com qualquer outra expressão à direita de um =.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'7',
+        modIntro:'Vamos usar o valor devolvido por uma função dentro de um cálculo maior, e comparar diretamente print() e return na mesma situação:',
+        modCode:'def somar_com_print(a, b):\n    print(a + b)   # apenas exibe, não devolve nada reaproveitável\n\ndef somar_com_return(a, b):\n    return a + b   # devolve o valor, que pode ser reaproveitado\n\nsomar_com_print(3, 4)              # exibe 7 diretamente\nresultado = somar_com_return(3, 4)  # guarda 7 em resultado\nprint(resultado * 10)               # 7 pode ser reaproveitado em outro cálculo',
+        modResult:'7\n70',
+        modNote:'Repare que somar_com_print(3, 4) * 10 NÃO funcionaria como esperado — uma função sem return explícito devolve None, e None * 10 gera erro.',
+        runnable:true,
+        extraBlocks:[
+          { title:'Funções sem return explícito', intro:'Se uma função não tiver nenhum return, ela devolve automaticamente um valor especial chamado None, que representa "nenhum valor":', code:'def saudacao(nome):\n    print(f"Olá, {nome}!")\n\nresultado = saudacao("Ana")\nprint(resultado)', result:'Olá, Ana!\nNone', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Usar print() dentro da função, mas esperar reaproveitar o resultado', code:'def somar(a, b):\n    print(a + b)\n\nresultado = somar(3, 4)\nprint(resultado * 2)', body:'Como somar usa print() em vez de return, o valor devolvido pela função é None (não 7). Tentar multiplicar None * 2 gera erro, porque None não é um número.' },
+          { title:'🐞 Escrever código depois de um return, esperando que ele ainda execute', code:'def somar(a, b):\n    return a + b\n    print("Soma calculada!")   # NUNCA executa', body:'Assim que return é executado, a função termina imediatamente. Qualquer linha escrita depois dele, dentro do mesmo bloco, é inalcançável.' },
+          { title:'🐞 Esquecer de guardar (ou usar) o valor devolvido', code:'def somar(a, b):\n    return a + b\n\nsomar(3, 4)   # o valor devolvido (7) é calculado, mas descartado', body:'Isso não gera erro, mas também não tem utilidade prática — se o resultado não for guardado, usado em uma expressão, ou passado para print(), ele é simplesmente perdido.' }
+        ],
+        howToRead:"Ao tentar usar None em uma operação matemática, o Python mostra: <span class=\"icode\">TypeError: unsupported operand type(s) for *: 'NoneType' and 'int'</span><br><br>Esse erro é um forte indício de que uma função usada em um cálculo não possui return — apenas print().",
+        tryIt:true,
+        tryItCode:'def somar(a, b):\n    print(a + b)\n\nresultado = somar(3, 4)\nprint(resultado * 2)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar uma função que calcula o preço final de um produto com desconto, devolvendo o resultado para ser usado depois.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'calcular_preco_com_desconto(100, 10)\n        ↓\ndesconto = 100 * (10 / 100) = 10.0\npreco_final = 100 - 10.0 = 90.0\n        ↓\nreturn 90.0\n        ↓\npreco_final_produto = 90.0\n\norcamento = 95\npreco_final_produto <= orcamento  →  90.0 <= 95  →  True',
+        code:'# Define uma função que calcula e DEVOLVE o preço com desconto\ndef calcular_preco_com_desconto(preco, percentual_desconto):\n    desconto = preco * (percentual_desconto / 100)\n    preco_final = preco - desconto\n    return preco_final\n\n# Chama a função e guarda o resultado\npreco_final_produto = calcular_preco_com_desconto(100, 10)\n\n# Usa o valor devolvido em outro cálculo\norcamento = 95\nif preco_final_produto <= orcamento:\n    print("Dentro do orçamento!")\nelse:\n    print("Acima do orçamento.")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que return faz dentro de uma função?', gabarito:'Devolve um valor e encerra a execução da função.' },
+          { kind:'text', prompt:'Qual é a diferença entre print() e return?', gabarito:'print() exibe; return devolve um valor reaproveitável.' },
+          { kind:'text', prompt:'O que uma função devolve quando não tem nenhum return explícito?', gabarito:'None' },
+          { kind:'text', prompt:'O que acontece com o código escrito depois de um return, dentro do mesmo bloco?', gabarito:'Nunca é executado.' },
+          { kind:'code', prompt:'Escreva uma função dobrar(numero) que DEVOLVA o dobro do número recebido.', starter:'', gabarito:'def dobrar(numero):\n    return numero * 2' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma função calcular_area_retangulo(largura, altura) que devolva a área calculada, e use o resultado em um print() formatado.', starter:'', gabarito:'def calcular_area_retangulo(largura, altura):\n    return largura * altura\n\nprint(f"Área: {calcular_area_retangulo(5, 3)}")' },
+          { kind:'code', prompt:'Crie uma função eh_par(numero) que devolva True se o número for par, e False caso contrário, e use-a dentro de um if.', starter:'', gabarito:'def eh_par(numero):\n    return numero % 2 == 0\n\nif eh_par(4):\n    print("É par")' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\ndef calcular_dobro(numero):\n    print(numero * 2)\n\nresultado = calcular_dobro(5)\nprint(resultado + 10)', starter:'def calcular_dobro(numero):\n    print(numero * 2)\n\nresultado = calcular_dobro(5)\nprint(resultado + 10)', gabarito:'Bug: calcular_dobro usa print() em vez de return, então resultado vale None; None + 10 gera TypeError.\nCorreção: usar return numero * 2 na função.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma função calcular_media(nota1, nota2, nota3) que devolva a média das três notas. Use o valor devolvido para classificar em "Aprovado" (>= 7), "Recuperação" (>= 5) ou "Reprovado", fora da função.', starter:'', gabarito:'def calcular_media(nota1, nota2, nota3):\n    return (nota1 + nota2 + nota3) / 3\n\nmedia = calcular_media(8, 6, 7)\nif media >= 7:\n    print("Aprovado")\nelif media >= 5:\n    print("Recuperação")\nelse:\n    print("Reprovado")' },
+          { kind:'code', prompt:'Desafio: crie calcular_imposto(valor), que devolve 10% do valor, e calcular_total_com_imposto(valor), que usa o valor devolvido pela primeira função. Chame apenas a segunda no programa principal.', starter:'', gabarito:'def calcular_imposto(valor):\n    return valor * 0.10\n\ndef calcular_total_com_imposto(valor):\n    return valor + calcular_imposto(valor)\n\nprint(calcular_total_com_imposto(100))' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'def nome_da_funcao(parametros):\n    ...\n    return VALOR   ← devolve VALOR e ENCERRA a função imediatamente\n\nresultado = nome_da_funcao(argumentos)   ← guarda o valor devolvido\n\nprint()  → apenas EXIBE, não devolve nada reaproveitável\nreturn   → DEVOLVE um valor, reaproveitável no resto do programa\n\nSem return explícito → a função devolve None'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar return para devolver um valor de uma função.',
+          'Sei explicar a diferença entre print() e return.',
+          'Sei que código após um return nunca é executado.',
+          'Sei que uma função sem return devolve None.',
+          'Sei guardar e reaproveitar o valor devolvido por uma função.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que return faz dentro de uma função?', options:['Exibe um valor na tela','Devolve um valor e encerra a execução da função','Reinicia a função','Apaga o valor da variável'], correct:1, explanation:'Devolve um valor e encerra a função.' },
+          { q:'O que uma função sem return explícito devolve?', options:['0','Uma string vazia','None','Erro, é obrigatório ter return'], correct:2, explanation:'Devolve None.' },
+          { q:'O que acontece com código escrito depois de um return, no mesmo bloco?', options:['Executa normalmente','Nunca é executado','Executa apenas uma vez','Gera erro de sintaxe'], correct:1, explanation:'Nunca é executado.' },
+          { q:'Por que resultado = funcao_com_print(...) seguido de resultado * 2 pode gerar erro?', options:['Porque print() sempre gera erro','Porque a função devolve None (não um número), e None não pode ser multiplicado','Porque * não existe em Python','Porque resultado não foi declarado'], correct:1, explanation:'A função devolve None.' },
+          { q:'Qual é a principal diferença entre print() e return?', options:['Não há diferença','print() exibe; return devolve um valor reaproveitável','return só funciona com números','print() só funciona dentro de funções'], correct:1, explanation:'print() exibe; return devolve.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Definindo Funções (return)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions' },
+          { label:'Referência da linguagem — instrução return', url:'https://docs.python.org/pt-br/3/reference/simple_stmts.html#the-return-statement' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap36',
+  title: 'Capítulo 36 — Escopo de variáveis',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é escopo de uma variável.',
+          'A diferença entre variáveis locais (dentro de uma função) e globais (fora de qualquer função).',
+          'Por que uma variável criada dentro de uma função não existe fora dela.',
+          'O que acontece quando um parâmetro tem o mesmo nome de uma variável global.'
+        ],
+        antes: 'É necessário saber criar e usar funções com parâmetros e return (Capítulos 33 a 35).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          '<b>Escopo</b> é a região do programa onde uma variável pode ser acessada. Toda variável criada <b>dentro</b> de uma função só existe <b>dentro dela</b> — esse é o chamado <b>escopo local</b>. Variáveis criadas <b>fora</b> de qualquer função, no nível principal do programa, têm <b>escopo global</b>, e podem ser lidas de qualquer lugar.'
+        ],
+        glossary: [
+          { term:'escopo', def:'a região do código onde uma variável pode ser acessada', example:null },
+          { term:'variável local', def:'criada dentro de uma função, existe apenas enquanto aquela função está executando', example:'não pode ser acessada de fora dela.' },
+          { term:'variável global', def:'criada fora de qualquer função, no nível principal do programa', example:'pode ser lida de dentro de qualquer função.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'PROGRAMA PRINCIPAL (escopo global)\n   │\n   │   idade = 20         ← variável global\n   │\n   ├── def calcular_dobro(numero):    (escopo local desta função)\n   │       resultado = numero * 2     ← variável LOCAL, só existe aqui dentro\n   │       return resultado\n   │\n   │   print(idade)        ← OK, idade é global\n   │   print(resultado)    ← ERRO! resultado só existia dentro da função',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Calcular o dobro de um número usando uma função com variável local.',
+        algoritmo:null,
+        code:'# Define uma função que calcula o dobro de um número\ndef calcular_dobro(numero):\n    # "resultado" é uma variável LOCAL: só existe dentro desta função\n    resultado = numero * 2\n    return resultado\n\n# Chama a função e guarda o valor devolvido em uma variável do programa principal\nvalor = calcular_dobro(5)\n\n# Exibe o valor guardado (este "valor" é uma variável global)\nprint(valor)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'valor = calcular_dobro(5)',
+          'Python chama calcular_dobro, com numero = 5',
+          'Dentro da função (escopo local): resultado = numero * 2 → resultado = 10',
+          'return resultado → devolve 10',
+          'A função termina; "resultado" e "numero" deixam de existir',
+          'valor = 10 (no escopo global)',
+          'print(valor) → Exibe: 10'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'def calcular_dobro(numero):\n    resultado = numero * 2\n    return resultado', explanation:'numero (o parâmetro) e resultado (criado dentro do bloco) são ambos VARIÁVEIS LOCAIS a essa função — eles só existem enquanto a função está sendo executada, e desaparecem assim que ela termina.' },
+          { code:'valor = calcular_dobro(5)', explanation:'Chama a função e guarda o valor DEVOLVIDO (não as variáveis internas, que já não existem mais) na variável valor, criada no escopo principal do programa (ESCOPO GLOBAL).' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'10',
+        modIntro:'Vamos tentar acessar uma variável local de fora da função, para confirmar o erro:',
+        modCode:'def calcular_dobro(numero):\n    resultado = numero * 2\n    return resultado\n\ncalcular_dobro(5)\nprint(resultado)',
+        modResult:"NameError: name 'resultado' is not defined",
+        modNote:null,
+        runnable:true,
+        naoConfunda:'Ler uma variável global dentro de uma função versus alterar uma variável global dentro de uma função: ler é permitido diretamente; alterar exige cuidados adicionais (fora do escopo desta apostila). A boa prática é: uma função deve receber o que precisa por PARÂMETRO, e devolver o que calcula com RETURN.',
+        extraBlocks:[
+          { title:'Lendo uma variável global dentro de uma função', intro:'Uma variável global pode ser LIDA dentro de uma função, mesmo sem ser passada como parâmetro:', code:'taxa_imposto = 0.10   # variável global\n\ndef calcular_imposto(preco):\n    return preco * taxa_imposto   # lê a variável global "taxa_imposto"\n\nprint(calcular_imposto(100))', result:'10.0', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar acessar uma variável local fora da função', code:'def calcular_area(largura, altura):\n    area = largura * altura\n    return area\n\ncalcular_area(5, 3)\nprint(area)', body:'area é local à função calcular_area — não existe fora dela. Para usar o resultado fora da função: resultado = calcular_area(5, 3); print(resultado)' },
+          { title:'🐞 Achar que parâmetros e variáveis globais de mesmo nome são a "mesma" variável', code:'numero = 100\n\ndef dobrar(numero):\n    return numero * 2\n\nprint(dobrar(5))\nprint(numero)', body:'O parâmetro numero (dentro da função) e a variável global numero (fora) têm o MESMO NOME, mas são coisas COMPLETAMENTE INDEPENDENTES. A variável global permanece inalterada (100).' },
+          { title:'🐞 Depender excessivamente de variáveis globais dentro de funções', code:null, body:'Embora seja possível LER variáveis globais de dentro de uma função, isso torna o código mais difícil de entender e reutilizar. A prática recomendada é sempre preferir passar tudo que a função precisa como parâmetro.' }
+        ],
+        howToRead:"Ao acessar uma variável local fora de sua função, o Python mostra: <span class=\"icode\">NameError: name 'resultado' is not defined</span><br><br>Isso confirma que, naquele ponto do programa, a variável simplesmente não existe — porque seu escopo (a função onde foi criada) já terminou de executar.",
+        tryIt:true,
+        tryItCode:'def calcular_area(largura, altura):\n    area = largura * altura\n    return area\n\ncalcular_area(5, 3)\nprint(area)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Demonstrar a diferença entre variável local e global em um pequeno programa de cálculo de salário líquido.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Variável global: taxa de desconto fixa, usada por toda a empresa\ntaxa_desconto_padrao = 0.08\n\n# Função que calcula o salário líquido, usando a taxa global e um parâmetro local\ndef calcular_salario_liquido(salario_bruto):\n    desconto = salario_bruto * taxa_desconto_padrao   # "desconto" é local\n    salario_liquido = salario_bruto - desconto          # "salario_liquido" é local\n    return salario_liquido\n\n# Chama a função e guarda o resultado em uma variável do escopo principal\nresultado_final = calcular_salario_liquido(3000)\n\nprint(resultado_final)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é escopo de uma variável?', gabarito:'A região do código onde uma variável pode ser acessada.' },
+          { kind:'text', prompt:'O que é uma variável local? E uma variável global?', gabarito:'Local: criada dentro de uma função, só existe ali. Global: criada fora de qualquer função, acessível (para leitura) de qualquer lugar.' },
+          { kind:'text', prompt:'Uma variável criada dentro de uma função pode ser acessada fora dela?', gabarito:'Não.' },
+          { kind:'text', prompt:'Uma variável global pode ser lida de dentro de uma função?', gabarito:'Sim, pode ser lida diretamente.' },
+          { kind:'text', prompt:'Por que é recomendável usar parâmetros e return, em vez de depender de variáveis globais dentro de funções?', gabarito:'Porque torna a função mais explícita e reutilizável, sem depender de estado externo implícito.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva uma função calcular_quadrado(numero) que crie uma variável local chamada resultado, e tente (propositalmente) acessar essa variável fora da função, observando o erro gerado.', starter:'', gabarito:'def calcular_quadrado(numero):\n    resultado = numero ** 2\n    return resultado\n\ncalcular_quadrado(4)\nprint(resultado)  # gera NameError — resultado é local' },
+          { kind:'code', prompt:'Crie uma variável global nome_da_loja = "Loja Python", e uma função exibir_cabecalho() que leia essa variável global e a exiba dentro de uma frase.', starter:'', gabarito:'nome_da_loja = "Loja Python"\n\ndef exibir_cabecalho():\n    print(f"Bem-vindo à {nome_da_loja}!")\n\nexibir_cabecalho()' },
+          { kind:'text', prompt:'🐞 Encontre o bug:\ndef calcular_total(preco, quantidade):\n    total = preco * quantidade\n    return total\n\ncalcular_total(10, 3)\nprint(total)', gabarito:'total é local a calcular_total e não existe fora dela; é necessário guardar o valor devolvido em uma variável do escopo principal: resultado = calcular_total(10, 3); print(resultado)' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa com uma variável global limite_credito = 1000, e uma função verificar_compra(valor_compra) que devolva True se o valor for menor ou igual ao limite, e False caso contrário. Teste com valores acima e abaixo do limite.', starter:'', gabarito:'limite_credito = 1000\n\ndef verificar_compra(valor_compra):\n    return valor_compra <= limite_credito\n\nprint(verificar_compra(800))\nprint(verificar_compra(1500))' },
+          { kind:'text', prompt:'Desafio: explique por que um parâmetro com o mesmo nome de uma variável global (como numero) não causa conflito — por que alterar o parâmetro dentro da função não afeta a variável global de mesmo nome.', gabarito:'O parâmetro da função é uma variável local, completamente independente da variável global de mesmo nome — alterá-lo dentro da função não afeta a variável externa.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'ESCOPO GLOBAL (fora de qualquer função)\n   variáveis aqui podem ser LIDAS de dentro de funções\n\nESCOPO LOCAL (dentro de uma função)\n   parâmetros e variáveis criadas aqui só existem DURANTE a execução\n   da função, e não podem ser acessados de fora dela\n\nBoa prática: usar PARÂMETROS para entrada e RETURN para saída,\nem vez de depender de variáveis globais.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é escopo de uma variável.',
+          'Sei diferenciar variável local de variável global.',
+          'Sei que uma variável local não existe fora de sua função.',
+          'Sei que uma variável global pode ser lida de dentro de uma função.',
+          'Sei por que preferir parâmetros e return a variáveis globais.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é uma variável local?', options:['Uma variável criada fora de qualquer função','Uma variável criada dentro de uma função, que só existe ali','Uma variável que nunca muda de valor','Uma variável usada apenas em print()'], correct:1, explanation:'Criada dentro de uma função, só existe ali.' },
+          { q:'Uma variável criada dentro de uma função pode ser acessada fora dela?', options:['Sim, sempre','Não, ela deixa de existir quando a função termina','Sim, mas só se for um número','Depende do nome da variável'], correct:1, explanation:'Deixa de existir quando a função termina.' },
+          { q:'Uma variável global pode ser lida de dentro de uma função?', options:['Não, nunca','Sim, pode ser lida diretamente','Só se for passada como parâmetro','Só se tiver o mesmo nome de um parâmetro'], correct:1, explanation:'Pode ser lida diretamente.' },
+          { q:'O que acontece ao acessar, fora de uma função, uma variável que só existe dentro dela?', options:['Retorna None','Gera NameError','Retorna 0','Funciona normalmente'], correct:1, explanation:'Gera NameError.' },
+          { q:'Qual é a boa prática recomendada para passar dados entre o programa principal e uma função?', options:['Sempre usar variáveis globais alteradas dentro da função','Usar parâmetros para entrada e return para saída','Não é possível passar dados entre eles','Usar apenas print()'], correct:1, explanation:'Parâmetros para entrada, return para saída.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Definindo Funções (escopo local)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions' },
+          { label:'Documentação Python — Escopos e Namespaces em Python', url:'https://docs.python.org/pt-br/3/tutorial/classes.html#python-scopes-and-namespaces' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap37',
+  title: 'Capítulo 37 — Recursos adicionais de funções',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como definir valores padrão para parâmetros.',
+          'Como usar argumentos nomeados ao chamar uma função.',
+          'Como criar funções com número variável de argumentos (*args).',
+          'Como documentar uma função com docstring.',
+          'O que são anotações de tipo (type hints) e uma introdução a funções lambda.'
+        ],
+        antes: 'É necessário dominar def, parâmetros, return e escopo (Capítulos 33 a 36). Este capítulo apresenta recursos adicionais.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Depois de dominar o básico de funções, Python oferece alguns recursos extras que tornam as funções mais flexíveis. <b>Argumentos com valor padrão</b>: é possível definir um valor padrão para um parâmetro, usado quando a chamada não fornece um argumento para ele.',
+          '<b>Argumentos nomeados</b>: ao chamar uma função, é possível especificar explicitamente a qual parâmetro cada argumento se refere, usando nome_do_parametro=valor — isso permite passar os argumentos em qualquer ordem.'
+        ],
+        glossary: [
+          { term:'valor padrão (default)', def:'um valor usado automaticamente por um parâmetro, quando a chamada da função não fornece um argumento correspondente', example:'def saudacao(nome, saudacao_inicial="Olá"):' },
+          { term:'*args', def:'sintaxe que permite a uma função receber qualquer quantidade de argumentos posicionais, agrupados automaticamente em uma tupla', example:'def somar_todos(*numeros):' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'def somar_todos(*numeros):\n    ...\n\nsomar_todos(1, 2, 3)\n        ↓\nnumeros = (1, 2, 3)   ← todos os argumentos viram uma tupla\n        ↓\nfor numero in numeros:\n    total = total + numero\n        ↓\ntotal = 6',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Criar uma saudação com valor padrão para o cumprimento.',
+        algoritmo:null,
+        code:'# "saudacao_inicial" tem um valor padrão, usado quando não for informado\ndef saudacao(nome, saudacao_inicial="Olá"):\n    print(f"{saudacao_inicial}, {nome}!")\n\n# Chamada sem o segundo argumento: usa o valor padrão "Olá"\nsaudacao("Ana")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'saudacao("Ana")',
+          'nome = "Ana"',
+          'saudacao_inicial = "Olá"  ← nenhum valor foi passado, então usa o padrão',
+          'print(f"Olá, Ana!")',
+          'Exibe: Olá, Ana!'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'def saudacao(nome, saudacao_inicial="Olá"):', explanation:'nome é um parâmetro comum, OBRIGATÓRIO — a chamada precisa fornecer um valor para ele. saudacao_inicial="Olá" define um VALOR PADRÃO: se a chamada não passar um segundo argumento, saudacao_inicial assume "Olá" automaticamente.' },
+          { code:'saudacao("Ana")', explanation:'Chama a função passando apenas nome; saudacao_inicial usa seu valor padrão.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Olá, Ana!',
+        modIntro:'Vamos ver docstrings e anotações de tipo, que documentam uma função sem afetar sua execução:',
+        modCode:'def calcular_media(nota1: float, nota2: float) -> float:\n    """Calcula e devolve a média aritmética de duas notas."""\n    return (nota1 + nota2) / 2\n\nprint(calcular_media(8.0, 7.0))',
+        modResult:'7.5',
+        modNote:'nota1: float indica que se espera um float para nota1. -> float, depois dos parênteses, indica que a função devolve um float. Essas anotações NÃO são verificadas automaticamente pelo Python — servem como documentação.',
+        runnable:true,
+        extraBlocks:[
+          { title:'Argumentos nomeados e *args', intro:'Argumentos nomeados permitem passar valores em qualquer ordem. *args agrupa qualquer quantidade de argumentos em uma tupla:', code:'def apresentar(nome, idade):\n    print(f"{nome} tem {idade} anos.")\n\napresentar(idade=20, nome="Carla")   # ordem invertida, mas funciona\n\ndef somar_todos(*numeros):\n    total = 0\n    for numero in numeros:\n        total = total + numero\n    return total\n\nprint(somar_todos(1, 2, 3))       # 6\nprint(somar_todos(10, 20))        # 30\nprint(somar_todos(5))             # 5', runnable:true },
+          { title:'Funções lambda', intro:'Uma função lambda é uma forma compacta de escrever uma função simples, de uma única expressão, sem usar def:', code:'dobro = lambda numero: numero * 2\nprint(dobro(5))   # 10', result:'10', runnable:true, note:'lambda NÃO substitui def na maioria dos casos — lambda só pode conter uma única expressão. Para qualquer função com lógica mais elaborada, def continua sendo a forma recomendada.' }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Colocar um parâmetro obrigatório depois de um com valor padrão', code:'def saudacao(saudacao_inicial="Olá", nome):\n    print(f"{saudacao_inicial}, {nome}!")', body:'Em Python, parâmetros com valor padrão devem vir DEPOIS dos parâmetros obrigatórios, nunca antes. Essa ordem gera erro de sintaxe.' },
+          { title:'🐞 Esperar que *args funcione sem o asterisco', code:'def somar_todos(numeros):\n    total = 0\n    for numero in numeros:\n        total = total + numero\n    return total\n\nprint(somar_todos(1, 2, 3))', body:'Sem o *, numeros é um parâmetro comum — a função esperaria receber UM único argumento, não vários. Chamar somar_todos(1, 2, 3) sem o * gera erro, por passar 3 argumentos para uma função que só espera 1.' },
+          { title:'🐞 Escrever lógica complexa dentro de um lambda', code:'classificar = lambda nota: "Aprovado" if nota >= 6 else "Reprovado"', body:'Embora isso funcione (é tecnicamente uma única expressão), abusar de lambda para lógicas mais elaboradas prejudica a legibilidade. Nesses casos, uma função def normal é preferível.' }
+        ],
+        howToRead:'Ao colocar um parâmetro obrigatório depois de um com valor padrão, o Python mostra: <span class="icode">SyntaxError: parameter without a default follows parameter with a default</span><br><br>Essa mensagem já explica exatamente o problema: a ordem precisa ser invertida.',
+        tryIt:true,
+        tryItCode:'def somar_todos(numeros):\n    total = 0\n    for numero in numeros:\n        total = total + numero\n    return total\n\nprint(somar_todos(1, 2, 3))'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar uma função de saudação personalizável, com valor padrão, docstring e anotações de tipo.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'def saudacao(nome: str, saudacao_inicial: str = "Olá") -> None:\n    """Exibe uma saudação personalizada para a pessoa informada."""\n    print(f"{saudacao_inicial}, {nome}!")\n\nsaudacao("Ana")\nsaudacao("Bruno", "Boa tarde")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um valor padrão de parâmetro?', gabarito:'Um valor usado automaticamente quando a chamada não fornece um argumento para aquele parâmetro.' },
+          { kind:'text', prompt:'O que são argumentos nomeados, e para que servem?', gabarito:'Permitem indicar explicitamente a qual parâmetro cada argumento se refere, possibilitando passá-los em qualquer ordem.' },
+          { kind:'text', prompt:'O que *args permite a uma função receber?', gabarito:'Qualquer quantidade de argumentos posicionais, agrupados em uma tupla.' },
+          { kind:'text', prompt:'O que é uma docstring?', gabarito:'Um texto de documentação, na primeira linha do corpo da função.' },
+          { kind:'text', prompt:'O que uma função lambda pode conter, no máximo?', gabarito:'Apenas uma única expressão.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma função calcular_preco_final(preco, desconto=0) que aplique o desconto informado (ou nenhum, por padrão) e devolva o resultado. Chame-a com e sem o segundo argumento.', starter:'', gabarito:'def calcular_preco_final(preco, desconto=0):\n    return preco - desconto\n\nprint(calcular_preco_final(100))\nprint(calcular_preco_final(100, 10))' },
+          { kind:'code', prompt:'Crie uma função media(*notas) que receba qualquer quantidade de notas e devolva a média delas.', starter:'', gabarito:'def media(*notas):\n    return sum(notas) / len(notas)\n\nprint(media(8, 7, 9))' },
+          { kind:'code', prompt:'Escreva uma função eh_maior_de_idade(idade), com docstring explicando seu propósito.', starter:'', gabarito:'def eh_maior_de_idade(idade):\n    """Devolve True se a idade for maior ou igual a 18."""\n    return idade >= 18\n\nprint(eh_maior_de_idade(20))' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma função cadastrar_produto(nome, preco, categoria="Geral"), que exiba os dados formatados do produto. Chame de três formas: sem categoria, com categoria informada normalmente, e com argumentos nomeados em ordem invertida.', starter:'', gabarito:'def cadastrar_produto(nome, preco, categoria="Geral"):\n    print(f"{nome} - R$ {preco:.2f} - {categoria}")\n\ncadastrar_produto("Caderno", 20)\ncadastrar_produto("Mochila", 90, "Acessórios")\ncadastrar_produto(preco=15, nome="Caneta")' },
+          { kind:'text', prompt:'Desafio: reescreva a função somar_todos(*numeros) como uma função lambda, se possível. Se não couber, explique por que lambda não é adequado para este caso.', gabarito:'A lógica de somar_todos usa um laço for com acumulador, que não cabe em uma única expressão — por isso não é adequada para lambda; a versão com def deve ser mantida (ainda que, tecnicamente, seja possível usar sum(numeros)).' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'def funcao(parametro, opcional="valor_padrao"):\n    ...\n\nfuncao(valor)                          → usa o valor padrão\nfuncao(valor, "outro")                 → sobrescreve o padrão\nfuncao(opcional="outro", parametro=valor)  → argumentos nomeados, ordem livre\n\ndef funcao(*args):\n    ...                                → args vira uma tupla com tudo que foi passado\n\ndef funcao(param: tipo) -> tipo_retorno:\n    """Docstring explicando o propósito da função."""\n    ...\n\nlambda parametro: expressao            → função compacta, de uma única expressão'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei definir valores padrão para parâmetros.',
+          'Sei usar argumentos nomeados em uma chamada.',
+          'Sei criar funções com *args.',
+          'Sei escrever uma docstring simples.',
+          'Sei o que são anotações de tipo, e que não são verificadas em tempo de execução.',
+          'Sei quando uma função lambda é apropriada, e quando não é.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que acontece se uma chamada não fornecer um argumento para um parâmetro com valor padrão?', options:['Gera erro','O parâmetro usa o valor padrão definido na função','O parâmetro recebe None','A função não executa'], correct:1, explanation:'Usa o valor padrão.' },
+          { q:'O que *args permite a uma função fazer?', options:['Receber exatamente um argumento','Receber qualquer quantidade de argumentos, agrupados em uma tupla','Não receber nenhum argumento','Receber apenas números'], correct:1, explanation:'Recebe qualquer quantidade, agrupados em tupla.' },
+          { q:'Onde deve ficar uma docstring dentro de uma função?', options:['Na última linha','Como a primeira linha do corpo da função, entre aspas triplas','Antes do def','Não tem posição fixa'], correct:1, explanation:'Primeira linha do corpo da função.' },
+          { q:'As anotações de tipo (nota: float) são verificadas automaticamente pelo Python durante a execução?', options:['Sim, sempre','Não, servem apenas como documentação (a menos que se use ferramentas externas)','Só em algumas versões do Python','Só para funções com return'], correct:1, explanation:'Servem apenas como documentação.' },
+          { q:'O que uma função lambda pode conter?', options:['Qualquer quantidade de linhas de código','Apenas uma única expressão','Apenas números','Apenas chamadas de print()'], correct:1, explanation:'Apenas uma única expressão.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Mais sobre Definição de Funções', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#more-on-defining-functions' },
+          { label:'Documentação Python — Expressões lambda', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#lambda-expressions' },
+          { label:'Documentação Python — Strings de documentação', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#documentation-strings' },
+          { label:'PEP 484 — Type Hints', url:'https://peps.python.org/pep-0484/' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'revisao6',
+  title: 'Parada para Revisão 6 — Fim da Parte VI',
+  screens: [
+    { id:'mapa', title:'Mapa mental', type:'diagram', data:{
+        intro:'Um resumo visual de tudo que vimos nos Capítulos 32 a 37.',
+        diagram:'FUNÇÕES\n   │\n   ├── Por que usar funções\n   │      evitar repetição de lógica, centralizar mudanças\n   │\n   ├── def nome():\n   │      BLOCO\n   │      DEFINIR ≠ EXECUTAR (só executa ao CHAMAR)\n   │\n   ├── Parâmetros e argumentos\n   │      parâmetro → nome na definição\n   │      argumento → valor na chamada\n   │\n   ├── return\n   │      devolve um valor, encerra a função\n   │      print() exibe; return devolve (reaproveitável)\n   │      sem return → devolve None\n   │\n   ├── Escopo\n   │      local (dentro da função) × global (fora)\n   │      variável local não existe fora da função\n   │\n   └── Recursos adicionais\n          valor padrão: def f(x, y=10):\n          argumentos nomeados: f(y=5, x=1)\n          *args: qualquer quantidade de argumentos\n          docstring, anotações de tipo, lambda',
+        note:null
+    }},
+    { id:'tabela', title:'Comandos vistos até aqui', type:'table', data:{
+        headers:['Comando/conceito','Para que serve','Exemplo'],
+        rows:[
+          ['<code>def nome():</code>','definir uma função','<code>def somar(a, b):</code>'],
+          ['<code>nome()</code>','chamar (executar) uma função','<code>somar(3, 4)</code>'],
+          ['<code>return valor</code>','devolver um valor da função','<code>return a + b</code>'],
+          ['<code>param=padrao</code>','valor padrão de parâmetro','<code>def f(x, y=0):</code>'],
+          ['<code>*args</code>','número variável de argumentos','<code>def f(*numeros):</code>'],
+          ['<code>"""..."""</code>','docstring','<code>"""Explica a função"""</code>'],
+          ['<code>lambda x: ...</code>','função compacta de uma linha','<code>lambda n: n * 2</code>']
+        ]
+    }},
+    { id:'errosfreq', title:'Erros frequentes', type:'list', data:{
+        intro:'Os erros mais comuns desta etapa:',
+        items:[
+          'Confundir print() (exibe) com return (devolve).',
+          'Chamar uma função antes de defini-la.',
+          'Chamar uma função sem os argumentos obrigatórios.',
+          'Tentar acessar uma variável local fora da função onde foi criada.',
+          'Colocar um parâmetro obrigatório depois de um com valor padrão.'
+        ]
+    }},
+    { id:'perguntas', title:'Perguntas rápidas', type:'qa', data:{
+        intro:'Tente responder mentalmente antes de clicar para revelar.',
+        items:[
+          { q:'Qual é a diferença entre definir e chamar uma função?', a:'Definir apenas registra a função; chamar executa seu código.' },
+          { q:'Qual é a diferença entre parâmetro e argumento?', a:'Parâmetro é o nome na definição; argumento é o valor na chamada.' },
+          { q:'O que print() e return fazem de diferente?', a:'print() exibe na tela; return devolve um valor reaproveitável.' },
+          { q:'O que acontece com uma variável criada dentro de uma função, depois que ela termina de executar?', a:'Deixa de existir (era uma variável local).' },
+          { q:'Para que serve um valor padrão de parâmetro?', a:'Fornece um valor automático quando a chamada não passa aquele argumento.' }
+        ]
+    }},
+    { id:'exrevisao', title:'Exercícios de revisão', type:'exercises', data:{
+        level:'Exercícios de revisão',
+        items:[
+          { kind:'code', prompt:'Escreva uma função calcular_imc(peso, altura) que devolva o IMC calculado (peso / altura ** 2), e use o resultado para classificar a faixa de peso fora da função.', starter:'', gabarito:'def calcular_imc(peso, altura):\n    return peso / altura ** 2\n\nimc = calcular_imc(70, 1.75)\nif imc < 25:\n    print("Peso normal")\nelse:\n    print("Acima do peso")' },
+          { kind:'code', prompt:'Escreva uma função contar_vogais(palavra) que devolva a quantidade de vogais em uma palavra recebida como parâmetro.', starter:'', gabarito:'def contar_vogais(palavra):\n    quantidade = 0\n    for letra in palavra:\n        if letra.lower() in "aeiou":\n            quantidade = quantidade + 1\n    return quantidade\n\nprint(contar_vogais("Python"))' },
+          { kind:'code', prompt:'Escreva uma função saudacao(nome, periodo="dia") que exiba "Bom dia, Ana!", "Boa tarde, Ana!" ou "Boa noite, Ana!", dependendo do valor de periodo.', starter:'', gabarito:'def saudacao(nome, periodo="dia"):\n    if periodo == "dia":\n        print(f"Bom dia, {nome}!")\n    elif periodo == "tarde":\n        print(f"Boa tarde, {nome}!")\n    else:\n        print(f"Boa noite, {nome}!")\n\nsaudacao("Ana")\nsaudacao("Bruno", "tarde")' }
+        ]
+    }},
+    { id:'desafio', title:'Pequeno desafio', type:'exercises', data:{
+        level:'Pequeno desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa calculadora_com_funcoes.py que defina somar(a, b), subtrair(a, b), multiplicar(a, b) e dividir(a, b), cada uma devolvendo o resultado. Peça dois números e uma operação ao usuário, e use match para chamar a função apropriada.', starter:'', gabarito:'def somar(a, b):\n    return a + b\n\ndef subtrair(a, b):\n    return a - b\n\ndef multiplicar(a, b):\n    return a * b\n\ndef dividir(a, b):\n    return a / b\n\na = float(input("Primeiro número: "))\nb = float(input("Segundo número: "))\noperacao = input("Operação (+, -, *, /): ")\n\nmatch operacao:\n    case "+":\n        print(somar(a, b))\n    case "-":\n        print(subtrair(a, b))\n    case "*":\n        print(multiplicar(a, b))\n    case "/":\n        print(dividir(a, b))\n    case _:\n        print("Operação inválida")' }
+        ]
+    }},
+    { id:'checklist', title:'Checklist de domínio da Parte VI', type:'checklist', data:{
+        items:[
+          'Sei explicar por que funções evitam repetição de código.',
+          'Sei definir e chamar funções com def.',
+          'Sei usar parâmetros e passar argumentos corretamente.',
+          'Sei usar return e diferenciá-lo de print().',
+          'Sei explicar escopo local e global.',
+          'Sei usar valores padrão, argumentos nomeados e *args.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte VII — Organização do Código, onde aprenderemos módulos e pacotes.'
     }}
   ]
 }
