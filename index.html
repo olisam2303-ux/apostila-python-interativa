@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a III</title>
+<title>Apostila Python Interativa — Partes I a IV</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a III · Primeiros Passos, Fundamentos e Tomada de Decisão</span>
+      <span>Partes I a IV · Primeiros Passos, Fundamentos, Decisão e Repetições</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -3127,6 +3127,863 @@ const MODULES = [
           'Sei usar match/case para comparar um valor com várias opções.'
         ],
         finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte IV — Repetições, onde aprenderemos while, for, range(), break, continue e laços aninhados.'
+    }}
+  ]
+},
+{
+  id: 'cap19',
+  title: 'Capítulo 19 — Conceito de repetição',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Por que repetir instruções manualmente (copiando e colando código) é um problema.',
+          'O que é um laço de repetição (loop).',
+          'A ideia geral por trás de while e for, antes de ver a sintaxe de cada um.'
+        ],
+        antes: 'É necessário conhecer if/elif/else (Parte III) — os laços de repetição costumam ser combinados com decisões.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Imagine que você precisa exibir os números de 1 a 5 na tela. Seria possível fazer isso com cinco chamadas de print() — mas isso tem problemas sérios: <b>não escala</b> (exibir 1 a 1000 exigiria 1000 linhas), <b>é difícil de manter</b> (mudar a lógica exige alterar cada linha) e <b>não se adapta a valores desconhecidos</b> (se a quantidade só for conhecida durante a execução, não há como "escrever" a quantidade certa de print() antecipadamente).',
+          'Para resolver isso, linguagens de programação oferecem estruturas de <b>repetição</b> (também chamadas de <b>laços</b>, ou <i>loops</i>), que permitem executar o mesmo bloco de código várias vezes, sem repeti-lo manualmente no texto do programa.'
+        ],
+        glossary: [
+          { term:'repetição / laço / loop', def:'uma estrutura que executa um bloco de código repetidas vezes, enquanto uma condição for verdadeira, ou uma vez para cada item de uma sequência', example:'while (Capítulo 20) e for (Capítulo 21) são os dois comandos principais de repetição em Python.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'SEM REPETIÇÃO (código repetido manualmente):\n\nprint(1)\nprint(2)\nprint(3)\nprint(4)\nprint(5)\n   ↑\n5 linhas quase idênticas, difícil de escalar\n\nCOM REPETIÇÃO (ideia geral, sintaxe real nos próximos capítulos):\n\nPARA CADA número de 1 até 5:\n    exibir o número\n   ↑\n1 bloco de instruções, reaproveitado automaticamente\n\n\nFLUXO GERAL DE UM LAÇO:\n\n┌─────────────────────────────┐\n│  A condição de repetir       │\n│  ainda é válida?             │\n└───────────┬───────────────────┘\n        Sim │           │ Não\n            ▼           ▼\n     Executa o bloco   Sai do laço,\n     e volta a         continua o\n     verificar          programa',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Vamos comparar visualmente as duas abordagens para o mesmo problema. A sintaxe do for (usada abaixo apenas para efeito de comparação) será explicada com calma no Capítulo 21.',
+        problem:'Preparar três itens.',
+        algoritmo:null,
+        code:'# Versão SEM repetição: cada linha precisa ser escrita manualmente\nprint("Preparando item 1")\nprint("Preparando item 2")\nprint("Preparando item 3")\n\n# Versão COM repetição: uma única instrução cobre qualquer quantidade de itens\nfor numero in range(1, 4):\n    print(f"Preparando item {numero}")',
+        codeNote:'Ambos os trechos produzem exatamente a mesma saída, mas o segundo continuaria funcionando corretamente mesmo que fosse necessário preparar 300 itens, apenas trocando o 4 por 301.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'Versão sem repetição: três instruções INDEPENDENTES, escritas manualmente',
+          'Versão com repetição: o laço "pergunta" — ainda há números de 1 a 3 não usados?',
+          'Sim, o próximo é 1 → executa o bloco com numero = 1 → "Preparando item 1"',
+          'O laço volta a perguntar: ainda há números? Sim, o próximo é 2 → "Preparando item 2"',
+          'Ainda há números? Sim, o próximo é 3 → "Preparando item 3"',
+          'Ainda há números? Não — o laço termina'
+        ],
+        after:null
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Preparando item 1\nPreparando item 2\nPreparando item 3',
+        modIntro:'Se, na versão sem repetição, quiséssemos preparar 10 itens em vez de 3, seria necessário escrever 10 linhas de print(). Na versão com repetição, basta alterar um único número:',
+        modCode:'for numero in range(1, 11):\n    print(f"Preparando item {numero}")',
+        modNote:'Essa é a principal vantagem prática de um laço: o tamanho do código não cresce junto com a quantidade de repetições.',
+        runnable:true,
+        naoConfunda:'Repetir código copiando e colando não é o mesmo que usar uma estrutura de repetição. Copiar e colar cria várias instruções independentes, uma para cada caso; uma estrutura de repetição usa uma única instrução, executada várias vezes.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Achar que sempre é necessário saber a sintaxe de for/while antes de planejar o algoritmo', code:null, body:'Vale a pena primeiro descrever, em linguagem natural, o que precisa se repetir e até quando, antes de escrever qualquer código. Por exemplo: "repetir a pergunta de uma nota para cada um dos 5 alunos da turma" já é um bom ponto de partida, mesmo sem saber ainda a sintaxe exata.' },
+          { title:'🐞 Confundir "repetir uma quantidade de vezes" com "repetir enquanto algo for verdade"', code:null, body:'Esses são exatamente os dois casos de uso que for e while cobrem, respectivamente — a diferença será detalhada nos próximos dois capítulos.' }
+        ],
+        howToRead:'Este capítulo não introduz sintaxe nova de Python, então não há mensagens de erro específicas para tratar aqui. O foco é conceitual: entender por que repetição é necessária antes de aprender como implementá-la.'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Descrever, em linguagem natural (sem código Python ainda), o algoritmo para dar "bom dia" a cada um dos alunos de uma lista de 4 nomes.',
+        entrada:null, processamento:null, saida:null,
+        algoritmo:['Para cada nome, na lista de 4 nomes: exibir "Bom dia, " seguido do nome.'],
+        simulation:'Esse tipo de descrição — "para cada X, faça Y" — é exatamente a ideia por trás do for, que será formalizado no Capítulo 21.',
+        code:null
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Cite dois problemas de repetir código manualmente (copiar e colar).', gabarito:'Não escala para grandes quantidades; é difícil de manter/alterar.' },
+          { kind:'text', prompt:'O que é um laço de repetição?', gabarito:'Uma estrutura que executa um bloco de código repetidas vezes.' },
+          { kind:'text', prompt:'Qual é a principal diferença de propósito entre while e for (mesmo sem saber a sintaxe ainda)?', gabarito:'while repete enquanto uma condição for verdadeira (quantidade desconhecida de antemão); for repete uma vez por item de uma sequência conhecida.' },
+          { kind:'text', prompt:'Descreva, em linguagem natural, um algoritmo que repita a pergunta "Qual é o seu nome?" três vezes.', gabarito:'1. Repetir 3 vezes:\n   1.1. Perguntar "Qual é o seu nome?"' },
+          { kind:'text', prompt:'Por que um laço "não cresce" no tamanho do código, mesmo repetindo milhares de vezes?', gabarito:'Porque a mesma instrução é reaproveitada a cada repetição, em vez de ser reescrita.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'text', prompt:'Escreva, em linguagem natural, um algoritmo com repetição para somar os números digitados pelo usuário até que ele digite 0.', gabarito:'Resposta aberta — o importante é identificar o que se repete (a leitura de um número) e a condição de parada (digitar 0).' },
+          { kind:'text', prompt:'O código abaixo cadastra 3 produtos. Que problema aconteceria se fosse necessário fazer isso para 100 produtos?\nprint("Produto 1 cadastrado")\nprint("Produto 2 cadastrado")\nprint("Produto 3 cadastrado")', gabarito:'Seria necessário escrever 100 linhas quase idênticas — não escala e é difícil de manter.' },
+          { kind:'text', prompt:'Explique, com suas palavras, por que "para cada item da lista de compras, marque como comprado" é um problema de repetição.', gabarito:'Porque a mesma ação (marcar como comprado) precisa ser repetida uma vez para cada item, o que é exatamente a ideia de um laço.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Descreva, em linguagem natural, o algoritmo completo de um jogo de adivinhação simples: o computador escolhe um número, e o jogador tenta adivinhar, repetindo a tentativa até acertar. Identifique a repetição e a condição de parada.', gabarito:'Resposta aberta — o importante é identificar claramente o que se repete (a tentativa de adivinhar) e a condição de parada (acertar o número).' },
+          { kind:'text', prompt:'Desafio: pense em uma tarefa do seu dia a dia que envolve repetição (ex.: lavar cada prato de uma pilha). Descreva-a como um algoritmo com repetição, identificando o que se repete e até quando.', gabarito:'Resposta aberta.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'REPETIR CÓDIGO MANUALMENTE (copiar e colar)\n   → não escala, difícil de manter\n\nLAÇO DE REPETIÇÃO (while / for)\n   → uma única instrução, executada várias vezes\n   → escala facilmente\n   → mais fácil de manter e corrigir\n\nwhile  → repete ENQUANTO uma condição for verdadeira\nfor    → repete UMA VEZ PARA CADA item de uma sequência'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei explicar por que repetir código manualmente é problemático.',
+          'Sei o que é um laço de repetição.',
+          'Sei a diferença geral de propósito entre while e for.',
+          'Sei descrever, em linguagem natural, um problema que envolve repetição.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual é um problema de repetir código copiando e colando?', options:['O código fica mais rápido','Não escala bem e é difícil de manter','É a única forma de repetir em Python','Não há nenhum problema'], correct:1, explanation:'Não escala e é difícil de manter.' },
+          { q:'O que é um laço de repetição?', options:['Um tipo de variável','Uma estrutura que executa um bloco de código várias vezes','Um tipo de erro','Uma forma de comentar código'], correct:1, explanation:'Uma estrutura que executa um bloco de código várias vezes.' },
+          { q:'Qual estrutura é mais indicada quando não se sabe quantas vezes a repetição vai acontecer?', options:['if','while','print','match'], correct:1, explanation:'while é indicado quando a quantidade não é conhecida.' },
+          { q:'Qual estrutura é mais indicada para repetir uma vez por item de uma sequência conhecida?', options:['for','while','else','input'], correct:0, explanation:'for é indicado para sequências conhecidas.' },
+          { q:'O tamanho do código de um laço cresce proporcionalmente à quantidade de repetições?', options:['Sim, sempre','Não — o código do laço permanece o mesmo, independentemente de quantas vezes ele repete','Sim, mas só no while','Sim, mas só no for'], correct:1, explanation:'O código do laço permanece o mesmo.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Mais ferramentas de controle de fluxo', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap20',
+  title: 'Capítulo 20 — while',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como repetir um bloco de código enquanto uma condição for verdadeira, usando while.',
+          'Como usar um contador para controlar quantas vezes um while repete.',
+          'Por que esquecer de atualizar a condição gera um laço infinito.',
+          'Como rastrear, com uma tabela, os valores de um while a cada repetição.'
+        ],
+        antes: 'É necessário conhecer condições e comparações (Capítulo 12) e o conceito geral de repetição (Capítulo 19).\n\n⚠ Aviso de segurança: um while mal escrito pode virar um laço infinito e travar a aba do navegador (o interpretador Python roda dentro da própria página). Antes de clicar em "Executar", sempre confira se a condição do seu while realmente vai se tornar False em algum momento. Se a página travar, basta recarregá-la — nenhum progresso salvo é perdido.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'A instrução <span class="icode">while</span> (do inglês, "enquanto") repete um bloco de código <b>enquanto</b> uma condição for True. A cada repetição, a condição é verificada novamente — assim que ela se tornar False, o laço para.',
+          'Um padrão extremamente comum dentro de um while é o uso de um <b>contador</b>: uma variável que começa com um valor inicial e é atualizada a cada repetição, até que a condição deixe de ser satisfeita.'
+        ],
+        glossary: [
+          { term:'while', def:'instrução que repete um bloco de código enquanto a condição associada a ela for True', example:'a condição é verificada antes de cada repetição, inclusive antes da primeira.' },
+          { term:'contador', def:'uma variável usada para controlar quantas vezes um laço se repete, normalmente aumentada (ou diminuída) a cada repetição', example:'contador = contador + 1' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'contador = 1\n        ↓\ncontador <= 3?  →  1 <= 3  →  True  → executa o bloco\n        ↓\nprint(1); contador = 2\n        ↓\ncontador <= 3?  →  2 <= 3  →  True  → executa o bloco\n        ↓\nprint(2); contador = 3\n        ↓\ncontador <= 3?  →  3 <= 3  →  True  → executa o bloco\n        ↓\nprint(3); contador = 4\n        ↓\ncontador <= 3?  →  4 <= 3  →  False → o laço PARA',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Exibir os números de 1 a 3 usando um contador.',
+        algoritmo:null,
+        code:'# Variável de controle, começando em 1\ncontador = 1\n\n# Repete enquanto o contador for menor ou igual a 3\nwhile contador <= 3:\n    # Exibe o valor atual do contador\n    print(contador)\n    # Atualiza o contador, para que o laço eventualmente termine\n    contador = contador + 1',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'contador = 1',
+          'while contador <= 3:',
+          '1 <= 3  →  True  → executa o bloco',
+          'print(contador)  → exibe 1',
+          'contador = contador + 1  → contador = 1 + 1 = 2',
+          '(volta para o topo do while, testando a condição novamente)',
+          '2 <= 3  →  True  → executa o bloco de novo',
+          '... e assim por diante, até contador valer 4',
+          '4 <= 3  →  False  → o laço termina'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'contador = 1', explanation:'Cria a variável contador, que vai controlar quantas vezes o laço se repete, começando em 1.' },
+          { code:'while contador <= 3:', explanation:'while inicia a estrutura de repetição. contador &lt;= 3 é a condição, testada <b>antes de cada repetição</b> (inclusive antes da primeira). Enquanto essa condição for True, o bloco indentado abaixo é executado.' },
+          { code:'    contador = contador + 1', explanation:'Aumenta o valor de contador em 1 a cada repetição. Esta linha é <b>essencial</b>: sem ela, contador nunca mudaria, a condição seria sempre True, e o laço nunca terminaria.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'1\n2\n3',
+        modIntro:'Vamos usar while para somar valores digitados pelo usuário até que ele digite 0 (uma caixa de diálogo vai pedir cada número):',
+        modCode:'# Soma acumulada, começando em 0\nsoma = 0\n\n# Pergunta o primeiro número\nnumero = int(input("Digite um número (0 para parar): "))\n\n# Repete enquanto o número digitado for diferente de 0\nwhile numero != 0:\n    soma = soma + numero\n    numero = int(input("Digite um número (0 para parar): "))\n\nprint(f"Soma total: {soma}")',
+        modNote:'Este while é seguro para executar: mesmo que você não digite 0, clicar em "Cancelar" na caixa de diálogo interrompe o programa com um erro controlado, sem travar a página.',
+        runnable:true,
+        naoConfunda:'while versus if: ambos testam uma condição, mas if testa UMA ÚNICA VEZ; while testa REPETIDAMENTE, voltando ao topo depois de cada execução do bloco, até que a condição se torne False.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer de atualizar a variável usada na condição (laço infinito)', code:'contador = 1\n\nwhile contador <= 3:\n    print(contador)', body:'Como contador nunca é alterado dentro do bloco, a condição permanece SEMPRE True, e o laço nunca termina — isso é chamado de <b>laço infinito</b>, e faz o programa "travar". Por segurança, este exemplo não tem botão de executar nesta apostila — nunca rode um código assim sem antes corrigi-lo.' },
+          { title:'🐞 Indentar a atualização do contador para fora do bloco do while', code:'contador = 1\n\nwhile contador <= 3:\n    print(contador)\ncontador = contador + 1', body:'Aqui, contador = contador + 1 está FORA do bloco do while (não está indentado junto com print). Isso também causa um laço infinito, pelo mesmo motivo do erro anterior.' },
+          { title:'🐞 Inicializar o contador com o valor errado', code:'contador = 0\n\nwhile contador <= 3:\n    print(contador)\n    contador = contador + 1', body:'Isso não é necessariamente um erro — mas produz uma saída diferente (0, 1, 2, 3, quatro números, em vez de 1, 2, 3). É importante decidir com clareza o valor inicial do contador.' }
+        ],
+        howToRead:'Um laço infinito <b>não gera uma mensagem de erro do Python</b> — o programa simplesmente continua executando sem parar. Se isso acontecer sem que fosse essa a intenção, é necessário interromper manualmente a execução (no terminal, geralmente com Ctrl+C; nesta apostila, recarregando a página) e revisar a condição e a atualização da variável usada nela.<br><br>Abaixo, uma versão <b>segura</b> para executar (contador começando em 0, em vez de 1 — repare na saída extra):',
+        tryIt:true,
+        tryItCode:'contador = 0\n\nwhile contador <= 3:\n    print(contador)\n    contador = contador + 1'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Exibir a contagem regressiva de 5 até 1, seguida da palavra "Lançamento!".',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'contador = 5  → 5 >= 1 → True  → exibe 5 → contador = 4\ncontador = 4  → 4 >= 1 → True  → exibe 4 → contador = 3\ncontador = 3  → 3 >= 1 → True  → exibe 3 → contador = 2\ncontador = 2  → 2 >= 1 → True  → exibe 2 → contador = 1\ncontador = 1  → 1 >= 1 → True  → exibe 1 → contador = 0\ncontador = 0  → 0 >= 1 → False → laço termina',
+        code:'# Contador começando em 5\ncontador = 5\n\n# Repete enquanto o contador for maior ou igual a 1\nwhile contador >= 1:\n    print(contador)\n    contador = contador - 1\n\nprint("Lançamento!")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Quando o bloco de um while deixa de ser executado?', gabarito:'Quando a condição se torna False.' },
+          { kind:'text', prompt:'O que é um laço infinito, e o que geralmente o causa?', gabarito:'Um laço que nunca termina, geralmente por a condição nunca se tornar False (variável não atualizada).' },
+          { kind:'text', prompt:'Por que é necessário atualizar, dentro do bloco, a variável usada na condição de um while?', gabarito:'Porque, sem essa atualização, a condição permanece sempre verdadeira.' },
+          { kind:'code', prompt:'Escreva um while que exiba os números de 1 a 10.', starter:'', gabarito:'contador = 1\nwhile contador <= 10:\n    print(contador)\n    contador = contador + 1' },
+          { kind:'text', prompt:'O que aconteceria se o contador do exercício anterior começasse em 11 em vez de 1?', gabarito:'O laço não executaria nenhuma vez, pois 11 <= 10 já seria False desde o início.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que exiba os números pares de 2 a 20, usando while.', starter:'', gabarito:'contador = 2\nwhile contador <= 20:\n    print(contador)\n    contador = contador + 2' },
+          { kind:'code', prompt:'Escreva um programa que peça uma senha ao usuário repetidamente (while), até que ele digite a senha correta ("python2026"), exibindo "Acesso liberado" ao final.', starter:'', gabarito:'senha = ""\nwhile senha != "python2026":\n    senha = input("Senha: ")\nprint("Acesso liberado")' },
+          { kind:'text', prompt:'🐞 Encontre o bug (não execute este código — ele trava, pois é um laço infinito):\ncontador = 1\nwhile contador <= 5:\n    print(contador)\nExplique o problema e escreva a correção.', gabarito:'Bug: falta atualizar contador dentro do bloco, causando laço infinito.\nCorreção:\ncontador = 1\nwhile contador <= 5:\n    print(contador)\n    contador = contador + 1' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Calcule a soma dos números de 1 a 100, usando while (sem fórmula pronta — apenas somando um por um, com um contador e uma variável acumuladora).', starter:'', gabarito:'contador = 1\nsoma = 0\nwhile contador <= 100:\n    soma = soma + contador\n    contador = contador + 1\nprint(soma)' },
+          { kind:'text', prompt:'Desafio: descreva um programa que simule um caixa eletrônico: peça ao usuário um valor de saque repetidamente, subtraindo de um saldo inicial de 1000, e pare (usando while) quando o saldo ficar menor que 0 OU o usuário digitar 0. Ao final, exiba o saldo restante. (Descreva a lógica; não é obrigatório rodar.)', gabarito:'Resposta aberta — a condição do while deve combinar as duas paradas, por exemplo: while saldo >= 0 and valor_saque != 0, atualizando saldo a cada iteração.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'while CONDIÇÃO:\n    BLOCO (repete enquanto a condição for True)\n\nCUIDADOS ESSENCIAIS:\n   1. A condição precisa depender de algo que muda dentro do bloco.\n   2. Esquecer de atualizar essa variável causa um laço infinito.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei escrever um while com condição e bloco indentado.',
+          'Sei usar um contador para controlar as repetições.',
+          'Sei explicar o que é e o que causa um laço infinito.',
+          'Sei rastrear, com uma tabela, os valores de um while a cada repetição.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Quando a condição de um while é testada?', options:['Apenas uma vez, no início','Antes de cada repetição, inclusive a primeira','Apenas ao final do programa','Nunca é testada'], correct:1, explanation:'Antes de cada repetição.' },
+          { q:'O que causa um laço infinito?', options:['Usar while em vez de for','A condição nunca se tornar False, geralmente por esquecer de atualizar a variável usada nela','Usar print() dentro do laço','Usar um contador'], correct:1, explanation:'A condição nunca se torna False.' },
+          { q:'No código: contador=1; while contador<=3: print(contador); contador=contador+1 — quantas vezes o print() é executado?', options:['2','3','4','Infinitas vezes'], correct:1, explanation:'3 vezes: contador 1, 2, 3.' },
+          { q:'O que acontece se a atualização do contador estiver fora do bloco do while (não indentada)?', options:['Nada muda','O laço se torna infinito','O programa gera erro de sintaxe','O laço executa uma vez a menos'], correct:1, explanation:'O laço se torna infinito.' },
+          { q:'Como interromper manualmente um laço infinito no terminal?', options:['Fechando o computador','Geralmente com Ctrl+C','Não é possível interromper','Reiniciando o Python'], correct:1, explanation:'Geralmente com Ctrl+C (nesta apostila, recarregando a página).' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Mais ferramentas de controle de fluxo', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html' },
+          { label:'Referência da linguagem — instrução composta while', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#the-while-statement' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap21',
+  title: 'Capítulo 21 — for',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como repetir um bloco de código uma vez para cada item de uma sequência, usando for.',
+          'Como percorrer os caracteres de uma string com for.',
+          'A diferença de propósito entre for e while.'
+        ],
+        antes: 'É necessário conhecer while (Capítulo 20) e strings (Capítulo 8).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Enquanto while repete um bloco <b>enquanto uma condição for verdadeira</b>, <span class="icode">for</span> (do inglês, "para") repete um bloco <b>uma vez para cada elemento de uma sequência</b>. É a estrutura mais indicada quando já sabemos, de alguma forma, sobre o que estamos repetindo.',
+          'A cada repetição, a variável recebe automaticamente o <b>próximo</b> item da sequência — não é necessário (nem correto) atualizá-la manualmente, como fazíamos com o contador do while.'
+        ],
+        glossary: [
+          { term:'for', def:'instrução que executa um bloco de código uma vez para cada elemento de uma sequência, guardando o elemento atual em uma variável a cada repetição', example:'for letra in "Python": print(letra)' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'for letra in "Python":\n    print(letra)\n\nSequência: "Python"  →  P  y  t  h  o  n\n\n1ª repetição: letra = "P"  → print("P")\n2ª repetição: letra = "y"  → print("y")\n3ª repetição: letra = "t"  → print("t")\n4ª repetição: letra = "h"  → print("h")\n5ª repetição: letra = "o"  → print("o")\n6ª repetição: letra = "n"  → print("n")\n\nDepois do último caractere, o laço termina automaticamente.',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Percorrer cada caractere da palavra "Python".',
+        algoritmo:null,
+        code:'# Repete uma vez para cada caractere da string "Python"\nfor letra in "Python":\n    # A cada repetição, "letra" guarda o caractere atual\n    print(letra)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'for letra in "Python":',
+          'O Python identifica a sequência: "Python" (6 caracteres)',
+          'letra = "P"  → print(letra) → exibe P',
+          'letra = "y"  → print(letra) → exibe y',
+          'letra = "t", "h", "o", "n"  → exibe t, h, o, n, uma de cada vez',
+          'Não há mais caracteres → o laço termina automaticamente'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'for letra in "Python":', explanation:'for inicia a estrutura de repetição. letra é o nome escolhido para a variável que vai guardar, a cada repetição, o item atual da sequência (aqui, um caractere). in "Python" indica qual sequência será percorrida. O : no final indica que um bloco começa na próxima linha.' },
+          { code:'    print(letra)', explanation:'Executado uma vez para cada caractere de "Python", exibindo o valor atual de letra.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'P\ny\nt\nh\no\nn',
+        modIntro:'Diferente do while, o for não precisa de um contador criado e atualizado manualmente — o controle da repetição é automático, baseado no tamanho da sequência:',
+        modCode:'nome = "Ana"\n\nfor letra in nome:\n    print(f"Letra: {letra}")\n\nprint("Fim da palavra")',
+        modResult:'Letra: A\nLetra: n\nLetra: a\nFim da palavra',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'for versus while: use for quando você já sabe SOBRE O QUE está repetindo (uma string, e futuramente uma lista, Capítulo 27). Use while quando a repetição depende de uma CONDIÇÃO que só pode ser avaliada durante a execução — nesses casos, muitas vezes nem se sabe, de antemão, quantas repetições vão acontecer.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer os dois-pontos no for', code:'for letra in "Python"\n    print(letra)', body:'Assim como if e while, for também exige : no final da linha.' },
+          { title:'🐞 Tentar alterar manualmente a variável de controle do for', code:'for letra in "Python":\n    print(letra)\n    letra = "z"', body:'Diferente do contador de um while, a variável de um for (aqui, letra) é atualizada automaticamente a cada repetição, com o próximo item da sequência. Alterá-la manualmente dentro do bloco não afeta a próxima repetição.' },
+          { title:'🐞 Usar for quando while seria mais adequado (ou vice-versa)', code:'# Repetir "até o usuário digitar 0" não tem uma sequência natural para\n# percorrer com for — while é mais adequado aqui.', body:'A regra geral: sequência conhecida → for; condição a ser avaliada durante a execução → while.' }
+        ],
+        howToRead:'Ao esquecer os dois-pontos, o Python mostra: <span class="icode">SyntaxError: expected \':\'</span><br><br>O mesmo tipo de erro já visto em if e while — a estrutura da linha está incompleta.',
+        tryIt:true,
+        tryItCode:'for letra in "Python"\n    print(letra)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Contar quantas vogais existem em uma palavra digitada pelo usuário.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'palavra = "casa"\nquantidade_vogais = 0\n\nletra = "c"  → "c" in "aeiouAEIOU"? → False\nletra = "a"  → "a" in "aeiouAEIOU"? → True  → quantidade_vogais = 1\nletra = "s"  → "s" in "aeiouAEIOU"? → False\nletra = "a"  → "a" in "aeiouAEIOU"? → True  → quantidade_vogais = 2',
+        code:'# Pergunta a palavra ao usuário\npalavra = input("Digite uma palavra: ")\n\n# Contador de vogais, começando em 0\nquantidade_vogais = 0\n\n# Percorre cada letra da palavra\nfor letra in palavra:\n    if letra in "aeiouAEIOU":\n        quantidade_vogais = quantidade_vogais + 1\n\nprint(f"Quantidade de vogais: {quantidade_vogais}")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que for letra in "casa": faz, em linhas gerais?', gabarito:'Repete uma vez para cada caractere da string "casa" (4 repetições).' },
+          { kind:'text', prompt:'É necessário atualizar manualmente a variável de um for dentro do bloco? Justifique.', gabarito:'Não, ela é atualizada automaticamente pelo for.' },
+          { kind:'code', prompt:'Escreva um for que exiba cada caractere da palavra "Brasil".', starter:'', gabarito:'for letra in "Brasil":\n    print(letra)' },
+          { kind:'text', prompt:'Qual é a principal diferença de propósito entre for e while?', gabarito:'for é usado quando já se conhece a sequência a percorrer; while quando a repetição depende de uma condição avaliada durante a execução.' },
+          { kind:'text', prompt:'O que acontece quando a sequência percorrida por um for acaba?', gabarito:'O laço termina automaticamente.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que exiba cada caractere do seu nome, um por linha, usando for.', starter:'', gabarito:'nome = "Samuel"\nfor letra in nome:\n    print(letra)' },
+          { kind:'code', prompt:'Escreva um programa que conte quantas letras "a" existem em uma palavra digitada pelo usuário.', starter:'', gabarito:'palavra = input("Palavra: ")\nquantidade = 0\nfor letra in palavra:\n    if letra == "a":\n        quantidade = quantidade + 1\nprint(quantidade)' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nfor letra in "Python"\n    print(letra)', starter:'for letra in "Python"\n    print(letra)', gabarito:'Bug: falta o : no final da linha do for.\nCorreção:\nfor letra in "Python":\n    print(letra)' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça uma frase ao usuário e exiba, para cada caractere, se ele é uma vogal, uma consoante, ou "outro" (espaços e pontuação) — usando for combinado com if/elif/else.', starter:'', gabarito:'frase = input("Frase: ")\nfor c in frase:\n    if c.lower() in "aeiou":\n        print(f"{c}: vogal")\n    elif c.isalpha():\n        print(f"{c}: consoante")\n    else:\n        print(f"{c}: outro")' },
+          { kind:'code', prompt:'Desafio: percorra a palavra "programação" e conte quantos caracteres NÃO são vogais, sem usar nenhum operador de repetição além de for.', starter:'', gabarito:'palavra = "programação"\nconsoantes = 0\nfor letra in palavra:\n    if letra.lower() not in "aeiouáéíóú":\n        consoantes = consoantes + 1\nprint(consoantes)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'for VARIAVEL in SEQUÊNCIA:\n    BLOCO (repete uma vez por item da sequência)\n\nA variável é atualizada automaticamente a cada repetição.\nO laço termina sozinho quando a sequência acaba.\n\nfor   → sequência conhecida (string, lista, range)\nwhile → condição avaliada durante a execução'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei escrever um for para percorrer uma string.',
+          'Sei que a variável do for é atualizada automaticamente.',
+          'Sei diferenciar quando usar for e quando usar while.',
+          'Sei combinar for com if dentro do bloco.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que for letra in "Sol": faz?', options:['Repete 3 vezes, uma para cada caractere de "Sol"','Repete indefinidamente','Gera erro','Repete apenas uma vez'], correct:0, explanation:'Repete uma vez por caractere: 3 vezes.' },
+          { q:'É necessário atualizar manualmente a variável de controle de um for?', options:['Sim, sempre','Não, ela é atualizada automaticamente a cada repetição','Só em alguns casos','Depende da versão do Python'], correct:1, explanation:'É atualizada automaticamente.' },
+          { q:'Quando um for que percorre uma string termina?', options:['Nunca','Quando o usuário decide','Automaticamente, quando os caracteres da string acabam','Depois de exatamente 10 repetições'], correct:2, explanation:'Termina automaticamente quando a sequência acaba.' },
+          { q:'Qual estrutura é mais indicada para percorrer os caracteres de uma palavra conhecida?', options:['while','for','if','match'], correct:1, explanation:'for é ideal para sequências conhecidas.' },
+          { q:'O que falta no código: for letra in "casa"\\n    print(letra)?', options:['Aspas','Dois-pontos (:)','Parênteses','Nada, está correto'], correct:1, explanation:'Falta o :.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Instrução for', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#for-statements' },
+          { label:'Referência da linguagem — instrução composta for', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#the-for-statement' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap22',
+  title: 'Capítulo 22 — range()',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que range() produz, e por que ele é tão usado com for.',
+          'As três formas de chamar range(): com um, dois ou três argumentos.',
+          'Por que o valor final informado em range() nunca é incluído.',
+          'Como usar range() para repetir um bloco uma quantidade exata de vezes.'
+        ],
+        antes: 'É necessário conhecer for (Capítulo 21).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'No capítulo anterior, usamos for para percorrer os caracteres de uma string. Mas, muitas vezes, queremos simplesmente repetir um bloco uma quantidade específica de vezes. Para isso, Python oferece a função <span class="icode">range()</span>, que produz uma <b>sequência de números inteiros</b>.',
+          'O ponto mais importante — e mais comum de gerar confusão — é que o valor de fim <b>nunca</b> é incluído na sequência gerada. range(1, 6) produz os números de 1 a 5, e não inclui o 6.'
+        ],
+        glossary: [
+          { term:'range()', def:'função que gera uma sequência de números inteiros, geralmente usada junto com for para repetir um bloco uma quantidade específica de vezes', example:'range(fim), range(inicio, fim) ou range(inicio, fim, passo).' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'range(5)\n   ↓\n0  1  2  3  4          ← 5 números, de 0 até 4 (o 5 NÃO entra)\n\nrange(1, 6)\n   ↓\n1  2  3  4  5          ← de 1 até 5 (o 6 NÃO entra)\n\nrange(0, 10, 2)\n   ↓\n0  2  4  6  8          ← de 0 até 8, pulando de 2 em 2 (o 10 NÃO entra)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Exibir os números de 0 a 4 usando range().',
+        algoritmo:null,
+        code:'# range(5) produz os números de 0 a 4 (5 números no total)\nfor numero in range(5):\n    # Exibe cada número gerado por range(5)\n    print(numero)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'range(5)',
+          'Python prepara a sequência: 0, 1, 2, 3, 4',
+          'for numero in range(5):',
+          '1ª repetição: numero = 0  → print(0)',
+          '2ª a 5ª repetição: numero = 1, 2, 3, 4 → print de cada um',
+          'Sequência esgotada → laço termina'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'for numero in range(5):', explanation:'range(5) gera a sequência 0, 1, 2, 3, 4 (cinco números, começando em 0, parando antes de 5). for numero in ... percorre essa sequência, guardando o valor atual em numero a cada repetição.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'0\n1\n2\n3\n4',
+        modIntro:'Vamos usar as três formas de range() para comparar seus resultados:',
+        modCode:'print("range(5):")\nfor n in range(5):\n    print(n)\n\nprint("range(1, 6):")\nfor n in range(1, 6):\n    print(n)\n\nprint("range(0, 10, 2):")\nfor n in range(0, 10, 2):\n    print(n)',
+        modResult:'range(5):\n0\n1\n2\n3\n4\nrange(1, 6):\n1\n2\n3\n4\n5\nrange(0, 10, 2):\n0\n2\n4\n6\n8',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'range(5) versus range(1, 5): o primeiro produz 0, 1, 2, 3, 4 (cinco números, começando em 0); o segundo produz 1, 2, 3, 4 (quatro números, começando em 1). Sempre que range() recebe apenas um argumento, ele é tratado como o FIM, e o início é automaticamente 0.',
+        extraBlocks:[
+          { title:'Passo negativo (contagem regressiva)', intro:'range() também aceita um passo negativo, para contar em ordem decrescente:', code:'for n in range(5, 0, -1):\n    print(n)', result:'5\n4\n3\n2\n1', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esperar que o valor final de range() seja incluído', code:'for numero in range(1, 10):\n    print(numero)', body:'Um iniciante pode esperar que isso exiba os números de 1 a 10, mas na verdade exibe de 1 a 9 — o 10 nunca é incluído. Se o objetivo é incluir o 10, use range(1, 11).' },
+          { title:'🐞 Confundir a ordem dos argumentos', code:'range(10, 1)', body:'Isso não gera erro, mas produz uma sequência VAZIA (nenhum número), porque, sem um passo negativo explícito, range() espera que o início seja menor que o fim. Para contar de 10 até 1, use range(10, 0, -1).' },
+          { title:'🐞 Usar range() com números decimais', code:'for numero in range(1, 5.5):\n    print(numero)', body:'range() só aceita números inteiros (int) como argumentos — usar um float gera erro.' }
+        ],
+        howToRead:'Ao usar um float em range(), o Python mostra: <span class="icode">TypeError: \'float\' object cannot be interpreted as an integer</span><br><br>A solução é garantir que todos os argumentos passados para range() sejam números inteiros — se necessário, convertendo-os com int() antes.',
+        tryIt:true,
+        tryItCode:'for numero in range(1, 5.5):\n    print(numero)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Exibir a tabuada do 5, de 1 a 10.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'multiplicador = 1  → resultado = 5 * 1 = 5   → "5 x 1 = 5"\nmultiplicador = 2  → resultado = 5 * 2 = 10  → "5 x 2 = 10"\nmultiplicador = 3  → resultado = 5 * 3 = 15  → "5 x 3 = 15"\n...',
+        code:'# Número para o qual queremos gerar a tabuada\nnumero_base = 5\n\n# Percorre os multiplicadores de 1 a 10\nfor multiplicador in range(1, 11):\n    resultado = numero_base * multiplicador\n    print(f"{numero_base} x {multiplicador} = {resultado}")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Que números range(4) produz?', gabarito:'0, 1, 2, 3.' },
+          { kind:'text', prompt:'Que números range(2, 7) produz?', gabarito:'2, 3, 4, 5, 6.' },
+          { kind:'text', prompt:'Que números range(0, 20, 5) produz?', gabarito:'0, 5, 10, 15.' },
+          { kind:'text', prompt:'O valor final passado para range() é incluído na sequência?', gabarito:'Não, o valor final nunca é incluído.' },
+          { kind:'text', prompt:'Como gerar, com range(), os números de 1 a 100 (incluindo o 100)?', gabarito:'range(1, 101)' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que exiba os números pares de 0 a 20, usando range() com passo 2.', starter:'', gabarito:'for numero in range(0, 21, 2):\n    print(numero)' },
+          { kind:'code', prompt:'Escreva um programa que exiba uma contagem regressiva de 10 a 0, usando range() com passo negativo.', starter:'', gabarito:'for numero in range(10, -1, -1):\n    print(numero)' },
+          { kind:'text', prompt:'Explique por que range(1, 10) não inclui o número 10, e o que seria necessário mudar para incluí-lo.', gabarito:'range() gera números até o valor final EXCLUSIVE; para incluir o 10, seria necessário range(1, 11).' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário um número n, e gere a tabuada completa (de 1 a 10) desse número, usando range() e f-strings.', starter:'', gabarito:'n = int(input("Número: "))\nfor multiplicador in range(1, 11):\n    print(f"{n} x {multiplicador} = {n * multiplicador}")' },
+          { kind:'code', prompt:'Desafio: use range() para calcular a soma de todos os números ÍMPARES entre 1 e 50 (inclusive), sem usar if — apenas ajustando os argumentos de range() (início, fim e passo).', starter:'', gabarito:'soma = 0\nfor numero in range(1, 50, 2):\n    soma = soma + numero\nprint(soma)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'range(fim)               → 0, 1, ..., fim - 1\nrange(inicio, fim)       → inicio, ..., fim - 1\nrange(inicio, fim, passo) → inicio, inicio+passo, ..., até antes de fim\n\nO valor de "fim" NUNCA é incluído.\n"passo" negativo permite contar em ordem decrescente.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar range() nas suas três formas.',
+          'Sei que o valor final nunca é incluído na sequência gerada.',
+          'Sei usar passo positivo e negativo em range().',
+          'Sei combinar range() com for para repetir um bloco N vezes.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Que números range(3) produz?', options:['1, 2, 3','0, 1, 2','0, 1, 2, 3','1, 2'], correct:1, explanation:'range(3) → 0, 1, 2.' },
+          { q:'Que números range(2, 5) produz?', options:['2, 3, 4','2, 3, 4, 5','1, 2, 3, 4','2, 5'], correct:0, explanation:'range(2, 5) → 2, 3, 4.' },
+          { q:'O valor final de range() é incluído na sequência gerada?', options:['Sim, sempre','Não, nunca','Só se for par','Depende do passo'], correct:1, explanation:'Nunca é incluído.' },
+          { q:'Como gerar os números pares de 0 a 10 (incluindo o 10)?', options:['range(0, 10, 2)','range(0, 11, 2)','range(0, 10)','range(2, 10)'], correct:1, explanation:'range(0, 11, 2) inclui o 10.' },
+          { q:'O que acontece ao chamar range(1, 5.5)?', options:['Funciona normalmente','Gera TypeError, pois range() só aceita inteiros','Arredonda automaticamente para range(1, 5)','Gera uma sequência vazia'], correct:1, explanation:'range() só aceita inteiros: TypeError.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — A função range()', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#the-range-function' },
+          { label:'Referência da biblioteca padrão — tipo range', url:'https://docs.python.org/pt-br/3/library/stdtypes.html#range' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap23',
+  title: 'Capítulo 23 — break e continue',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como interromper um laço antes do previsto com break.',
+          'Como pular para a próxima repetição, ignorando o restante do bloco, com continue.',
+          'A diferença de comportamento entre os dois comandos.',
+          'Como usar break para implementar buscas que param assim que encontram o que procuram.'
+        ],
+        antes: 'É necessário conhecer while (Capítulo 20), for (Capítulo 21) e range() (Capítulo 22).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, todo laço que escrevemos executava exatamente as repetições previstas pela sua condição (while) ou pela sua sequência (for). Python oferece dois comandos para alterar esse comportamento padrão dentro de um laço: <span class="icode">break</span> (interrompe o laço imediatamente) e <span class="icode">continue</span> (interrompe apenas a repetição atual, pulando para a próxima).'
+        ],
+        glossary: [
+          { term:'break', def:'interrompe o laço por completo, seguindo para a primeira linha depois dele', example:'if numero == 5: break' },
+          { term:'continue', def:'interrompe apenas a repetição atual, voltando ao topo do laço para a próxima repetição (se houver)', example:'if numero == 5: continue' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'FLUXO NORMAL (sem break/continue):\n\nrepetição 1 → bloco inteiro → repetição 2 → bloco inteiro → ... → fim\n\n\nCOM break (na repetição 3, por exemplo):\n\nrepetição 1 → bloco inteiro\nrepetição 2 → bloco inteiro\nrepetição 3 → break!  → SAI do laço imediatamente\n(repetições 4, 5, ... nunca acontecem)\n\n\nCOM continue (na repetição 3, por exemplo):\n\nrepetição 1 → bloco inteiro\nrepetição 2 → bloco inteiro\nrepetição 3 → continue!  → pula o resto do bloco desta repetição\nrepetição 4 → bloco inteiro (o laço continua normalmente)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Exibir números de 1 a 10, parando ao chegar em 5.',
+        algoritmo:null,
+        code:'# Percorre os números de 1 a 10\nfor numero in range(1, 11):\n    # Quando o número for 5, interrompe o laço completamente\n    if numero == 5:\n        break\n    # Esta linha só executa para números diferentes de 5\n    print(numero)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'numero = 1  → numero == 5? → False → print(1)',
+          'numero = 2  → numero == 5? → False → print(2)',
+          'numero = 3  → numero == 5? → False → print(3)',
+          'numero = 4  → numero == 5? → False → print(4)',
+          'numero = 5  → numero == 5? → True  → break! → SAI do laço',
+          '(os números 6, 7, 8, 9, 10 nunca são visitados)'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'    if numero == 5:\n        break', explanation:'A cada repetição, verifica se numero é igual a 5. Quando for, break interrompe o laço <b>imediatamente</b> — nenhuma linha depois de break, dentro do laço, é executada naquela repetição, e nenhuma repetição seguinte acontece.' },
+          { code:'    print(numero)', explanation:'Executa normalmente para todos os números <b>antes</b> de 5 ser encontrado. Quando numero é 5, o break já interrompeu o laço antes de esta linha ser alcançada naquela repetição.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'1\n2\n3\n4',
+        modIntro:'Vamos trocar break por continue, para observar a diferença:',
+        modCode:'for numero in range(1, 11):\n    if numero == 5:\n        continue\n    print(numero)',
+        modTrace:'numero = 5  → numero == 5? → True  → continue! → pula o print desta repetição\nnumero = 6, 7, 8, 9, 10 → False → print de cada um normalmente',
+        modResult:'1\n2\n3\n4\n6\n7\n8\n9\n10',
+        modNote:'Com break, o laço para completamente ao encontrar 5 (números depois dele nunca aparecem); com continue, apenas o número 5 é "pulado" — o laço continua normalmente depois dele.',
+        runnable:true,
+        naoConfunda:'break versus continue: break ENCERRA o laço inteiro. continue apenas PULA O RESTANTE DO BLOCO daquela repetição específica, e o laço continua normalmente na próxima.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Usar break quando o objetivo era continue, ou vice-versa', code:'for numero in range(1, 11):\n    if numero % 2 == 0:\n        break   # ERRADO, se a intenção era "pular apenas os pares"\n    print(numero)', body:'Assim que o primeiro número par (2) é encontrado, o laço inteiro é interrompido — nenhum número depois dele (mesmo os ímpares) é exibido. Se a intenção era apenas "não exibir os pares, mas continuar verificando os demais", o correto seria continue.' },
+          { title:'🐞 Esperar que break interrompa apenas um if, e não o laço', code:'for numero in range(1, 5):\n    if numero == 2:\n        break\n    print(f"Processando {numero}")\nprint("Depois do laço")', body:'break interrompe o LAÇO MAIS PRÓXIMO que o envolve, não apenas o if em que está escrito. Depois do break, a execução salta diretamente para a primeira linha depois do laço inteiro.' }
+        ],
+        howToRead:'break e continue, quando usados corretamente dentro de um laço, não geram mensagens de erro — o comportamento inesperado é sempre um erro de <b>lógica</b>. Vale registrar um caso especial: usar break ou continue FORA de qualquer laço gera um erro real: <span class="icode">SyntaxError: \'break\' outside loop</span>',
+        tryIt:true,
+        tryItCode:'break'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Buscar o primeiro número múltiplo de 7 em uma sequência de 1 a 50, parando assim que ele for encontrado.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'numero = 1  → 1 % 7 = 1 → não é múltiplo → continua\nnumero = 2  → 2 % 7 = 2 → não é múltiplo → continua\n...\nnumero = 7  → 7 % 7 = 0 → é múltiplo! → exibe e break',
+        code:'# Percorre os números de 1 a 50\nfor numero in range(1, 51):\n    # Verifica se o número é múltiplo de 7\n    if numero % 7 == 0:\n        print(f"Encontrado: {numero}")\n        break',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que break faz dentro de um laço?', gabarito:'Interrompe o laço inteiro imediatamente.' },
+          { kind:'text', prompt:'O que continue faz dentro de um laço?', gabarito:'Pula o restante da repetição atual; o laço continua na próxima.' },
+          { kind:'text', prompt:'Depois de um break, o restante das repetições ainda acontece?', gabarito:'Não, o laço para completamente.' },
+          { kind:'text', prompt:'Depois de um continue, o laço para completamente?', gabarito:'Não, o laço continua normalmente.' },
+          { kind:'text', prompt:'O que acontece ao usar break fora de qualquer laço?', gabarito:'Gera SyntaxError: \'break\' outside loop.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que exiba os números de 1 a 20, mas pare (break) assim que encontrar um número maior que 15.', starter:'', gabarito:'for numero in range(1, 21):\n    if numero > 15:\n        break\n    print(numero)' },
+          { kind:'code', prompt:'Escreva um programa que exiba os números de 1 a 10, pulando (continue) os múltiplos de 3.', starter:'', gabarito:'for numero in range(1, 11):\n    if numero % 3 == 0:\n        continue\n    print(numero)' },
+          { kind:'code', prompt:'🐞 Encontre o bug: o programador queria pular os números pares e exibir apenas os ímpares, mas o programa para assim que encontra o primeiro par.\nfor numero in range(1, 10):\n    if numero % 2 == 0:\n        break\n    print(numero)', starter:'for numero in range(1, 10):\n    if numero % 2 == 0:\n        break\n    print(numero)', gabarito:'Bug: deveria usar continue, não break.\nCorreção:\nfor numero in range(1, 10):\n    if numero % 2 == 0:\n        continue\n    print(numero)' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário para digitar números repetidamente (while True, com break quando o usuário digitar "sair"), somando todos os números válidos digitados, e exibindo a soma total ao final.', starter:'', gabarito:'soma = 0\nwhile True:\n    entrada = input("Digite um número (ou \'sair\'): ")\n    if entrada == "sair":\n        break\n    soma = soma + int(entrada)\nprint(soma)' },
+          { kind:'code', prompt:'Desafio: percorra os números de 1 a 100 e exiba apenas os múltiplos de 3 que também não sejam múltiplos de 5, usando continue para pular os que não atendem à regra.', starter:'', gabarito:'for numero in range(1, 101):\n    if numero % 3 != 0:\n        continue\n    if numero % 5 == 0:\n        continue\n    print(numero)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'break     → interrompe o laço INTEIRO imediatamente\ncontinue  → pula apenas o RESTANTE da repetição atual, o laço continua\n\nfor numero in range(...):\n    if CONDIÇÃO_DE_PARAR:\n        break\n    if CONDIÇÃO_DE_PULAR:\n        continue\n    ... (código normal do laço)'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar break para interromper um laço.',
+          'Sei usar continue para pular a repetição atual.',
+          'Sei explicar a diferença de comportamento entre os dois.',
+          'Sei identificar qual dos dois usar em um problema específico.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que break faz?', options:['Pula apenas a repetição atual','Interrompe o laço inteiro imediatamente','Reinicia o laço do zero','Não tem efeito'], correct:1, explanation:'Interrompe o laço inteiro imediatamente.' },
+          { q:'O que continue faz?', options:['Interrompe o laço inteiro','Pula o restante do bloco da repetição atual, e o laço continua','Reinicia o programa','Gera um erro'], correct:1, explanation:'Pula o restante do bloco da repetição atual.' },
+          { q:'No código: for n in range(1,6): if n==3: break; print(n) — o que é exibido?', options:['1 2 3 4 5','1 2','1 2 4 5','3 4 5'], correct:1, explanation:'break interrompe ao chegar em 3: exibe 1 e 2.' },
+          { q:'No código: for n in range(1,6): if n==3: continue; print(n) — o que é exibido?', options:['1 2 3 4 5','1 2','1 2 4 5','3 4 5'], correct:2, explanation:'continue pula apenas o 3: exibe 1, 2, 4, 5.' },
+          { q:'O que acontece ao usar break fora de qualquer laço?', options:['Nada, é ignorado','Gera SyntaxError','Interrompe o programa inteiro','Reinicia o script'], correct:1, explanation:'Gera SyntaxError.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Instruções break e continue', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#break-and-continue-statements' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap24',
+  title: 'Capítulo 24 — Laços aninhados',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um laço dentro de outro laço (laço aninhado).',
+          'Como o laço interno se repete completamente para cada repetição do laço externo.',
+          'Como usar laços aninhados para gerar tabelas e padrões bidimensionais.'
+        ],
+        antes: 'É necessário conhecer for, while e range() (Capítulos 20 a 22).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Um <b>laço aninhado</b> é um laço de repetição escrito <b>dentro</b> do bloco de outro laço. Isso é útil sempre que um problema tem duas dimensões de repetição — por exemplo, "para cada linha, percorrer cada coluna".',
+          'O ponto essencial para entender laços aninhados é: <b>para cada repetição do laço externo, o laço interno é executado do início ao fim, completo</b>.'
+        ],
+        glossary: [
+          { term:'laço aninhado', def:'um laço (for ou while) colocado dentro do bloco de outro laço', example:'o laço mais interno é executado por completo a cada repetição do laço mais externo.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'for linha in range(1, 4):        ← laço EXTERNO (3 repetições)\n    for coluna in range(1, 4):   ← laço INTERNO (3 repetições, a cada volta do externo)\n        print(linha, coluna)\n\nlinha = 1:\n    coluna = 1  →  (1, 1)\n    coluna = 2  →  (1, 2)\n    coluna = 3  →  (1, 3)\nlinha = 2:\n    coluna = 1  →  (2, 1)\n    coluna = 2  →  (2, 2)\n    coluna = 3  →  (2, 3)\nlinha = 3:\n    coluna = 1  →  (3, 1)\n    coluna = 2  →  (3, 2)\n    coluna = 3  →  (3, 3)\n\nTotal de repetições: 3 (externo) × 3 (interno) = 9',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Percorrer todas as combinações de linha e coluna de 1 a 3.',
+        algoritmo:null,
+        code:'# Laço externo: controla as "linhas"\nfor linha in range(1, 4):\n    # Laço interno: controla as "colunas", repetindo por completo a cada linha\n    for coluna in range(1, 4):\n        print(f"linha {linha}, coluna {coluna}")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'linha = 1',
+          '   coluna = 1, 2, 3  → print para cada uma',
+          '   (laço interno esgotado, volta para o laço externo)',
+          'linha = 2',
+          '   coluna = 1, 2, 3  → print para cada uma',
+          'linha = 3',
+          '   coluna = 1, 2, 3  → print para cada uma'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'for linha in range(1, 4):', explanation:'Laço externo, percorrendo 1, 2, 3.' },
+          { code:'    for coluna in range(1, 4):', explanation:'Laço interno, também percorrendo 1, 2, 3. Como está indentado dentro do laço externo, ele é <b>reiniciado do zero a cada repetição</b> do laço externo.' },
+          { code:'        print(f"linha {linha}, coluna {coluna}")', explanation:'Está indentada <b>dentro</b> do laço interno (duas indentações), e por isso executa a cada repetição do laço interno — ou seja, 9 vezes ao todo.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'linha 1, coluna 1\nlinha 1, coluna 2\nlinha 1, coluna 3\nlinha 2, coluna 1\nlinha 2, coluna 2\nlinha 2, coluna 3\nlinha 3, coluna 1\nlinha 3, coluna 2\nlinha 3, coluna 3',
+        modIntro:'Um uso clássico de laços aninhados é gerar a tabuada completa, de 1 a 5. Repare que print("---") está indentado apenas uma vez — dentro do laço externo, mas fora do laço interno — por isso executa uma vez por numero_base, não por multiplicador:',
+        modCode:'for numero_base in range(1, 6):\n    for multiplicador in range(1, 11):\n        resultado = numero_base * multiplicador\n        print(f"{numero_base} x {multiplicador} = {resultado}")\n    print("---")  # separador entre uma tabuada e a próxima',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'A quantidade de indentação define A QUAL LAÇO uma linha pertence. Uma linha indentada apenas uma vez a partir do for externo pertence ao laço externo; uma linha indentada duas vezes pertence ao laço interno. Confundir esses níveis é a causa mais comum de erros de lógica em laços aninhados.',
+        extraBlocks:[
+          { title:'Desenhando padrões com laços aninhados', intro:'Laços aninhados também são muito usados para desenhar padrões com for e range(). O _ é uma convenção comum para indicar "esta variável não será usada":', code:'for linha in range(1, 5):\n    for _ in range(linha):\n        print("*", end="")\n    print()  # pula para a próxima linha ao final de cada linha do desenho', result:'*\n**\n***\n****', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Indentar print() no nível errado', code:'for linha in range(1, 4):\n    for coluna in range(1, 4):\n        print(f"linha {linha}, coluna {coluna}")\n    print("Fim da linha")', body:'Aqui, print("Fim da linha") está indentado uma vez a menos que o print() de dentro do laço interno — pertence ao laço EXTERNO, e executa apenas uma vez por linha (3 vezes no total), não uma vez por coluna.' },
+          { title:'🐞 Reutilizar o mesmo nome de variável nos dois laços', code:'for numero in range(1, 4):\n    for numero in range(1, 4):\n        print(numero)', body:'Usar numero para os dois laços faz com que o laço interno SOBRESCREVA o valor de numero do laço externo a cada repetição — o valor original do laço externo é perdido. Use nomes diferentes (ex.: linha e coluna).' },
+          { title:'🐞 Subestimar a quantidade total de repetições', code:null, body:'Um laço aninhado com um laço externo de 10 repetições e um laço interno de 10 repetições executa o bloco mais interno 100 vezes (10 × 10), não 20. Vale sempre estimar o total multiplicando as quantidades de cada nível.' }
+        ],
+        howToRead:'Laços aninhados mal escritos, como nos erros comuns acima, normalmente NÃO geram erro de execução — o programa roda, mas produz uma saída diferente da esperada (erro de lógica). A melhor forma de identificar o problema é reduzir temporariamente a quantidade de repetições e rastrear manualmente, linha por linha.',
+        tryIt:true,
+        tryItCode:'for linha in range(1, 4):\n    for coluna in range(1, 4):\n        print(f"linha {linha}, coluna {coluna}")\n    print("Fim da linha")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Desenhar um quadrado de 4x4 feito de asteriscos.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'linha = 0: coluna 0,1,2,3 → exibe **** (sem quebra) → print() quebra a linha\nlinha = 1: coluna 0,1,2,3 → exibe **** (sem quebra) → print() quebra a linha\n(e assim por diante até linha = 3)',
+        code:'# Laço externo controla as linhas do quadrado\nfor linha in range(4):\n    # Laço interno controla as colunas de cada linha\n    for coluna in range(4):\n        print("*", end="")\n    print()  # pula para a próxima linha do desenho',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um laço aninhado?', gabarito:'Um laço dentro do bloco de outro laço.' },
+          { kind:'text', prompt:'Quantas vezes o bloco mais interno de um laço aninhado executa, se o laço externo tem 3 repetições e o interno tem 4?', gabarito:'3 × 4 = 12 vezes.' },
+          { kind:'text', prompt:'O que determina a qual laço uma linha pertence, em um laço aninhado?', gabarito:'A indentação.' },
+          { kind:'text', prompt:'É recomendável usar o mesmo nome de variável para os dois laços de um aninhamento? Por quê?', gabarito:'Não é recomendável, pois o laço interno sobrescreve a variável do externo.' },
+          { kind:'text', prompt:'O que print() sozinho (sem argumentos) faz, quando usado depois de um laço interno com end=""?', gabarito:'Pula para a próxima linha do terminal (encerra a linha aberta pelos end="" anteriores).' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um laço aninhado que exiba todos os pares possíveis entre os números de 1 a 3 e as letras "A", "B", "C".', starter:'', gabarito:'for numero in range(1, 4):\n    for letra in "ABC":\n        print(numero, letra)' },
+          { kind:'code', prompt:'Escreva um programa que desenhe um triângulo retângulo de asteriscos com 5 linhas.', starter:'', gabarito:'for linha in range(1, 6):\n    for coluna in range(linha):\n        print("*", end="")\n    print()' },
+          { kind:'text', prompt:'🐞 Encontre o bug:\nfor i in range(1, 4):\n    for i in range(1, 4):\n        print(i)\nExplique por que reutilizar i nos dois laços é problemático.', gabarito:'Reutilizar i no laço interno sobrescreve o valor de i do laço externo a cada repetição, tornando o valor do laço externo inacessível/incorreto dentro do bloco.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Gere a tabuada completa de 1 a 10 (todos os números), usando laços aninhados, separando cada tabuada com uma linha de traços ("----------").', starter:'', gabarito:'for base in range(1, 11):\n    for multiplicador in range(1, 11):\n        print(f"{base} x {multiplicador} = {base * multiplicador}")\n    print("----------")' },
+          { kind:'text', prompt:'Desafio: descreva a lógica para desenhar um "tabuleiro de xadrez" 4x4, alternando "X" e "O", usando a soma dos índices de linha e coluna (par ou ímpar) para decidir qual símbolo exibir.', gabarito:'Se (linha + coluna) % 2 == 0, exibir "X"; caso contrário, exibir "O".' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'for externo in range(...):\n    for interno in range(...):\n        BLOCO MAIS INTERNO\n            → executa (repetições do externo) × (repetições do interno) vezes\n\nIndentação define a qual laço cada linha pertence.\nUse nomes de variáveis diferentes em cada nível.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei escrever um laço dentro de outro laço.',
+          'Sei calcular quantas vezes o bloco mais interno executa ao todo.',
+          'Sei usar a indentação corretamente para definir a qual laço uma linha pertence.',
+          'Sei evitar reutilizar o mesmo nome de variável em laços aninhados.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um laço aninhado?', options:['Um laço com break','Um laço dentro do bloco de outro laço','Um laço sem condição','Um tipo de if'], correct:1, explanation:'Um laço dentro do bloco de outro laço.' },
+          { q:'Se o laço externo tem 5 repetições e o interno tem 2, quantas vezes o bloco mais interno executa?', options:['7','5','2','10'], correct:3, explanation:'5 × 2 = 10.' },
+          { q:'O que determina a qual laço uma linha de código pertence, em um laço aninhado?', options:['A ordem em que foi escrita','A indentação','O nome da variável','O tipo de dado usado'], correct:1, explanation:'A indentação.' },
+          { q:'Por que reutilizar o mesmo nome de variável nos dois laços de um aninhamento é problemático?', options:['Gera erro de sintaxe','O laço interno sobrescreve o valor da variável do laço externo','O programa não executa','Não há problema algum'], correct:1, explanation:'O laço interno sobrescreve a variável do externo.' },
+          { q:'No código: for linha in range(2): for coluna in range(3): print("*",end=""); print() — quantos asteriscos são exibidos?', options:['2','3','5','6'], correct:3, explanation:'2 × 3 = 6 asteriscos.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Mais ferramentas de controle de fluxo', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'revisao4',
+  title: 'Parada para Revisão 4 — Fim da Parte IV',
+  screens: [
+    { id:'mapa', title:'Mapa mental', type:'diagram', data:{
+        intro:'Um resumo visual de tudo que vimos nos Capítulos 19 a 24.',
+        diagram:'REPETIÇÕES\n   │\n   ├── Por que repetir código manualmente é ruim\n   │      não escala, difícil de manter\n   │\n   ├── while CONDIÇÃO:\n   │      repete ENQUANTO a condição for True\n   │      exige contador atualizado manualmente (senão: laço infinito)\n   │\n   ├── for VARIAVEL in SEQUÊNCIA:\n   │      repete uma vez por item da sequência\n   │      variável atualizada automaticamente\n   │\n   ├── range(fim) / range(inicio, fim) / range(inicio, fim, passo)\n   │      gera sequência de inteiros\n   │      valor final NUNCA é incluído\n   │\n   ├── break     → interrompe o laço inteiro\n   ├── continue  → pula apenas a repetição atual\n   │\n   └── Laços aninhados\n          laço dentro de laço\n          bloco mais interno executa (externo × interno) vezes',
+        note:null
+    }},
+    { id:'tabela', title:'Comandos vistos até aqui', type:'table', data:{
+        headers:['Comando/conceito','Para que serve','Exemplo'],
+        rows:[
+          ['<code>while CONDIÇÃO:</code>','repetir enquanto for verdadeiro','<code>while contador &lt;= 3:</code>'],
+          ['<code>for VAR in SEQ:</code>','repetir por item de uma sequência','<code>for letra in "Ana":</code>'],
+          ['<code>range(a, b, p)</code>','gerar sequência de inteiros','<code>range(1, 11)</code>'],
+          ['<code>break</code>','interromper o laço inteiro','<code>if x == 5: break</code>'],
+          ['<code>continue</code>','pular a repetição atual','<code>if x == 5: continue</code>'],
+          ['laço aninhado','laço dentro de laço','<code>for l in ...: for c in ...:</code>']
+        ]
+    }},
+    { id:'errosfreq', title:'Erros frequentes', type:'list', data:{
+        intro:'Os erros mais comuns desta etapa:',
+        items:[
+          'Esquecer de atualizar o contador de um while (laço infinito).',
+          'Esperar que range(a, b) inclua o valor b.',
+          'Confundir break com continue.',
+          'Reutilizar o mesmo nome de variável em laços aninhados.',
+          'Indentar incorretamente uma linha, mudando a qual laço ela pertence.'
+        ]
+    }},
+    { id:'perguntas', title:'Perguntas rápidas', type:'qa', data:{
+        intro:'Tente responder mentalmente antes de clicar para revelar.',
+        items:[
+          { q:'Qual é a principal diferença entre while e for?', a:'while repete enquanto uma condição for verdadeira; for repete uma vez por item de uma sequência conhecida.' },
+          { q:'O que causa um laço infinito?', a:'A condição do laço nunca se tornar False (variável de controle não atualizada).' },
+          { q:'Que números range(2, 8) produz?', a:'2, 3, 4, 5, 6, 7.' },
+          { q:'Qual é a diferença entre break e continue?', a:'break interrompe o laço inteiro; continue pula apenas a repetição atual.' },
+          { q:'Quantas vezes o bloco mais interno de um laço aninhado executa, se o externo tem 4 repetições e o interno tem 5?', a:'4 × 5 = 20 vezes.' }
+        ]
+    }},
+    { id:'exrevisao', title:'Exercícios de revisão', type:'exercises', data:{
+        level:'Exercícios de revisão',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que peça números ao usuário repetidamente (while) até que ele digite um número negativo, exibindo a soma de todos os números positivos digitados.', starter:'', gabarito:'soma = 0\nnumero = float(input("Número (negativo para parar): "))\nwhile numero >= 0:\n    soma = soma + numero\n    numero = float(input("Número (negativo para parar): "))\nprint(soma)' },
+          { kind:'code', prompt:'Escreva um programa que exiba, usando for e range(), todos os múltiplos de 4 entre 1 e 100.', starter:'', gabarito:'for numero in range(4, 101, 4):\n    print(numero)' },
+          { kind:'code', prompt:'Escreva um programa que desenhe um triângulo invertido de asteriscos com 5 linhas:\n*****\n****\n***\n**\n*', starter:'', gabarito:'for linha in range(5, 0, -1):\n    for coluna in range(linha):\n        print("*", end="")\n    print()' }
+        ]
+    }},
+    { id:'desafio', title:'Pequeno desafio', type:'exercises', data:{
+        level:'Pequeno desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa jogo_da_adivinhacao_simples.py que defina um número secreto fixo (numero_secreto = 42) e peça ao usuário para tentar adivinhar, repetidamente, usando while True e break quando o número for acertado, exibindo "Muito alto!" ou "Muito baixo!" a cada tentativa incorreta.', starter:'', gabarito:'numero_secreto = 42\nwhile True:\n    tentativa = int(input("Tente adivinhar: "))\n    if tentativa == numero_secreto:\n        print("Acertou!")\n        break\n    elif tentativa > numero_secreto:\n        print("Muito alto!")\n    else:\n        print("Muito baixo!")' }
+        ]
+    }},
+    { id:'checklist', title:'Checklist de domínio da Parte IV', type:'checklist', data:{
+        items:[
+          'Sei usar while com um contador, evitando laços infinitos.',
+          'Sei usar for para percorrer strings.',
+          'Sei usar as três formas de range().',
+          'Sei usar break e continue corretamente.',
+          'Sei escrever e rastrear laços aninhados.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte V — Estruturas de Dados, onde aprenderemos listas, tuplas, conjuntos e dicionários.'
     }}
   ]
 }
