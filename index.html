@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a XI</title>
+<title>Apostila Python Interativa — Partes I a XII</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a XI · Primeiros Passos até Boas Práticas</span>
+      <span>Partes I a XII · Primeiros Passos até Ambiente Profissional</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -8406,6 +8406,412 @@ const MODULES = [
         links:[
           { label:'Documentação Python — Tutorial, seção 8: Erros e Exceções', url:'https://docs.python.org/pt-br/3/tutorial/errors.html' },
           { label:'Documentação Python — módulo pdb (depurador interativo)', url:'https://docs.python.org/pt-br/3/library/pdb.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap56',
+  title: 'Capítulo 56 — Ambientes virtuais',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Por que projetos diferentes podem precisar de versões diferentes de uma mesma biblioteca.',
+          'O que é um ambiente virtual, e o problema que ele resolve.',
+          'Como criar e ativar um ambiente virtual com o módulo venv.'
+        ],
+        antes: 'É necessário saber executar comandos no terminal (Capítulo 3) e entender o que é um módulo (Capítulo 38). Os comandos deste capítulo são executados no TERMINAL do seu computador, não neste navegador — por isso os blocos abaixo não têm botão "Executar".'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, usamos apenas módulos que já vêm prontos com o Python (como math, random, json). Mas, na prática profissional, é comum instalar <b>bibliotecas externas</b> (assunto aprofundado no Capítulo 58) — pacotes de código escritos por outras pessoas.',
+          'O problema é: diferentes projetos, no mesmo computador, podem precisar de <b>versões diferentes</b> da mesma biblioteca. Se todas as bibliotecas fossem instaladas em um único local "global", instalar uma versão nova para o Projeto B poderia quebrar o Projeto A, que dependia da versão antiga. Um <b>ambiente virtual</b> resolve isso: cria um espaço isolado, específico de um projeto.'
+        ],
+        glossary: [
+          { term:'ambiente virtual', def:'um espaço isolado, específico de um projeto, onde bibliotecas podem ser instaladas sem afetar outros projetos ou a instalação "global" do Python', example:'criado com o módulo venv, já embutido no Python.' }
+        ],
+        callout: '🧠 Entenda: imagine duas receitas de bolo que usam "farinha", mas uma pede farinha comum e a outra pede farinha sem glúten. Com um único pote de farinha, você não conseguiria preparar as duas corretamente ao mesmo tempo — precisaria de potes separados, um para cada receita.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'Computador\n   │\n   ├── Projeto A\n   │      ambiente virtual A\n   │         biblioteca_x versão 1.0\n   │\n   └── Projeto B\n          ambiente virtual B\n             biblioteca_x versão 2.0\n\nCada ambiente virtual tem SUAS PRÓPRIAS versões instaladas,\nsem conflito entre os dois projetos.',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Criando um ambiente virtual, pelo terminal, dentro da pasta de um projeto (comando de TERMINAL, não código Python):',
+        problem:'Criar um ambiente virtual para isolar as dependências de um projeto.',
+        algoritmo:null,
+        code:'python -m venv venv',
+        codeNote:'python: chama o interpretador. -m venv: diz ao Python para executar o módulo venv, já embutido na biblioteca padrão (Capítulo 38). O segundo "venv": nome da pasta criada para guardar o ambiente (por convenção, geralmente venv ou .venv).',
+        runnable:false
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'python -m venv venv',
+          'Python executa o módulo "venv"',
+          'Cria uma nova pasta chamada "venv", dentro do projeto atual',
+          'Dentro dela, uma cópia isolada do interpretador Python é preparada',
+          'Esse ambiente ainda precisa ser ATIVADO antes de ser usado'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'python -m venv venv', explanation:'python: chama o interpretador Python. -m venv: executa o módulo venv, já embutido na biblioteca padrão. O segundo "venv", ao final: o NOME DA PASTA que será criada para guardar o ambiente virtual.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Uma nova pasta chamada venv/ aparece dentro do projeto, contendo uma cópia isolada do interpretador Python e a estrutura necessária para instalar bibliotecas próprias daquele projeto.',
+        modIntro:'Depois de criado, o ambiente virtual precisa ser ATIVADO para que os próximos comandos (como instalar bibliotecas, Capítulo 57) usem esse ambiente isolado, em vez da instalação global do Python:',
+        modCode:'# No Windows (PowerShell):\nvenv\\Scripts\\Activate.ps1\n\n# No Windows (Prompt de Comando):\nvenv\\Scripts\\activate.bat\n\n# No Linux/macOS:\nsource venv/bin/activate',
+        modResult:'(venv) C:\\meu_projeto>\n\n← o terminal passa a exibir o nome do ambiente entre parênteses, no início da linha',
+        modNote:'Para desativar o ambiente virtual (voltar ao Python "global" do sistema), o comando é o mesmo em qualquer sistema operacional: deactivate',
+        runnable:false,
+        naoConfunda:'Criar um ambiente virtual (python -m venv venv) versus ativá-lo (venv\\Scripts\\Activate.ps1, ou equivalente): criar monta a estrutura de pastas necessária, uma única vez por projeto. Ativar "liga" esse ambiente na sessão atual do terminal — é necessário ativar o ambiente TODA VEZ que se abre um novo terminal para trabalhar naquele projeto.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer de ativar o ambiente virtual antes de instalar bibliotecas', code:'# Terminal SEM "(venv)" visível no início da linha\npip install requests   # instala GLOBALMENTE, não no projeto', body:'Se o ambiente não estiver ativado (sem (venv) visível no início da linha do terminal), as bibliotecas instaladas (Capítulo 57) acabam indo para a instalação global do Python, e não para o ambiente isolado do projeto — o problema que os ambientes virtuais existem justamente para evitar.' },
+          { title:'🐞 Incluir a pasta do ambiente virtual no controle de versão do projeto', code:'# .gitignore\nvenv/', body:'A pasta venv/ costuma ser grande e é facilmente recriada a partir de uma lista de dependências (Capítulo 57) — por isso, é uma prática comum não incluí-la ao compartilhar ou versionar um projeto.' },
+          { title:'🐞 Criar um novo ambiente virtual para cada execução, sem necessidade', code:'# Desnecessário: recriar "venv" toda vez\npython -m venv venv   # basta ATIVAR, não recriar', body:'O ambiente virtual só precisa ser criado UMA VEZ por projeto — depois disso, ele apenas precisa ser ativado a cada nova sessão de trabalho naquele projeto, sem necessidade de recriá-lo.' }
+        ],
+        howToRead:'Se o comando de ativação não for reconhecido pelo terminal (por exemplo, por restrições de política de execução de scripts no PowerShell), uma mensagem de erro específica do sistema operacional pode aparecer. Esse tipo de erro é específico do ambiente do computador, não do Python em si, e sua solução pode variar conforme o sistema operacional.',
+        tryIt:false
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Roteiro completo, do zero, para um novo projeto.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# 1. Criar a pasta do projeto e entrar nela\nmkdir meu_projeto\ncd meu_projeto\n\n# 2. Criar o ambiente virtual\npython -m venv venv\n\n# 3. Ativar o ambiente virtual (Windows PowerShell, por exemplo)\nvenv\\Scripts\\Activate.ps1\n\n# 4. Confirmar que está ativado (deve aparecer "(venv)" no início da linha)\n\n# 5. Ao terminar de trabalhar, desativar\ndeactivate',
+        runnable:false
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um ambiente virtual?', gabarito:'Um espaço isolado para as dependências de um projeto específico.' },
+          { kind:'text', prompt:'Que problema um ambiente virtual resolve?', gabarito:'Evita conflitos entre versões de bibliotecas usadas por projetos diferentes no mesmo computador.' },
+          { kind:'text', prompt:'Qual módulo do Python é usado para criar ambientes virtuais?', gabarito:'venv.' },
+          { kind:'text', prompt:'Qual é a diferença entre criar e ativar um ambiente virtual?', gabarito:'Criar monta a estrutura de pastas; ativar "liga" o ambiente na sessão atual do terminal.' },
+          { kind:'text', prompt:'Como saber, olhando o terminal, se um ambiente virtual está ativado?', gabarito:'Pelo prefixo (venv) (ou nome equivalente) exibido no início da linha do terminal.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'text', prompt:'Crie um ambiente virtual em uma pasta de teste no seu computador, e confirme que a pasta venv/ foi criada.', gabarito:'Resposta prática — criar o ambiente com python -m venv venv e confirmar visualmente a pasta criada.' },
+          { kind:'text', prompt:'Ative o ambiente virtual criado no exercício anterior, e confirme visualmente que ele está ativo (pelo prefixo no terminal).', gabarito:'Resposta prática — após ativar, o prefixo (venv) deve aparecer no início da linha do terminal.' },
+          { kind:'text', prompt:'Desative o ambiente virtual, e confirme que o prefixo desaparece do terminal.', gabarito:'Resposta prática — usar o comando deactivate; o prefixo (venv) deve desaparecer.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Pesquise qual comando é usado para excluir/remover um ambiente virtual, e explique por que isso é seguro.', gabarito:'Apagar a pasta do ambiente virtual (por exemplo, venv/) diretamente é seguro, pois ela pode ser recriada a qualquer momento a partir do requirements.txt; nada do código-fonte do projeto é perdido.' },
+          { kind:'text', prompt:'Explique, com suas palavras, por que a pasta venv/ normalmente não é enviada junto com o código-fonte de um projeto, e o que seria necessário para recriar esse ambiente em outro computador.', gabarito:'A pasta venv/ é grande e facilmente recriada a partir do requirements.txt (Capítulo 57); para recriar o ambiente em outro computador, basta criar um novo venv e rodar pip install -r requirements.txt.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'python -m venv venv         → cria o ambiente virtual (pasta "venv")\n\nAtivar (Windows PowerShell): venv\\Scripts\\Activate.ps1\nAtivar (Linux/macOS):        source venv/bin/activate\n\ndeactivate                   → desativa o ambiente virtual\n\nPROJETO → AMBIENTE VIRTUAL → DEPENDÊNCIAS DO PROJETO (isoladas)'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é um ambiente virtual e por que ele é útil.',
+          'Sei criar um ambiente virtual com python -m venv.',
+          'Sei ativar e desativar um ambiente virtual.',
+          'Sei por que a pasta do ambiente virtual normalmente não é compartilhada junto com o código-fonte.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um ambiente virtual?', options:['Um jogo educativo','Um espaço isolado para as dependências de um projeto específico','Um tipo de variável','Uma versão online do Python'], correct:1, explanation:'Um espaço isolado para as dependências de um projeto específico.' },
+          { q:'Qual módulo é usado para criar ambientes virtuais?', options:['math','venv','random','json'], correct:1, explanation:'venv.' },
+          { q:'Qual é a diferença entre criar e ativar um ambiente virtual?', options:['São a mesma coisa','Criar monta a estrutura de pastas; ativar "liga" o ambiente na sessão atual do terminal','Ativar cria a pasta; criar apenas a usa','Não é necessário ativar depois de criar'], correct:1, explanation:'Criar monta a estrutura; ativar "liga" o ambiente.' },
+          { q:'Qual comando desativa um ambiente virtual já ativado?', options:['exit','deactivate','stop venv','close'], correct:1, explanation:'deactivate.' },
+          { q:'Por que a pasta venv/ geralmente não é compartilhada junto com o código-fonte de um projeto?', options:['Porque ela é ilegal de compartilhar','Porque é grande e pode ser recriada facilmente a partir da lista de dependências','Porque o Python proíbe','Porque ela contém senhas'], correct:1, explanation:'Porque é grande e pode ser recriada facilmente a partir da lista de dependências.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, seção 12: Ambientes Virtuais e Pacotes', url:'https://docs.python.org/pt-br/3/tutorial/venv.html' },
+          { label:'Referência da biblioteca padrão — módulo venv', url:'https://docs.python.org/pt-br/3/library/venv.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap57',
+  title: 'Capítulo 57 — pip',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é o pip, e por que ele é necessário.',
+          'Como instalar, listar e remover bibliotecas com pip.',
+          'Como salvar e reutilizar a lista de dependências de um projeto, usando requirements.txt.'
+        ],
+        antes: 'É necessário saber usar o terminal (Capítulo 3) e ter criado e ativado um ambiente virtual (Capítulo 56). Os comandos deste capítulo são executados no TERMINAL, não neste navegador.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Já usamos módulos prontos da biblioteca padrão do Python (math, random, json), que já vêm instalados junto com o Python. Mas a comunidade Python também disponibiliza milhares de <b>bibliotecas externas</b>, que precisam ser instaladas separadamente antes de serem usadas.',
+          'pip é o gerenciador de pacotes padrão do Python, usado exatamente para isso: baixar e instalar bibliotecas externas, geralmente disponíveis no PyPI (Python Package Index, o repositório oficial).'
+        ],
+        glossary: [
+          { term:'pip', def:'o instalador de pacotes padrão do Python, usado para baixar e instalar bibliotecas externas', example:'geralmente disponíveis no PyPI (Python Package Index).' }
+        ],
+        callout: '💡 Dica: sempre execute pip install com o AMBIENTE VIRTUAL ativado (Capítulo 56), para que a biblioteca seja instalada apenas naquele projeto específico, não na instalação global do Python.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'pip install requests\n        ↓\npip contata o PyPI (repositório oficial de pacotes)\n        ↓\nBaixa o pacote "requests" e suas dependências\n        ↓\nInstala tudo dentro do ambiente virtual ATIVO no momento\n        ↓\nA partir de agora, "import requests" funciona neste projeto',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Instalando uma biblioteca externa popular (comando de TERMINAL, não código Python):',
+        problem:'Instalar a biblioteca requests no ambiente virtual ativo.',
+        algoritmo:null,
+        code:'pip install requests',
+        codeNote:'pip chama o gerenciador de pacotes. install é o subcomando para instalar uma nova biblioteca. requests é o nome do pacote a ser instalado (usada apenas como exemplo neste capítulo).',
+        runnable:false
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'pip install requests',
+          'pip verifica se o ambiente virtual está ativo',
+          'Contata o PyPI, buscando o pacote "requests"',
+          'Baixa o pacote e suas dependências necessárias',
+          'Instala tudo dentro da pasta do ambiente virtual ativo',
+          'A biblioteca "requests" já pode ser importada com "import requests"'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'pip install requests', explanation:'Instala a biblioteca requests no ambiente virtual atualmente ativado — baixando-a do PyPI, junto com suas dependências.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Collecting requests\n  Downloading requests-2.x.x-py3-none-any.whl\nInstalling collected packages: requests\nSuccessfully installed requests-2.x.x',
+        modIntro:'pip oferece outros comandos úteis, além de install:',
+        modCode:'# Lista todas as bibliotecas instaladas no ambiente atual\npip list\n\n# Exibe informações detalhadas sobre uma biblioteca instalada\npip show requests\n\n# Remove (desinstala) uma biblioteca\npip uninstall requests\n\n# Atualiza uma biblioteca já instalada para a versão mais recente\npip install --upgrade requests\n\n# Gera o arquivo requirements.txt, listando as bibliotecas instaladas\npip freeze > requirements.txt\n\n# Instala todas as bibliotecas listadas no arquivo, em outro computador\npip install -r requirements.txt',
+        modResult:'requirements.txt (exemplo de conteúdo gerado):\nrequests==2.31.0',
+        modNote:'requirements.txt: um arquivo de texto listando as bibliotecas (e suas versões) usadas por um projeto, permitindo recriar o mesmo ambiente em outro computador com um único comando.',
+        runnable:false,
+        naoConfunda:'pip install nome (instala UMA biblioteca específica) versus pip install -r requirements.txt (instala TODAS as bibliotecas listadas em um arquivo, de uma só vez). O segundo comando é o padrão usado ao configurar um projeto já existente pela primeira vez em um computador novo.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Instalar uma biblioteca sem o ambiente virtual ativado', code:'pip install requests', body:'Se nenhum ambiente virtual estiver ativo, a biblioteca é instalada GLOBALMENTE no computador, fora do isolamento explicado no Capítulo 56 — o que pode causar os mesmos conflitos entre projetos que os ambientes virtuais existem para evitar.' },
+          { title:'🐞 Digitar o nome da biblioteca incorretamente', code:'pip install reqeusts', body:'Um erro de digitação no nome do pacote resulta em uma mensagem informando que o pacote não foi encontrado no PyPI.' },
+          { title:'🐞 Esquecer de atualizar o requirements.txt após instalar uma nova biblioteca', code:'pip freeze > requirements.txt', body:'Se uma nova biblioteca for instalada, mas o requirements.txt não for regenerado, outras pessoas (ou outros ambientes) que reutilizarem esse arquivo não terão essa nova dependência instalada automaticamente.' }
+        ],
+        howToRead:'Ao tentar instalar um pacote com nome incorreto ou inexistente, pip mostra uma mensagem como:<br><span class="icode">ERROR: Could not find a version that satisfies the requirement reqeusts</span><br><span class="icode">ERROR: No matching distribution found for reqeusts</span><br><br>Isso indica que nenhum pacote com esse nome exato foi encontrado no repositório — geralmente causado por um erro de digitação.',
+        tryIt:false
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Roteiro completo, combinando ambiente virtual e pip.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# 1. Criar e ativar o ambiente virtual (Capítulo 56)\npython -m venv venv\nvenv\\Scripts\\Activate.ps1\n\n# 2. Instalar uma biblioteca\npip install requests\n\n# 3. Gerar o arquivo de dependências do projeto\npip freeze > requirements.txt\n\n# 4. Em outro momento (ou outro computador), recriar o ambiente:\npython -m venv venv\nvenv\\Scripts\\Activate.ps1\npip install -r requirements.txt',
+        runnable:false
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é pip?', gabarito:'O gerenciador de pacotes padrão do Python.' },
+          { kind:'text', prompt:'Qual comando instala uma biblioteca chamada nome_da_biblioteca?', gabarito:'pip install nome_da_biblioteca.' },
+          { kind:'text', prompt:'Qual comando lista todas as bibliotecas instaladas no ambiente atual?', gabarito:'pip list.' },
+          { kind:'text', prompt:'Para que serve o arquivo requirements.txt?', gabarito:'Listar as bibliotecas (e versões) usadas por um projeto, permitindo recriar o mesmo ambiente em outro computador.' },
+          { kind:'text', prompt:'Qual comando instala todas as bibliotecas listadas em requirements.txt?', gabarito:'pip install -r requirements.txt.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'text', prompt:'Crie e ative um ambiente virtual, e instale nele uma biblioteca de sua escolha (por exemplo, requests).', gabarito:'Resposta prática — instalar, gerar requirements.txt, e desinstalar uma biblioteca, confirmando cada etapa com pip list.' },
+          { kind:'text', prompt:'Gere o arquivo requirements.txt do ambiente criado no exercício anterior, e confirme seu conteúdo.', gabarito:'Resposta prática — usar pip freeze > requirements.txt e abrir o arquivo gerado para conferir.' },
+          { kind:'text', prompt:'Desinstale a biblioteca instalada, e confirme com pip list que ela não aparece mais.', gabarito:'Resposta prática — usar pip uninstall nome, e confirmar com pip list.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Crie um novo ambiente virtual, do zero, e use o requirements.txt gerado no exercício anterior para reinstalar a mesma biblioteca com um único comando.', gabarito:'Resposta prática recriando um ambiente virtual e usando pip install -r requirements.txt para reinstalar as dependências.' },
+          { kind:'text', prompt:'Pesquise, na documentação oficial de uma biblioteca popular de sua escolha, qual é o comando pip install recomendado para instalá-la, e escreva para que ela serve.', gabarito:'Resposta prática de pesquisa — o essencial é praticar a consulta à documentação oficial de uma biblioteca.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'pip install nome              → instala uma biblioteca\npip list                       → lista bibliotecas instaladas\npip show nome                  → detalhes de uma biblioteca\npip uninstall nome             → remove uma biblioteca\npip freeze > requirements.txt  → salva a lista de dependências\npip install -r requirements.txt → reinstala tudo a partir do arquivo\n\nSempre execute pip com o AMBIENTE VIRTUAL ativado.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é pip e para que ele serve.',
+          'Sei instalar, listar e remover bibliotecas com pip.',
+          'Sei gerar e usar um arquivo requirements.txt.',
+          'Sei por que instalar bibliotecas com o ambiente virtual ativado é importante.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é pip?', options:['Um tipo de dado do Python','O gerenciador de pacotes padrão do Python','Um erro comum','Um módulo da biblioteca padrão para matemática'], correct:1, explanation:'O gerenciador de pacotes padrão do Python.' },
+          { q:'Qual comando instala a biblioteca requests?', options:['pip get requests','pip install requests','python install requests','import requests'], correct:1, explanation:'pip install requests.' },
+          { q:'Para que serve pip freeze > requirements.txt?', options:['Apaga todas as bibliotecas instaladas','Salva a lista de bibliotecas instaladas em um arquivo','Instala uma nova biblioteca','Atualiza o Python'], correct:1, explanation:'Salva a lista de bibliotecas instaladas em um arquivo.' },
+          { q:'Qual comando reinstala todas as bibliotecas listadas em requirements.txt?', options:['pip install requirements.txt','pip install -r requirements.txt','pip load requirements.txt','pip freeze requirements.txt'], correct:1, explanation:'pip install -r requirements.txt.' },
+          { q:'Por que é importante ativar o ambiente virtual antes de usar pip install?', options:['Não é importante, tanto faz','Para garantir que a biblioteca seja instalada apenas naquele projeto, sem afetar outros','Porque pip só funciona com o ambiente ativado','Porque pip apaga o Python global caso contrário'], correct:1, explanation:'Para garantir que a biblioteca seja instalada apenas naquele projeto.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, seção 12.2: Instalando Pacotes', url:'https://docs.python.org/pt-br/3/tutorial/venv.html#installing-packages-with-pip' },
+          { label:'Documentação oficial do pip', url:'https://pip.pypa.io/' },
+          { label:'PyPI — Python Package Index', url:'https://pypi.org/' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap58',
+  title: 'Capítulo 58 — Bibliotecas e dependências',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'A diferença precisa entre módulo, pacote, biblioteca e dependência.',
+          'Como esses quatro conceitos se relacionam entre si.',
+          'Como avaliar, de forma responsável, se vale a pena adicionar uma nova dependência a um projeto.'
+        ],
+        antes: 'É necessário conhecer módulos (Capítulo 38), pacotes (Capítulo 40) e pip (Capítulo 57).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Ao longo desta apostila, usamos várias vezes os termos "módulo", "pacote", "biblioteca" e "dependência" — às vezes de forma intercambiável. Este capítulo organiza, com precisão técnica, o que cada um realmente significa.'
+        ],
+        glossary: [
+          { term:'módulo', def:'um único arquivo Python (.py) contendo código reutilizável', example:null },
+          { term:'pacote', def:'uma pasta contendo vários módulos relacionados, organizada junto com um arquivo __init__.py', example:null },
+          { term:'biblioteca', def:'um conjunto (geralmente maior) de módulos e/ou pacotes, publicado para reutilização', example:'pode ser da biblioteca padrão (math, json) ou externa, instalada via pip (requests).' },
+          { term:'dependência', def:'qualquer biblioteca externa da qual um projeto depende para funcionar corretamente', example:null }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'seu_projeto/\n    principal.py\n    requirements.txt        ← lista as DEPENDÊNCIAS do projeto\n    financeiro/               ← um PACOTE seu\n        __init__.py\n        juros.py               ← um MÓDULO seu\n\nprincipal.py:\n    import math                 ← MÓDULO da biblioteca padrão\n    import requests              ← BIBLIOTECA externa (uma DEPENDÊNCIA)\n    from financeiro import juros ← seu próprio MÓDULO, dentro de um PACOTE seu',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Três importações lado a lado, cada uma representando um conceito diferente (financeiro é um pacote fictício deste exemplo — por isso este bloco é apenas ilustrativo, não executável):',
+        problem:'Identificar módulo, biblioteca externa e módulo próprio em um mesmo programa.',
+        algoritmo:null,
+        code:'import math          # módulo da biblioteca padrão\nimport requests       # biblioteca externa (instalada com pip install requests)\nfrom financeiro import juros   # módulo próprio, dentro de um pacote próprio',
+        codeNote:'math: MÓDULO da biblioteca padrão — já vem com o Python. requests: BIBLIOTECA EXTERNA — precisou ser instalada com pip install requests, e é uma DEPENDÊNCIA deste projeto. juros: MÓDULO PRÓPRIO, dentro do PACOTE PRÓPRIO "financeiro".',
+        runnable:false
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'import math → Python já sabe onde encontrar "math" (biblioteca padrão, instalada junto com o próprio Python)',
+          'import requests → Python procura "requests" nas bibliotecas INSTALADAS no ambiente virtual ativo',
+          'Se "requests" não estiver instalada, o Python gera ModuleNotFoundError',
+          'from financeiro import juros → Python procura a pasta "financeiro" (pacote próprio) dentro do projeto',
+          'Carrega o módulo "juros" de dentro dela'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Este capítulo tem o papel de consolidar o vocabulário técnico, não de introduzir sintaxe nova. Clique na linha.',
+        lines:[
+          { code:'import math', explanation:'MÓDULO da biblioteca padrão — já vem com o Python, não precisa de instalação.' },
+          { code:'import requests', explanation:'BIBLIOTECA EXTERNA — precisa ser instalada com pip install requests (Capítulo 57), e é uma DEPENDÊNCIA deste projeto.' },
+          { code:'from financeiro import juros', explanation:'juros é um MÓDULO PRÓPRIO, dentro do PACOTE PRÓPRIO "financeiro" — código criado por você, não uma biblioteca externa.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Este capítulo é conceitual — não há uma "saída" única a ser exibida; o objetivo é a clareza terminológica.',
+        modIntro:null,
+        modCode:null,
+        modResult:null,
+        modNote:null,
+        runnable:false,
+        naoConfunda:'Todo pacote e todo módulo da biblioteca padrão são, em certo sentido, parte de "bibliotecas" — mas nem toda biblioteca é uma dependência. Uma biblioteca só é chamada de dependência EM RELAÇÃO A UM PROJETO ESPECÍFICO que precisa dela: requests é uma dependência do seu projeto se, e somente se, o seu projeto realmente a importa e usa.'
+    }},
+    { id:'tabela', title:'Exemplos concretos', type:'table', data:{
+        headers:['Termo','Exemplo','De onde vem'],
+        rows:[
+          ['Módulo (biblioteca padrão)','<code>math</code>, <code>random</code>, <code>json</code>, <code>datetime</code>','já vem com o Python'],
+          ['Módulo (próprio)','<code>calculadora.py</code> (Capítulo 39)','criado por você'],
+          ['Pacote (próprio)','<code>financeiro/</code> (Capítulo 40)','criado por você'],
+          ['Biblioteca (padrão)','a <code>math</code> inteira, como conjunto','já vem com o Python'],
+          ['Biblioteca (externa)','<code>requests</code> (exemplo deste capítulo)','instalada com pip install'],
+          ['Dependência','qualquer biblioteca externa listada em <code>requirements.txt</code>','específica de cada projeto']
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Usar "biblioteca" e "módulo" como sinônimos perfeitos, sempre', code:'# módulo: UM arquivo\n# biblioteca: geralmente um CONJUNTO maior\n#             (pode conter vários módulos e/ou pacotes)', body:'Embora, na prática cotidiana, muitos programadores usem esses termos de forma mais solta, é útil saber a distinção precisa.' },
+          { title:'🐞 Adicionar dependências desnecessárias a um projeto', code:'# Antes de instalar uma nova dependência, pergunte-se:\n# "o que já está na biblioteca padrão resolveria isso?"', body:'Cada nova dependência instalada é mais um componente externo do qual o projeto passa a depender — mais uma coisa que pode ficar desatualizada, ter vulnerabilidades, ou parar de ser mantida.' },
+          { title:'🐞 Esquecer que dependências externas variam entre versões', code:'# requirements.txt\nrequests==2.31.0   # NÃO apenas "requests"', body:'Diferentes versões de uma mesma biblioteca externa podem se comportar de forma diferente — por isso requirements.txt registra não apenas o nome, mas também a versão exata de cada dependência.' }
+        ],
+        howToRead:'Ao tentar importar uma biblioteca externa que ainda não foi instalada no ambiente virtual atual, o Python mostra: <span class="icode">ModuleNotFoundError: No module named \'requests\'</span><br><br>A solução é sempre a mesma: confirmar que o ambiente virtual correto está ativado (Capítulo 56), e instalar a dependência faltante com pip install (Capítulo 57).',
+        tryIt:true,
+        tryItCode:'import math\nprint(math.sqrt(16))\n\nimport requests   # biblioteca externa, NAO instalada neste ambiente\nprint("Esta linha nao sera executada")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Para um projeto fictício de "consulta de previsão do tempo", classificar cada componente usado, segundo os quatro conceitos deste capítulo.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'Componente: json                     → MÓDULO da biblioteca padrão\nComponente: requests                  → BIBLIOTECA EXTERNA, e uma\n                                         DEPENDÊNCIA deste projeto\nComponente: previsao/formatador.py    → MÓDULO PRÓPRIO\nComponente: pasta "previsao/"          → PACOTE PRÓPRIO',
+        runnable:false
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um módulo?', gabarito:'Um único arquivo .py reutilizável.' },
+          { kind:'text', prompt:'O que é um pacote?', gabarito:'Uma pasta contendo vários módulos relacionados.' },
+          { kind:'text', prompt:'O que é uma biblioteca?', gabarito:'Um conjunto de módulos/pacotes publicado para reutilização (da biblioteca padrão ou externa).' },
+          { kind:'text', prompt:'O que é uma dependência?', gabarito:'Uma biblioteca externa da qual um projeto específico depende para funcionar.' },
+          { kind:'text', prompt:'Toda biblioteca é uma dependência de qualquer projeto? Justifique.', gabarito:'Não — só é dependência em relação a um projeto que realmente a utiliza.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'text', prompt:'Para um projeto que usa import math, import random, e um módulo próprio utilidades.py, classifique cada componente segundo os termos deste capítulo.', gabarito:'math e random: módulos da biblioteca padrão; utilidades.py: módulo próprio.' },
+          { kind:'text', prompt:'Explique, com suas palavras, por que o requirements.txt registra versões específicas das dependências, e não apenas seus nomes.', gabarito:'Porque diferentes versões de uma mesma biblioteca podem se comportar de forma diferente; registrar a versão exata garante reprodutibilidade.' },
+          { kind:'text', prompt:'Reflita e escreva: antes de adicionar uma biblioteca externa a um projeto, que pergunta vale a pena fazer primeiro?', gabarito:'"O que já está disponível na biblioteca padrão resolveria esse problema, sem precisar de algo externo?"' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Escolha um dos projetos que você já construiu nesta apostila (por exemplo, o Projeto 4, Jogo de Adivinhação, que usa o módulo random). Liste todos os módulos, pacotes e dependências externas usados nele, classificando cada um corretamente.', gabarito:'Resposta prática — por exemplo, o Projeto 4 (Jogo de Adivinhação) usa o módulo random, da biblioteca padrão, sem dependências externas.' },
+          { kind:'text', prompt:'Escreva, em suas palavras, uma explicação curta da diferença entre módulo, pacote, biblioteca e dependência, como se estivesse explicando para alguém que ainda não leu este capítulo.', gabarito:'Resposta prática — o essencial é distinguir: módulo (um arquivo), pacote (pasta de módulos), biblioteca (conjunto publicado para reuso) e dependência (biblioteca externa que UM projeto específico usa).' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'MÓDULO       → um arquivo .py\nPACOTE       → uma pasta com vários módulos relacionados\nBIBLIOTECA   → um conjunto de módulos/pacotes, publicado para reutilização\n               (pode ser da biblioteca padrão, ou externa via pip)\nDEPENDÊNCIA  → uma biblioteca EXTERNA da qual UM PROJETO ESPECÍFICO depende\n\nNem toda biblioteca é dependência de todo projeto —\nsó é dependência quando o projeto realmente a utiliza.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei diferenciar módulo, pacote, biblioteca e dependência.',
+          'Sei classificar corretamente os componentes de um projeto real.',
+          'Sei por que evitar dependências desnecessárias.',
+          'Sei por que requirements.txt registra versões específicas.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você concluiu a Parte XII — Ambiente Profissional, e está pronto(a) para avançar para a Parte XIII — Projetos, onde vamos aplicar tudo o que foi aprendido em programas completos.'
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um módulo?', options:['Uma pasta com vários arquivos','Um único arquivo Python reutilizável','Uma biblioteca externa, sempre','Um erro de importação'], correct:1, explanation:'Um único arquivo Python reutilizável.' },
+          { q:'O que é um pacote?', options:['Um único arquivo .py','Uma pasta contendo vários módulos relacionados','O mesmo que uma dependência','Um tipo de variável'], correct:1, explanation:'Uma pasta contendo vários módulos relacionados.' },
+          { q:'O que caracteriza uma dependência?', options:['Qualquer módulo da biblioteca padrão','Uma biblioteca externa da qual um projeto específico depende para funcionar','Qualquer arquivo .py do projeto','Um erro de sintaxe'], correct:1, explanation:'Uma biblioteca externa da qual um projeto específico depende.' },
+          { q:'Toda biblioteca é, automaticamente, uma dependência de qualquer projeto?', options:['Sim, sempre','Não, só é dependência em relação a um projeto que realmente a utiliza','Sim, mas apenas bibliotecas externas','Não existe essa distinção'], correct:1, explanation:'Não, só é dependência em relação a um projeto que realmente a utiliza.' },
+          { q:'Por que requirements.txt registra a versão exata de cada dependência?', options:['Para ocupar mais espaço','Para garantir que o comportamento do projeto seja reproduzível em qualquer computador','Porque o Python exige isso','Não há motivo específico'], correct:1, explanation:'Para garantir reprodutibilidade.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, capítulo 6: Módulos', url:'https://docs.python.org/pt-br/3/tutorial/modules.html' },
+          { label:'Documentação Python — Tutorial, seção 12: Ambientes Virtuais e Pacotes', url:'https://docs.python.org/pt-br/3/tutorial/venv.html' },
+          { label:'PyPI — Python Package Index', url:'https://pypi.org/' }
         ]
     }}
   ]
