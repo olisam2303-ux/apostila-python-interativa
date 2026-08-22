@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a VI</title>
+<title>Apostila Python Interativa — Partes I a VII</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a VI · Primeiros Passos até Funções</span>
+      <span>Partes I a VII · Primeiros Passos até Organização do Código</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -5872,6 +5872,402 @@ const MODULES = [
           'Sei usar valores padrão, argumentos nomeados e *args.'
         ],
         finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte VII — Organização do Código, onde aprenderemos módulos e pacotes.'
+    }}
+  ]
+},
+{
+  id: 'cap38',
+  title: 'Capítulo 38 — Módulos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um módulo em Python.',
+          'Como usar import para acessar funções de um módulo.',
+          'A diferença entre import modulo e from modulo import item.',
+          'Alguns módulos úteis da biblioteca padrão: math, random e datetime.'
+        ],
+        antes: 'É necessário saber criar e chamar funções (Parte VI).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Um <b>módulo</b> é um arquivo Python (.py) contendo código — geralmente funções, mas também variáveis e outras definições — que pode ser <b>importado</b> e reutilizado em outros programas. O próprio Python já vem com uma grande quantidade de módulos prontos, reunidos na chamada <b>biblioteca padrão</b>.',
+          'Depois de importado, acessamos o conteúdo do módulo usando um ponto (.), da mesma forma que já fazíamos com métodos: math.sqrt(16) chama a função sqrt (raiz quadrada) que pertence ao módulo math.'
+        ],
+        glossary: [
+          { term:'módulo', def:'um arquivo Python contendo código reutilizável (funções, variáveis, etc.), que pode ser importado em outros programas com import', example:null },
+          { term:'import', def:'instrução usada para trazer o conteúdo de um módulo para dentro do programa atual', example:'import math' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'import math\n        ↓\nPython carrega o módulo "math", disponibilizando tudo que ele contém\n        ↓\nmath.sqrt(16)\n        ↓\nAcessa a função "sqrt" DENTRO do módulo "math"\n        ↓\nCalcula a raiz quadrada de 16\n        ↓\n4.0',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Calcular a raiz quadrada de 16 usando o módulo math.',
+        algoritmo:null,
+        code:'# Importa o módulo "math", disponibilizando suas funções matemáticas\nimport math\n\n# Usa a função sqrt() do módulo math, para calcular a raiz quadrada\nprint(math.sqrt(16))',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'import math',
+          'Python localiza e carrega o módulo "math"',
+          'Todo o conteúdo de "math" fica disponível através do prefixo "math."',
+          'math.sqrt(16)',
+          'Python chama a função sqrt, dentro de math, com o argumento 16',
+          'Calcula: 4.0 → print(4.0) → Exibe: 4.0'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'import math', explanation:'Carrega o módulo math, tornando todo o seu conteúdo acessível através do prefixo math.' },
+          { code:'print(math.sqrt(16))', explanation:'math.sqrt(16) chama a função sqrt (do inglês, square root, raiz quadrada), pertencente ao módulo math, passando 16 como argumento.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'4.0',
+        modIntro:'O módulo math oferece várias funções e constantes úteis. Também é possível importar apenas itens específicos, usando from, sem precisar do prefixo do módulo depois:',
+        modCode:'import math\n\nprint(math.sqrt(25))       # raiz quadrada: 5.0\nprint(math.pi)              # constante pi: 3.141592653589793\nprint(math.floor(4.7))      # arredonda para baixo: 4\nprint(math.ceil(4.2))       # arredonda para cima: 5\n\nfrom math import sqrt\nprint(sqrt(16))   # sem o prefixo "math."',
+        modResult:'5.0\n3.141592653589793\n4\n5\n4.0',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'import modulo versus from modulo import item: a primeira forma importa o módulo INTEIRO, exigindo o prefixo (math.sqrt) para acessar qualquer coisa dentro dele. A segunda forma importa APENAS o item especificado, tornando-o disponível diretamente pelo nome (sqrt, sem math.). A primeira forma é geralmente preferida, pois deixa claro de qual módulo cada função vem.',
+        extraBlocks:[
+          { title:'Os módulos random e datetime', intro:'random.randint(a, b) sorteia um número inteiro entre a e b, incluindo AMBOS os limites — diferente de range(), que exclui o valor final. datetime é útil para trabalhar com datas (o resultado abaixo varia conforme quando você executar):', code:'import random\n\nnumero_sorteado = random.randint(1, 10)\nprint(numero_sorteado)\n\nimport datetime\n\nhoje = datetime.date.today()\nprint(hoje)', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer o prefixo do módulo depois de import modulo', code:'import math\nprint(sqrt(16))', body:'Como o import foi feito na forma import math (sem from), é necessário usar math.sqrt(16), com o prefixo. Sem ele, o Python não reconhece sqrt como algo existente.' },
+          { title:'🐞 Tentar usar um módulo sem importá-lo primeiro', code:'print(math.sqrt(16))', body:'Sem a linha import math antes, o Python não conhece math, e gera erro.' },
+          { title:'🐞 Escrever o nome do módulo errado', code:'import maths', body:'O nome correto do módulo em Python é math (sem "s" no final) — um erro de digitação impede a importação.' }
+        ],
+        howToRead:"Ao tentar usar um módulo não importado: <span class=\"icode\">NameError: name 'math' is not defined</span><br><br>Ao tentar importar um módulo com nome incorreto ou inexistente: <span class=\"icode\">ModuleNotFoundError: No module named 'maths'</span>",
+        tryIt:true,
+        tryItCode:'print(math.sqrt(16))'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Sortear um número aleatório entre 1 e 100, e calcular sua raiz quadrada.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Importa os módulos necessários\nimport random\nimport math\n\n# Sorteia um número entre 1 e 100 (ambos incluídos)\nnumero = random.randint(1, 100)\n\n# Calcula a raiz quadrada do número sorteado\nraiz = math.sqrt(numero)\n\n# Exibe os resultados\nprint(f"Número sorteado: {numero}")\nprint(f"Raiz quadrada: {raiz:.2f}")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um módulo em Python?', gabarito:'Um arquivo Python reutilizável, importável por outros programas.' },
+          { kind:'text', prompt:'O que a instrução import faz?', gabarito:'Carrega o conteúdo de um módulo para o programa atual.' },
+          { kind:'text', prompt:'Qual é a diferença entre import math e from math import sqrt?', gabarito:'import math exige o prefixo math. para acessar seu conteúdo; from math import sqrt importa apenas sqrt, sem prefixo.' },
+          { kind:'text', prompt:'Qual módulo é usado para gerar valores aleatórios?', gabarito:'random' },
+          { kind:'text', prompt:'O que math.sqrt(9) retorna?', gabarito:'3.0' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que importe math e exiba o valor de math.pi com duas casas decimais.', starter:'', gabarito:'import math\nprint(f"{math.pi:.2f}")' },
+          { kind:'code', prompt:'Escreva um programa que importe random e simule o lançamento de um dado de 6 faces, usando random.randint(1, 6).', starter:'', gabarito:'import random\nprint(random.randint(1, 6))' },
+          { kind:'code', prompt:'Escreva um programa que importe datetime e exiba a data de hoje.', starter:'', gabarito:'import datetime\nprint(datetime.date.today())' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Sorteie 5 números aleatórios entre 1 e 60 (simulando um sorteio de loteria simplificado), armazenando-os em uma lista, e exiba a lista organizada em ordem crescente com .sort().', starter:'', gabarito:'import random\nnumeros = []\nfor _ in range(5):\n    numeros.append(random.randint(1, 60))\nnumeros.sort()\nprint(numeros)' },
+          { kind:'text', prompt:'Desafio: pesquise (com help(math), ou observando exemplos) mais duas funções do módulo math além das apresentadas, e descreva o uso de cada uma.', gabarito:'Resposta aberta — ex.: math.pow(base, expoente), math.factorial(n).' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'import modulo              → acessa com modulo.item\nfrom modulo import item    → acessa diretamente com item (sem prefixo)\n\nmath     → funções matemáticas (sqrt, pi, floor, ceil, ...)\nrandom   → valores aleatórios (randint, choice, ...)\ndatetime → datas e horários'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei importar um módulo com import.',
+          'Sei usar from modulo import item.',
+          'Sei usar funções básicas de math, random e datetime.',
+          'Sei que é necessário importar um módulo antes de usá-lo.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que import math faz?', options:['Cria um novo módulo chamado math','Carrega o módulo math, disponibilizando seu conteúdo','Exibe o conteúdo de math na tela','Apaga o módulo math'], correct:1, explanation:'Carrega o módulo math.' },
+          { q:'Como acessar a função sqrt depois de import math (sem from)?', options:['sqrt(16)','math.sqrt(16)','math->sqrt(16)','import.sqrt(16)'], correct:1, explanation:'math.sqrt(16), com o prefixo.' },
+          { q:'O que random.randint(1, 6) faz?', options:['Sempre retorna 1','Sorteia um número inteiro entre 1 e 6, incluindo ambos','Sorteia um número entre 1 e 5, excluindo o 6','Gera um erro'], correct:1, explanation:'Sorteia entre 1 e 6, incluindo ambos.' },
+          { q:'O que acontece ao usar um módulo sem importá-lo antes?', options:['Funciona normalmente','Gera NameError','O Python importa automaticamente','Gera SyntaxError'], correct:1, explanation:'Gera NameError.' },
+          { q:'Qual módulo é usado para trabalhar com datas?', options:['math','random','datetime','time_module'], correct:2, explanation:'datetime.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Módulos', url:'https://docs.python.org/pt-br/3/tutorial/modules.html' },
+          { label:'Referência da biblioteca padrão — math', url:'https://docs.python.org/pt-br/3/library/math.html' },
+          { label:'Referência da biblioteca padrão — random', url:'https://docs.python.org/pt-br/3/library/random.html' },
+          { label:'Referência da biblioteca padrão — datetime', url:'https://docs.python.org/pt-br/3/library/datetime.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap39',
+  title: 'Capítulo 39 — Criando seus próprios módulos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como transformar um arquivo .py próprio em um módulo reutilizável.',
+          'Como importar funções de um arquivo para outro, dentro do mesmo projeto.',
+          'Por que organizar um programa em vários arquivos facilita a manutenção.'
+        ],
+        antes: 'É necessário saber criar funções (Parte VI) e importar módulos prontos do Python (Capítulo 38).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'No capítulo anterior, importamos módulos <b>prontos</b>, que já vêm com o Python. Mas qualquer arquivo .py que você mesmo escrever também pode se tornar um módulo, importável por <b>outro</b> arquivo .py — desde que os dois estejam organizados corretamente (geralmente, na mesma pasta).',
+          'O nome do módulo, ao importar, é simplesmente o <b>nome do arquivo</b>, sem a extensão .py. Por exemplo, um arquivo chamado calculadora.py é importado como import calculadora.'
+        ],
+        glossary: []
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'Pasta do projeto:\n   calculadora.py     ← módulo criado por você\n   principal.py       ← programa que USA o módulo\n\ncalculadora.py:\n   def somar(a, b):\n       return a + b\n\nprincipal.py:\n   import calculadora\n   resultado = calculadora.somar(3, 4)\n   print(resultado)\n\nRelação entre os arquivos:\n\n   principal.py  ──import──►  calculadora.py\n        │                            │\n   usa calculadora.somar(...)   define somar(a, b)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Nesta apostila interativa, os dois arquivos (calculadora.py e principal.py) são mostrados separadamente para refletir a organização real, e depois combinados em um único bloco executável — na prática, cada um ficaria em seu próprio arquivo.',
+        problem:'Arquivo calculadora.py:\ndef somar(a, b):\n    return a + b\n\nArquivo principal.py (na mesma pasta):\nimport calculadora\nresultado = calculadora.somar(3, 4)\nprint(resultado)',
+        algoritmo:null,
+        code:'# --- conteúdo de calculadora.py ---\n# Este arquivo é um módulo: define funções para serem usadas por outros arquivos\n\n# Função que soma dois valores e devolve o resultado\ndef somar(a, b):\n    return a + b\n\n# --- conteúdo de principal.py (aqui simulado no mesmo bloco) ---\n# Em um projeto real: import calculadora\n\n# Chama a função "somar", que pertence ao módulo calculadora\nresultado = somar(3, 4)\n\n# Exibe o resultado\nprint(resultado)',
+        codeNote:'Em um arquivo separado, a chamada seria calculadora.somar(3, 4), com o prefixo do módulo.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'Ao executar: python principal.py',
+          'import calculadora',
+          'Python procura um arquivo chamado calculadora.py na mesma pasta',
+          'Encontra e carrega o conteúdo desse arquivo (a função somar)',
+          'resultado = calculadora.somar(3, 4)',
+          'Chama a função somar, definida em calculadora.py, com a = 3, b = 4',
+          'Devolve 7 → resultado = 7 → print(resultado) → Exibe: 7'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'import calculadora   (em principal.py)', explanation:'Importa o arquivo calculadora.py como um módulo, tornando somar acessível através do prefixo calculadora.' },
+          { code:'resultado = calculadora.somar(3, 4)', explanation:'Chama a função somar, do módulo calculadora, exatamente como faríamos com qualquer módulo pronto do Python (Capítulo 38).' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'7',
+        modIntro:'Vamos adicionar mais funções ao módulo calculadora.py, e usá-las no principal.py. Repare que também é possível importar apenas funções específicas do seu próprio módulo, com from:',
+        modCode:'# calculadora.py\ndef somar(a, b):\n    return a + b\n\ndef subtrair(a, b):\n    return a - b\n\ndef multiplicar(a, b):\n    return a * b\n\n# principal.py (simulado no mesmo bloco)\nprint(somar(10, 5))\nprint(subtrair(10, 5))\nprint(multiplicar(10, 5))',
+        modResult:'15\n5\n50',
+        modNote:'Em arquivos separados: import calculadora, depois calculadora.somar(...), calculadora.subtrair(...), etc. Ou, importando só uma função: from calculadora import somar; somar(2, 3) — sem o prefixo.',
+        runnable:true,
+        naoConfunda:'Um módulo importável PRECISA ESTAR ACESSÍVEL para o arquivo que o importa — na forma mais simples, isso significa estar na MESMA PASTA. Organizações mais avançadas de projeto (com subpastas, pacotes) serão vistas no próximo capítulo.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar importar um módulo que está em outra pasta', code:'import calculadora', body:'Se calculadora.py não estiver na mesma pasta que o arquivo que faz o import (nem em um local que o Python saiba procurar), a importação falha.' },
+          { title:'🐞 Nomear o próprio arquivo com o nome de um módulo já existente do Python', code:'# arquivo chamado math.py, na mesma pasta de um programa que faz "import math"', body:'Se você criar um arquivo chamado math.py, random.py, ou qualquer outro nome que já pertence à biblioteca padrão, seu arquivo pode acabar sendo importado NO LUGAR do módulo oficial, causando comportamento inesperado.' },
+          { title:'🐞 Esquecer que alterações no módulo exigem salvar o arquivo antes de testar', code:null, body:'Assim como vimos no Capítulo 3, alterações em calculadora.py só têm efeito na próxima execução de principal.py depois de o arquivo ser salvo.' }
+        ],
+        howToRead:"Ao tentar importar um módulo próprio que não existe (ou está no lugar errado), o Python mostra: <span class=\"icode\">ModuleNotFoundError: No module named 'calculadora'</span><br><br>A solução é confirmar que o arquivo calculadora.py realmente existe, e está na mesma pasta que o arquivo que tenta importá-lo."
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Organizar funções de validação de dados em um módulo separado, e usá-las no programa principal.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# validacoes.py\ndef eh_maior_de_idade(idade):\n    return idade >= 18\n\ndef eh_email_valido(email):\n    return "@" in email\n\n# principal.py (simulado no mesmo bloco)\nidade = 20\nemail = "ana@exemplo.com"\n\nif eh_maior_de_idade(idade):\n    print("Maior de idade")\n\nif eh_email_valido(email):\n    print("E-mail válido")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é necessário para que um arquivo .py possa ser importado por outro?', gabarito:'Estar acessível ao arquivo que o importa (na forma mais simples, na mesma pasta).' },
+          { kind:'text', prompt:'Como o nome de um módulo próprio se relaciona com o nome do arquivo?', gabarito:'É o nome do arquivo, sem a extensão .py.' },
+          { kind:'text', prompt:'É necessário que os dois arquivos estejam na mesma pasta (na forma mais simples de importação)?', gabarito:'Sim, na forma básica apresentada.' },
+          { kind:'text', prompt:'O que acontece se você nomear seu próprio arquivo random.py, na mesma pasta de um programa que já usa import random?', gabarito:'Pode causar conflito com o módulo oficial random do Python.' },
+          { kind:'text', prompt:'Como importar apenas uma função específica de um módulo próprio?', gabarito:'from meu_modulo import funcao' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie (simule) um módulo saudacoes.py com uma função bom_dia(nome) que exiba uma saudação, e "importe-a" chamando-a com pelo menos dois nomes diferentes.', starter:'', gabarito:'# saudacoes.py\ndef bom_dia(nome):\n    print(f"Bom dia, {nome}!")\n\n# principal.py\nbom_dia("Ana")\nbom_dia("Bruno")' },
+          { kind:'code', prompt:'Crie (simule) um módulo matematica.py com uma função eh_par(numero), e use-a para classificar três números diferentes.', starter:'', gabarito:'# matematica.py\ndef eh_par(numero):\n    return numero % 2 == 0\n\n# principal.py\nprint(eh_par(4))\nprint(eh_par(7))\nprint(eh_par(10))' },
+          { kind:'text', prompt:'Explique por que separar funções de validação em um módulo próprio pode facilitar a manutenção de um sistema maior.', gabarito:'Evita duplicar a lógica em várias partes do sistema e centraliza a manutenção — uma correção no módulo se reflete em todo lugar que o utiliza.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie (simule) um módulo financeiro.py com calcular_juros(valor, taxa), que devolve o valor dos juros, e calcular_montante(valor, taxa), que usa a primeira função internamente. Use as duas no programa principal.', starter:'', gabarito:'# financeiro.py\ndef calcular_juros(valor, taxa):\n    return valor * taxa\n\ndef calcular_montante(valor, taxa):\n    return valor + calcular_juros(valor, taxa)\n\n# principal.py\nprint(calcular_montante(1000, 0.05))' },
+          { kind:'text', prompt:'Desafio: descreva como reorganizar um programa anterior (como a Calculadora), separando as funções de cálculo em um módulo próprio, e mantendo no arquivo principal apenas a interação com o usuário.', gabarito:'Resposta aberta — as funções somar, subtrair etc. iriam para calculadora.py; o arquivo principal.py ficaria apenas com input(), print() e as chamadas às funções importadas.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'meu_modulo.py:\n   def funcao():\n       ...\n\nprincipal.py:\n   import meu_modulo\n   meu_modulo.funcao()\n\n   ou\n\n   from meu_modulo import funcao\n   funcao()\n\nO nome do módulo = nome do arquivo, sem ".py"\nOs arquivos precisam estar acessíveis um ao outro (mesma pasta, na forma mais simples)'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei transformar um arquivo .py em um módulo importável.',
+          'Sei importar e usar funções de um módulo próprio.',
+          'Sei que o nome do módulo é o nome do arquivo, sem .py.',
+          'Sei evitar nomear meus próprios arquivos como módulos já existentes do Python.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Se você criar utilidades.py, como ele é importado em outro arquivo?', options:['import utilidades.py','import utilidades','from py import utilidades','include utilidades'], correct:1, explanation:'import utilidades, sem a extensão.' },
+          { q:'Na forma mais simples, onde os dois arquivos (módulo e programa principal) precisam estar?', options:['Em pastas diferentes, obrigatoriamente','Na mesma pasta','Não importa a localização','Apenas o módulo precisa existir, o outro não'], correct:1, explanation:'Na mesma pasta.' },
+          { q:'O que acontece se você nomear seu próprio arquivo como math.py?', options:['Nada, funciona normalmente e sem riscos','Pode causar conflito com o módulo oficial math do Python','O Python renomeia automaticamente','Gera erro imediatamente ao salvar'], correct:1, explanation:'Pode causar conflito com o módulo oficial.' },
+          { q:'Como importar apenas a função somar de um módulo calculadora.py?', options:['import calculadora.somar','from calculadora import somar','use calculadora.somar','calculadora->somar'], correct:1, explanation:'from calculadora import somar.' },
+          { q:'O que é necessário fazer após alterar um módulo próprio, para que a mudança tenha efeito?', options:['Nada, é automático','Salvar o arquivo do módulo antes de executar novamente o programa principal','Reiniciar o computador','Renomear o arquivo'], correct:1, explanation:'Salvar o arquivo antes de executar novamente.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Mais sobre Módulos', url:'https://docs.python.org/pt-br/3/tutorial/modules.html#more-on-modules' },
+          { label:'Documentação Python — Módulos (visão geral)', url:'https://docs.python.org/pt-br/3/tutorial/modules.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap40',
+  title: 'Capítulo 40 — Pacotes',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um pacote em Python, e como ele se relaciona com módulos.',
+          'Como organizar vários módulos relacionados dentro de uma pasta.',
+          'O papel do arquivo __init__.py.',
+          'Como importar módulos de dentro de um pacote.'
+        ],
+        antes: 'É necessário entender módulos próprios (Capítulo 39).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'No capítulo anterior, criamos um único arquivo (calculadora.py) como módulo. Quando um projeto cresce e passa a ter <b>muitos módulos relacionados</b>, é comum organizá-los dentro de uma <b>pasta</b>, formando o que Python chama de <b>pacote</b>.',
+          'Para importar um módulo específico de dentro de um pacote, usamos ponto (.) para indicar o caminho: from financeiro import juros'
+        ],
+        glossary: [
+          { term:'pacote', def:'uma pasta contendo vários módulos relacionados (arquivos .py), organizados juntos, geralmente identificada pela presença de um arquivo __init__.py', example:null },
+          { term:'__init__.py', def:'um arquivo (geralmente vazio, ou com pouco código) que marca uma pasta como um pacote Python', example:'permite que seus módulos sejam importados.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'meu_projeto/\n    principal.py\n    financeiro/          ← PACOTE (pasta com __init__.py)\n        __init__.py\n        juros.py          ← MÓDULO dentro do pacote\n        impostos.py       ← outro MÓDULO dentro do pacote\n\nprincipal.py:\n   from financeiro import juros\n              ↓\n   Python entra na pasta "financeiro" e carrega o módulo "juros"\n              ↓\n   juros.calcular(...)   ← acessa uma função dentro desse módulo',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Estrutura de pastas: meu_projeto/ com principal.py e financeiro/ (contendo __init__.py e juros.py). Nesta apostila interativa, os arquivos são combinados em um único bloco executável.',
+        problem:'financeiro/juros.py:\ndef calcular(valor, taxa):\n    return valor * taxa\n\nprincipal.py:\nfrom financeiro import juros\nresultado = juros.calcular(1000, 0.05)\nprint(resultado)',
+        algoritmo:null,
+        code:'# --- financeiro/juros.py ---\ndef calcular(valor, taxa):\n    return valor * taxa\n\n# --- principal.py (simulado no mesmo bloco) ---\n# Em um projeto real: from financeiro import juros\n\nresultado = calcular(1000, 0.05)\nprint(resultado)',
+        codeNote:'Em arquivos separados, a chamada seria juros.calcular(1000, 0.05), com o prefixo do módulo.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'Ao executar: python principal.py',
+          'from financeiro import juros',
+          'Python localiza a pasta "financeiro"',
+          'Confirma que ela é um pacote (existe __init__.py)',
+          'Carrega o módulo "juros" (arquivo juros.py) de dentro dela',
+          'resultado = juros.calcular(1000, 0.05)',
+          'Devolve: 1000 * 0.05 = 50.0 → resultado = 50.0 → Exibe: 50.0'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'from financeiro import juros   (em principal.py)', explanation:'financeiro é o nome do PACOTE (a pasta). juros é o nome do MÓDULO (o arquivo juros.py) dentro dessa pasta. Depois desta linha, juros.calcular(...) acessa a função definida dentro de juros.py.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'50.0',
+        modIntro:'Vamos adicionar um segundo módulo ao pacote, impostos.py, e usar ambos no programa principal. Repare que, mesmo as duas funções tendo o MESMO NOME (calcular), não há conflito entre elas — cada uma pertence a um módulo diferente:',
+        modCode:'# --- financeiro/juros.py ---\ndef calcular(valor, taxa):\n    return valor * taxa\n\n# --- financeiro/impostos.py ---\ndef calcular_impostos(valor, aliquota):\n    return valor * aliquota\n\n# --- principal.py (simulado) ---\n# Em um projeto real: from financeiro import juros, impostos\n\nvalor_juros = calcular(1000, 0.05)\nvalor_impostos = calcular_impostos(1000, 0.10)\n\nprint(f"Juros: {valor_juros}")\nprint(f"Impostos: {valor_impostos}")',
+        modResult:'Juros: 50.0\nImpostos: 100.0',
+        modNote:'Em arquivos separados, as chamadas seriam juros.calcular(...) e impostos.calcular(...) — o prefixo do módulo deixa claro qual delas está sendo chamada em cada caso, mesmo com nomes de função iguais.',
+        runnable:true,
+        naoConfunda:'Módulo versus pacote: um MÓDULO é um único arquivo .py. Um PACOTE é uma PASTA contendo vários módulos relacionados (e um arquivo __init__.py). Um projeto pequeno pode ter apenas módulos soltos (Capítulo 39); um projeto maior organiza grupos de módulos relacionados em pacotes.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer o arquivo __init__.py (historicamente obrigatório)', code:null, body:'Historicamente, __init__.py era OBRIGATÓRIO para que o Python reconhecesse uma pasta como pacote. Em versões modernas (3.3+), pacotes "implícitos" também funcionam na maioria dos casos — mas manter __init__.py, mesmo vazio, continua sendo uma prática recomendada.' },
+          { title:'🐞 Confundir a ordem do caminho de importação', code:'from juros import financeiro', body:'A ordem correta é sempre PACOTE primeiro, depois MÓDULO: from financeiro import juros, não o contrário.' },
+          { title:'🐞 Tentar importar um pacote que não está acessível a partir de onde o programa é executado', code:null, body:'Assim como módulos soltos, pacotes precisam estar organizados de forma que o Python consiga localizá-los — na forma mais simples, a pasta do pacote deve estar DENTRO da mesma pasta do arquivo principal.' }
+        ],
+        howToRead:"Ao tentar importar um pacote ou módulo em local incorreto, o Python mostra: <span class=\"icode\">ModuleNotFoundError: No module named 'financeiro'</span><br><br>A solução é sempre confirmar a estrutura de pastas e a localização exata dos arquivos."
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Organizar um pequeno pacote loja, com módulos separados para produtos e clientes.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# --- loja/produtos.py ---\ndef calcular_total(preco, quantidade):\n    return preco * quantidade\n\n# --- loja/clientes.py ---\ndef eh_cliente_vip(total_compras):\n    return total_compras >= 1000\n\n# --- principal.py (simulado) ---\ntotal = calcular_total(50, 25)\nprint(total)\nprint(eh_cliente_vip(total))',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um pacote em Python?', gabarito:'Uma pasta contendo módulos relacionados.' },
+          { kind:'text', prompt:'Qual é a diferença entre módulo e pacote?', gabarito:'Módulo é um arquivo .py; pacote é uma pasta com vários módulos.' },
+          { kind:'text', prompt:'Para que serve o arquivo __init__.py?', gabarito:'Marca a pasta como um pacote Python.' },
+          { kind:'text', prompt:'Como importar o módulo juros, dentro do pacote financeiro?', gabarito:'from financeiro import juros' },
+          { kind:'text', prompt:'Duas funções de mesmo nome, em módulos diferentes de um pacote, causam conflito? Justifique.', gabarito:'Não, pois são acessadas com o prefixo do respectivo módulo (juros.calcular × impostos.calcular).' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie (simule) um pacote utilidades, com um módulo texto.py contendo uma função inverter(palavra), e "importe-a" em um principal.py.', starter:'', gabarito:'# utilidades/texto.py\ndef inverter(palavra):\n    return palavra[::-1]\n\n# principal.py\nprint(inverter("Python"))' },
+          { kind:'code', prompt:'Adicione, ao pacote utilidades, um segundo módulo numeros.py, com uma função eh_primo(numero), e use ambos os módulos no principal.py.', starter:'', gabarito:'# utilidades/numeros.py\ndef eh_primo(numero):\n    if numero < 2:\n        return False\n    for i in range(2, numero):\n        if numero % i == 0:\n            return False\n    return True\n\n# principal.py\nprint(inverter("Python"))\nprint(eh_primo(7))' },
+          { kind:'text', prompt:'Explique quando faz sentido organizar módulos em um pacote, em vez de deixá-los soltos na mesma pasta.', gabarito:'Pacotes fazem sentido quando há vários módulos relacionados por tema, tornando a organização de um projeto grande mais clara.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Organize (simule) um pacote escola, com módulos alunos.py (com calcular_media(notas)) e turmas.py (com contar_aprovados(lista_de_medias), contando médias >= 7). Use os dois no programa principal.', starter:'', gabarito:'# escola/alunos.py\ndef calcular_media(notas):\n    return sum(notas) / len(notas)\n\n# escola/turmas.py\ndef contar_aprovados(lista_de_medias):\n    total = 0\n    for media in lista_de_medias:\n        if media >= 7:\n            total = total + 1\n    return total\n\n# principal.py\nmedias = [calcular_media([8, 9]), calcular_media([5, 6])]\nprint(contar_aprovados(medias))' },
+          { kind:'text', prompt:'Desafio: reflita como um projeto grande (como o Sistema de vendas básico) poderia se beneficiar de ser organizado como um pacote, com módulos separados para clientes, produtos, vendas e relatórios.', gabarito:'Resposta aberta — separar em módulos dentro de um pacote sistema_vendas facilitaria localizar e alterar cada parte do sistema de forma independente.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'pacote/\n    __init__.py       ← marca a pasta como pacote\n    modulo_a.py\n    modulo_b.py\n\nprincipal.py:\n    from pacote import modulo_a\n    modulo_a.funcao()\n\nMÓDULO = um arquivo .py\nPACOTE = uma pasta com vários módulos relacionados'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é um pacote e como ele se diferencia de um módulo.',
+          'Sei criar uma estrutura de pasta com __init__.py.',
+          'Sei importar um módulo de dentro de um pacote.',
+          'Sei que módulos diferentes podem ter funções de mesmo nome sem conflito.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um pacote em Python?', options:['Um único arquivo .py','Uma pasta contendo módulos relacionados','Um tipo de variável','Uma função especial'], correct:1, explanation:'Uma pasta contendo módulos relacionados.' },
+          { q:'Para que serve o arquivo __init__.py?', options:['Executa automaticamente ao iniciar o Python','Marca uma pasta como um pacote Python','Armazena senhas do projeto','É obrigatório em qualquer arquivo .py'], correct:1, explanation:'Marca a pasta como um pacote.' },
+          { q:'Como importar o módulo impostos, dentro do pacote financeiro?', options:['import impostos.financeiro','from financeiro import impostos','from impostos import financeiro','include financeiro.impostos'], correct:1, explanation:'from financeiro import impostos.' },
+          { q:'Duas funções de mesmo nome em módulos diferentes de um pacote:', options:['Sempre geram erro','Não causam conflito, pois são acessadas com o prefixo do respectivo módulo','Sobrescrevem uma à outra automaticamente','Não são permitidas pelo Python'], correct:1, explanation:'Não causam conflito, graças ao prefixo do módulo.' },
+          { q:'Qual é a relação entre módulo e pacote?', options:['São a mesma coisa','Um pacote é uma pasta que agrupa vários módulos relacionados','Um módulo é maior que um pacote','Pacotes não podem conter módulos'], correct:1, explanation:'Um pacote agrupa vários módulos.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Pacotes', url:'https://docs.python.org/pt-br/3/tutorial/modules.html#packages' }
+        ]
     }}
   ]
 }
