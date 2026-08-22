@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a VII</title>
+<title>Apostila Python Interativa — Partes I a VIII</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a VII · Primeiros Passos até Organização do Código</span>
+      <span>Partes I a VIII · Primeiros Passos até Arquivos e Dados</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -6267,6 +6267,283 @@ const MODULES = [
     { id:'refs', title:'Referências oficiais', type:'refs', data:{
         links:[
           { label:'Documentação Python — Pacotes', url:'https://docs.python.org/pt-br/3/tutorial/modules.html#packages' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap41',
+  title: 'Capítulo 41 — Arquivos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como abrir, ler, escrever e fechar arquivos de texto em Python.',
+          'Por que usar with é a forma recomendada de trabalhar com arquivos.',
+          'A diferença entre os modos de abertura "r", "w" e "a".',
+          'Como ler um arquivo linha por linha.'
+        ],
+        antes: 'É necessário saber usar for (Capítulo 21) e strings (Capítulo 8).\n\n💡 Nesta apostila interativa, os arquivos que você criar existem dentro do navegador (no sistema de arquivos temporário do Pyodide) — funcionam de verdade dentro dos exercícios, mas não ficam salvos no seu computador.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, todos os dados dos nossos programas existiam apenas <b>enquanto o programa estava rodando</b> — ao fechar o programa, tudo se perdia. Para guardar informações de forma permanente (persistente), usamos <b>arquivos</b>.',
+          'Python permite trabalhar com arquivos usando a função open(), que recebe o nome do arquivo e o <b>modo</b> de abertura: "r" (read/leitura, arquivo precisa existir), "w" (write/escrita, cria ou APAGA o conteúdo existente) e "a" (append/adicionar ao final, preserva o conteúdo).',
+          'A forma <b>recomendada</b> de trabalhar com arquivos usa a palavra-chave <span class="icode">with</span>, que garante que o arquivo será <b>fechado automaticamente</b> ao final, mesmo que ocorra algum erro durante seu uso.'
+        ],
+        glossary: [
+          { term:'arquivo', def:'um conjunto de dados salvo no disco do computador, que pode ser lido e escrito por um programa, e que continua existindo mesmo depois que o programa termina', example:null },
+          { term:'with', def:'estrutura que abre um recurso (como um arquivo), executa um bloco de código, e garante seu fechamento automático ao final do bloco', example:'mesmo se ocorrer um erro no meio do caminho.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'with open("dados.txt", "w") as arquivo:\n    arquivo.write("Olá, arquivo!")\n              ↓\nPython abre (ou cria) o arquivo "dados.txt", em modo escrita\n              ↓\nExecuta o bloco: escreve "Olá, arquivo!" dentro dele\n              ↓\nAo sair do bloco (fim da indentação), o arquivo é FECHADO automaticamente',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Criar um arquivo de texto e escrever uma mensagem nele.',
+        algoritmo:null,
+        code:'# Abre (ou cria) o arquivo "dados.txt" em modo escrita ("w")\nwith open("dados.txt", "w") as arquivo:\n    # Escreve o texto informado dentro do arquivo\n    arquivo.write("Olá, arquivo!")\n# Ao sair do bloco "with", o arquivo é fechado automaticamente\nprint("Arquivo criado!")',
+        codeNote:'O programa em si não exibe o conteúdo do arquivo — o resultado é a criação de dados.txt. Adicionamos um print() extra aqui só para confirmar que o bloco executou.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'with open("dados.txt", "w") as arquivo:',
+          'Python cria (ou sobrescreve) o arquivo "dados.txt"',
+          'Associa esse arquivo aberto à variável "arquivo"',
+          'arquivo.write("Olá, arquivo!")',
+          'Escreve o texto dentro do arquivo',
+          '(fim do bloco with)',
+          'Python fecha o arquivo automaticamente, salvando as alterações'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'with open("dados.txt", "w") as arquivo:', explanation:'open("dados.txt", "w") abre (criando, se não existir) o arquivo dados.txt, em modo escrita. as arquivo associa o arquivo aberto à variável arquivo, usada dentro do bloco.' },
+          { code:'    arquivo.write("Olá, arquivo!")', explanation:'.write(...) escreve o texto informado dentro do arquivo. Diferente de print(), .write() NÃO adiciona uma quebra de linha automaticamente ao final — se for necessária, precisa ser incluída manualmente, com "\\n".' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'(nada é exibido na tela — o resultado é a criação do arquivo dados.txt, contendo o texto "Olá, arquivo!")',
+        modIntro:'Vamos ler o conteúdo desse arquivo, usando o modo "r":',
+        modCode:'with open("dados.txt", "r") as arquivo:\n    conteudo = arquivo.read()\n\nprint(conteudo)',
+        modResult:'Olá, arquivo!',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'Modo "w" versus modo "a": "w" APAGA todo o conteúdo anterior do arquivo antes de escrever (ou cria um novo, se ele não existir). "a" PRESERVA o conteúdo existente, adicionando o novo texto ao final. Usar "w" por engano, quando a intenção era "a", é uma causa comum de perda acidental de dados.',
+        extraBlocks:[
+          { title:'Escrevendo e lendo várias linhas', intro:'Vamos escrever várias linhas, e depois ler o arquivo linha por linha, usando for diretamente sobre o arquivo aberto. Cada linha vem com o \\n no final — .strip() remove esse caractere extra:', code:'with open("tarefas.txt", "w") as arquivo:\n    arquivo.write("Estudar Python\\n")\n    arquivo.write("Fazer exercícios\\n")\n    arquivo.write("Revisar anotações\\n")\n\nwith open("tarefas.txt", "r") as arquivo:\n    for linha in arquivo:\n        print(linha.strip())\n\n# Adiciona uma nova tarefa SEM apagar as anteriores, usando o modo "a"\nwith open("tarefas.txt", "a") as arquivo:\n    arquivo.write("Descansar\\n")\n\nwith open("tarefas.txt", "r") as arquivo:\n    for linha in arquivo:\n        print(linha.strip())', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar abrir, em modo leitura, um arquivo que não existe', code:'with open("inexistente.txt", "r") as arquivo:\n    conteudo = arquivo.read()', body:'Isso gera erro, pois não há nenhum arquivo com esse nome para ser lido.' },
+          { title:'🐞 Usar "w" quando a intenção era adicionar conteúdo', code:'with open("tarefas.txt", "w") as arquivo:\n    arquivo.write("Nova tarefa\\n")', body:'Se tarefas.txt já continha outras tarefas, elas são APAGADAS por completo antes desta nova escrita — o modo "w" sempre recomeça o arquivo do zero.' },
+          { title:'🐞 Esquecer de usar with, e não fechar o arquivo manualmente', code:'arquivo = open("dados.txt", "w")\narquivo.write("Texto")\n# esqueceu de chamar arquivo.close()', body:'Sem with (ou sem chamar .close() manualmente), o arquivo pode não ter suas alterações salvas corretamente. O uso de with evita esse problema automaticamente.' }
+        ],
+        howToRead:"Ao tentar abrir um arquivo inexistente em modo leitura, o Python mostra: <span class=\"icode\">FileNotFoundError: [Errno 2] No such file or directory: 'inexistente.txt'</span><br><br>A solução é confirmar o nome exato do arquivo e sua localização, ou garantir que ele seja criado antes.",
+        tryIt:true,
+        tryItCode:'with open("inexistente.txt", "r") as arquivo:\n    conteudo = arquivo.read()'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Salvar uma lista de nomes em um arquivo de texto, um nome por linha, e depois ler e exibir o conteúdo salvo.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Lista de nomes a serem salvos\nnomes = ["Ana", "Bruno", "Carla"]\n\n# Escreve cada nome em uma linha do arquivo\nwith open("nomes.txt", "w") as arquivo:\n    for nome in nomes:\n        arquivo.write(nome + "\\n")\n\n# Lê e exibe o conteúdo salvo\nwith open("nomes.txt", "r") as arquivo:\n    for linha in arquivo:\n        print(linha.strip())',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Para que serve a função open()?', gabarito:'Abrir um arquivo para leitura, escrita ou adição.' },
+          { kind:'text', prompt:'Qual é a diferença entre os modos "w" e "a"?', gabarito:'"w" apaga o conteúdo anterior (ou cria um novo); "a" preserva o conteúdo, adicionando ao final.' },
+          { kind:'text', prompt:'Por que usar with é recomendado ao trabalhar com arquivos?', gabarito:'Porque garante o fechamento automático do arquivo, mesmo em caso de erro.' },
+          { kind:'text', prompt:'O que .write() faz, e o que ele NÃO faz automaticamente?', gabarito:'Escreve texto no arquivo; não adiciona quebra de linha automaticamente.' },
+          { kind:'text', prompt:'O que acontece ao tentar abrir, em modo "r", um arquivo que não existe?', gabarito:'Gera FileNotFoundError.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que crie um arquivo diario.txt e escreva nele três frases de sua escolha, cada uma em uma linha.', starter:'', gabarito:'with open("diario.txt", "w") as arquivo:\n    arquivo.write("Primeira frase\\n")\n    arquivo.write("Segunda frase\\n")\n    arquivo.write("Terceira frase\\n")' },
+          { kind:'code', prompt:'Escreva um programa que leia o arquivo diario.txt criado no exercício anterior e exiba seu conteúdo linha por linha.', starter:'', gabarito:'with open("diario.txt", "r") as arquivo:\n    for linha in arquivo:\n        print(linha.strip())' },
+          { kind:'code', prompt:'Escreva um programa que adicione uma nova linha ao arquivo diario.txt, sem apagar o conteúdo já existente, usando o modo "a".', starter:'', gabarito:'with open("diario.txt", "a") as arquivo:\n    arquivo.write("Quarta frase, adicionada depois\\n")' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário para digitar 3 tarefas (via input(), dentro de um laço), salve cada uma em um arquivo tarefas.txt (uma por linha), e depois leia e exiba a lista completa, numerada (enumerate()).', starter:'', gabarito:'tarefas = []\nfor _ in range(3):\n    tarefas.append(input("Tarefa: "))\n\nwith open("tarefas.txt", "w") as arquivo:\n    for tarefa in tarefas:\n        arquivo.write(tarefa + "\\n")\n\nwith open("tarefas.txt", "r") as arquivo:\n    for indice, linha in enumerate(arquivo):\n        print(f"{indice + 1}. {linha.strip()}")' },
+          { kind:'code', prompt:'Desafio: leia o arquivo tarefas.txt e conte quantas linhas (tarefas) ele contém, sem usar nenhuma lista intermediária — apenas um contador que aumenta a cada repetição do for.', starter:'', gabarito:'total = 0\nwith open("tarefas.txt", "r") as arquivo:\n    for linha in arquivo:\n        total = total + 1\nprint(total)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'open("arquivo.txt", modo)\n\nmodos:\n   "r"  → leitura (arquivo precisa existir)\n   "w"  → escrita (APAGA o conteúdo anterior, ou cria novo)\n   "a"  → adicionar ao final (preserva o conteúdo anterior)\n\nwith open(...) as arquivo:\n    arquivo.write(texto)     → escreve\n    arquivo.read()            → lê tudo de uma vez\n    for linha in arquivo:     → lê linha por linha\n\nO "with" fecha o arquivo automaticamente ao final do bloco.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei abrir um arquivo com open() e with.',
+          'Sei escrever em um arquivo com .write().',
+          'Sei ler um arquivo com .read() e com for.',
+          'Sei a diferença entre os modos "r", "w" e "a".',
+          'Sei por que with é a forma recomendada de trabalhar com arquivos.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que o modo "w" faz ao abrir um arquivo já existente?', options:['Adiciona conteúdo ao final, preservando o que já existia','Apaga o conteúdo anterior antes de escrever','Apenas permite leitura','Gera erro sempre'], correct:1, explanation:'Apaga o conteúdo anterior.' },
+          { q:'O que o modo "a" faz?', options:['Apaga o arquivo','Adiciona conteúdo ao final, sem apagar o que já existia','Só permite leitura','Cria uma cópia do arquivo'], correct:1, explanation:'Adiciona ao final, preservando o conteúdo.' },
+          { q:'Por que usar with ao trabalhar com arquivos?', options:['É opcional e não traz benefícios','Garante o fechamento automático do arquivo, mesmo em caso de erro','Torna a leitura mais lenta','É a única forma de ler arquivos em Python'], correct:1, explanation:'Garante o fechamento automático.' },
+          { q:'O que acontece ao tentar abrir, em modo "r", um arquivo inexistente?', options:['O Python cria o arquivo automaticamente','Gera FileNotFoundError','Retorna uma string vazia','Gera SyntaxError'], correct:1, explanation:'Gera FileNotFoundError.' },
+          { q:'.write() adiciona uma quebra de linha automaticamente?', options:['Sim, sempre','Não, é necessário incluir "\\n" manualmente quando desejado','Apenas no modo "a"','Apenas se o texto tiver mais de 10 caracteres'], correct:1, explanation:'Não adiciona automaticamente.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Leitura e Escrita de Arquivos', url:'https://docs.python.org/pt-br/3/tutorial/inputoutput.html#reading-and-writing-files' },
+          { label:'Referência da função embutida open()', url:'https://docs.python.org/pt-br/3/library/functions.html#open' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap42',
+  title: 'Capítulo 42 — JSON',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é JSON e por que é um formato tão usado para salvar dados estruturados.',
+          'Como converter um dicionário Python em JSON e salvá-lo em um arquivo, com json.dump().',
+          'Como ler um arquivo JSON e transformá-lo de volta em um dicionário Python, com json.load().'
+        ],
+        antes: 'É necessário conhecer dicionários (Capítulo 30), listas de dicionários (Capítulo 31) e arquivos (Capítulo 41).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'No Capítulo 41, aprendemos a salvar <b>texto simples</b> em arquivos. Mas e quando os dados que queremos salvar são mais estruturados — como um dicionário, ou uma lista de dicionários? Para isso, existe o <b>JSON</b>.',
+          'A boa notícia é que um dicionário JSON é <b>visualmente muito parecido</b> com um dicionário Python. O módulo json, pronto na biblioteca padrão, converte entre dicionários Python e o formato JSON.'
+        ],
+        glossary: [
+          { term:'JSON (JavaScript Object Notation)', def:'um formato de texto muito usado para representar dados estruturados (como dicionários e listas), legível tanto por humanos quanto por outros programas', example:'amplamente usado para salvar dados em arquivos e para comunicação entre sistemas.' },
+          { term:'json.dump(dados, arquivo)', def:'converte um dicionário (ou lista) Python para o formato JSON, e escreve diretamente em um arquivo já aberto', example:null },
+          { term:'json.load(arquivo)', def:'lê o conteúdo JSON de um arquivo já aberto, e o converte de volta em um dicionário (ou lista) Python', example:null }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'aluno = {"nome": "Ana", "idade": 16}   ← dicionário Python (em memória)\n              ↓  json.dump(aluno, arquivo)\naluno.json:\n{"nome": "Ana", "idade": 16}            ← mesmo conteúdo, salvo em ARQUIVO\n              ↓  json.load(arquivo)\naluno = {"nome": "Ana", "idade": 16}   ← de volta a um dicionário Python',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Salvar um dicionário Python em um arquivo JSON.',
+        algoritmo:null,
+        code:'# Importa o módulo responsável por converter dados para/de JSON\nimport json\n\n# Dicionário Python que queremos salvar\naluno = {"nome": "Ana", "idade": 16}\n\n# Abre (ou cria) o arquivo em modo escrita, e salva o dicionário como JSON\nwith open("aluno.json", "w") as arquivo:\n    json.dump(aluno, arquivo)\n\nprint("Salvo!")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'aluno = {"nome": "Ana", "idade": 16}',
+          'Python cria esse dicionário na memória',
+          'with open("aluno.json", "w") as arquivo:',
+          'Cria (ou sobrescreve) o arquivo aluno.json',
+          'json.dump(aluno, arquivo)',
+          'Converte o dicionário para o formato de texto JSON',
+          'Escreve esse texto dentro do arquivo aluno.json',
+          '(fim do bloco with) → arquivo é fechado, alterações salvas'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'with open("aluno.json", "w") as arquivo:\n    json.dump(aluno, arquivo)', explanation:'Abre o arquivo aluno.json em modo escrita. json.dump(aluno, arquivo) converte o dicionário aluno para o formato JSON e o escreve diretamente dentro do arquivo já aberto.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'(nada é exibido na tela — o resultado é o arquivo aluno.json, com o conteúdo {"nome": "Ana", "idade": 16})',
+        modIntro:'Vamos ler esse arquivo de volta, reconstruindo o dicionário Python. Note que aluno, depois de json.load(), é um dicionário Python DE VERDADE — pode ser acessado por chave, alterado, percorrido:',
+        modCode:'import json\n\naluno = {"nome": "Ana", "idade": 16}\nwith open("aluno.json", "w") as arquivo:\n    json.dump(aluno, arquivo)\n\nwith open("aluno.json", "r") as arquivo:\n    aluno_carregado = json.load(arquivo)\n\nprint(aluno_carregado)\nprint(aluno_carregado["nome"])\nprint(type(aluno_carregado))',
+        modResult:"{'nome': 'Ana', 'idade': 16}\nAna\n<class 'dict'>",
+        modNote:null,
+        runnable:true,
+        naoConfunda:'json.dump() versus json.load(): dump (despejar) ESCREVE dados Python em um arquivo, no formato JSON. load (carregar) LÊ um arquivo JSON e o transforma de volta em dados Python. Uma forma de lembrar: "dump" tem D de "descer" (salvar no disco); "load" tem L de "ler" (trazer de volta).',
+        extraBlocks:[
+          { title:'Salvando uma lista de dicionários, com indent', intro:'indent=4 faz com que o JSON seja salvo de forma legível, com quebras de linha e indentação:', code:'import json\n\nalunos = [\n    {"nome": "Ana", "nota": 8.5},\n    {"nome": "Bruno", "nota": 7.0}\n]\n\nwith open("alunos.json", "w") as arquivo:\n    json.dump(alunos, arquivo, indent=4)\n\nwith open("alunos.json", "r") as arquivo:\n    print(arquivo.read())', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar carregar um arquivo que não contém JSON válido', code:'import json\n\nwith open("arquivo_de_texto_comum.txt", "w") as arquivo:\n    arquivo.write("isto não é JSON")\n\nwith open("arquivo_de_texto_comum.txt", "r") as arquivo:\n    dados = json.load(arquivo)', body:'Se o conteúdo do arquivo não seguir a estrutura JSON esperada, json.load() gera erro.' },
+          { title:'🐞 Esquecer de importar o módulo json', code:'dados = json.load(arquivo)', body:'Sem import json no início do arquivo, o Python não reconhece json, gerando NameError.' },
+          { title:'🐞 Confundir json.dump()/json.load() (arquivo) com json.dumps()/json.loads() (texto)', code:null, body:'O módulo json também oferece json.dumps() (com "s" no final, de string), que converte dados Python diretamente em uma string (sem escrever em arquivo), e json.loads(), o processo inverso.' }
+        ],
+        howToRead:'Ao tentar carregar um conteúdo que não é JSON válido, o Python mostra algo como: <span class="icode">json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</span><br><br>A solução é confirmar que o arquivo realmente contém JSON válido.',
+        tryIt:true,
+        tryItCode:'import json\n\nwith open("arquivo_de_texto_comum.txt", "w") as arquivo:\n    arquivo.write("isto não é JSON")\n\nwith open("arquivo_de_texto_comum.txt", "r") as arquivo:\n    dados = json.load(arquivo)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Salvar um pequeno cadastro de produto em JSON, e depois recarregá-lo, atualizando seu estoque.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'import json\n\n# Cria e salva o cadastro inicial do produto\nproduto = {"nome": "Caderno", "preco": 24.90, "estoque": 15}\n\nwith open("produto.json", "w") as arquivo:\n    json.dump(produto, arquivo, indent=4)\n\n# Recarrega o produto salvo, atualiza o estoque, e salva novamente\nwith open("produto.json", "r") as arquivo:\n    produto_carregado = json.load(arquivo)\n\nproduto_carregado["estoque"] = produto_carregado["estoque"] - 3\n\nwith open("produto.json", "w") as arquivo:\n    json.dump(produto_carregado, arquivo, indent=4)\n\nprint(produto_carregado)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é JSON, e para que ele é usado?', gabarito:'Um formato de texto para representar dados estruturados, muito usado para salvar dados e comunicação entre sistemas.' },
+          { kind:'text', prompt:'Qual função salva um dicionário Python em um arquivo, no formato JSON?', gabarito:'json.dump()' },
+          { kind:'text', prompt:'Qual função lê um arquivo JSON e o transforma de volta em dicionário Python?', gabarito:'json.load()' },
+          { kind:'text', prompt:'O que o parâmetro indent=4 faz em json.dump()?', gabarito:'Formata o JSON salvo com indentação, tornando-o legível.' },
+          { kind:'text', prompt:'É necessário importar algum módulo para usar json.dump() e json.load()? Qual?', gabarito:'Sim, o módulo json.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie um dicionário representando um livro ("titulo", "autor", "ano"), salve-o em livro.json, e depois leia e exiba o conteúdo salvo.', starter:'', gabarito:'import json\n\nlivro = {"titulo": "Python para Iniciantes", "autor": "Autor", "ano": 2026}\nwith open("livro.json", "w") as arquivo:\n    json.dump(livro, arquivo, indent=4)\n\nwith open("livro.json", "r") as arquivo:\n    livro_carregado = json.load(arquivo)\nprint(livro_carregado)' },
+          { kind:'code', prompt:'Crie uma lista de dicionários representando 3 tarefas (cada uma com "descricao" e "concluida", um booleano), salve-a em tarefas.json, e recarregue e exiba cada tarefa formatada.', starter:'', gabarito:'import json\n\ntarefas = [\n    {"descricao": "Estudar", "concluida": True},\n    {"descricao": "Correr", "concluida": False},\n    {"descricao": "Ler", "concluida": False}\n]\nwith open("tarefas.json", "w") as arquivo:\n    json.dump(tarefas, arquivo, indent=4)\n\nwith open("tarefas.json", "r") as arquivo:\n    tarefas_carregadas = json.load(arquivo)\nfor tarefa in tarefas_carregadas:\n    print(f"{tarefa[\'descricao\']}: {tarefa[\'concluida\']}")' },
+          { kind:'text', prompt:'Explique por que salvar dados como JSON é mais prático do que salvá-los como texto simples, quando os dados têm uma estrutura como um dicionário.', gabarito:'JSON já sabe representar automaticamente a estrutura de chaves e valores (e listas), evitando ter que reconstruir manualmente essa estrutura a partir de texto simples.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Simule um pequeno cadastro de contatos: crie uma lista de dicionários (cada um com "nome" e "telefone"), salve-a em contatos.json, recarregue, adicione um novo contato à lista carregada, e salve a lista atualizada de volta.', starter:'', gabarito:'import json\n\ncontatos = [\n    {"nome": "Ana", "telefone": "11999990000"},\n    {"nome": "Bruno", "telefone": "11988880000"}\n]\n\nwith open("contatos.json", "w") as arquivo:\n    json.dump(contatos, arquivo, indent=4)\n\nwith open("contatos.json", "r") as arquivo:\n    contatos_carregados = json.load(arquivo)\n\ncontatos_carregados.append({"nome": "Carla", "telefone": "11977770000"})\n\nwith open("contatos.json", "w") as arquivo:\n    json.dump(contatos_carregados, arquivo, indent=4)\n\nfor contato in contatos_carregados:\n    print(contato["nome"])' },
+          { kind:'text', prompt:'Desafio: descreva como ler o arquivo contatos.json e exibir apenas os nomes dos contatos (sem os telefones), percorrendo a lista carregada com for.', gabarito:'with open("contatos.json", "r") as arquivo:\n    contatos = json.load(arquivo)\nfor contato in contatos:\n    print(contato["nome"])' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'import json\n\njson.dump(dados, arquivo)     → salva dados Python em um arquivo JSON\njson.dump(dados, arquivo, indent=4)  → salva formatado, legível\n\njson.load(arquivo)             → lê um arquivo JSON, devolve dados Python\n\nDICIONÁRIO PYTHON  ⇄  JSON (arquivo)'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é JSON e por que ele é usado.',
+          'Sei salvar um dicionário em um arquivo JSON com json.dump().',
+          'Sei ler um arquivo JSON de volta com json.load().',
+          'Sei usar indent para tornar o JSON salvo mais legível.',
+          'Sei que o resultado de json.load() é um dicionário/lista Python comum.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que JSON representa?', options:['Um tipo de erro do Python','Um formato de texto para representar dados estruturados','Um módulo exclusivo para números','Uma linguagem de programação'], correct:1, explanation:'Um formato de texto para dados estruturados.' },
+          { q:'Qual função salva dados Python em um arquivo JSON?', options:['json.load()','json.dump()','json.save()','json.write()'], correct:1, explanation:'json.dump()' },
+          { q:'Qual função lê um arquivo JSON e o converte em dados Python?', options:['json.dump()','json.load()','json.read()','json.open()'], correct:1, explanation:'json.load()' },
+          { q:'O que indent=4 faz em json.dump()?', options:['Limita o arquivo a 4 linhas','Formata o JSON salvo com indentação, tornando-o mais legível','Converte números para inteiros','Não tem efeito algum'], correct:1, explanation:'Formata com indentação legível.' },
+          { q:'Depois de json.load(), o tipo do dado carregado (se originalmente era um dicionário) é:', options:['str','dict','json','list, sempre'], correct:1, explanation:'dict.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Salvando Dados Estruturados com json', url:'https://docs.python.org/pt-br/3/tutorial/inputoutput.html#saving-structured-data-with-json' },
+          { label:'Referência da biblioteca padrão — módulo json', url:'https://docs.python.org/pt-br/3/library/json.html' }
         ]
     }}
   ]
