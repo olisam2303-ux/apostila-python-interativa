@@ -5942,18 +5942,25 @@ async function runPythonCodeNow(code, outEl, runBtn) {
   outEl.classList.remove('error');
   outEl.textContent = 'Carregando o interpretador Python (isso só demora na primeira vez)...';
   if (runBtn) runBtn.disabled = true;
+  let namespace = null;
   try {
     const pyodide = await ensurePyodide();
     outEl.textContent = 'Executando...';
     let out = [];
     pyodide.setStdout({ batched:(s)=> out.push(s) });
     pyodide.setStderr({ batched:(s)=> out.push(s) });
-    await pyodide.runPythonAsync(code);
+    // Cada bloco de código deve se comportar como um script independente,
+    // exatamente como no resto da apostila — sem variáveis "vazando" de um
+    // exemplo para o outro. Por isso cada execução ganha seu próprio
+    // namespace global novo, em vez de reaproveitar o namespace da página.
+    namespace = pyodide.globals.get('dict')();
+    await pyodide.runPythonAsync(code, { globals: namespace });
     outEl.textContent = out.length ? out.join('\n') : '(nenhuma saída — programa executou sem usar print())';
   } catch (err) {
     outEl.classList.add('error');
     outEl.textContent = formatPythonError(String(err));
   } finally {
+    if (namespace) namespace.destroy();
     if (runBtn) runBtn.disabled = false;
   }
 }
