@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I e II</title>
+<title>Apostila Python Interativa — Partes I a III</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I e II · Primeiros Passos e Fundamentos</span>
+      <span>Partes I a III · Primeiros Passos, Fundamentos e Tomada de Decisão</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -2101,6 +2101,1032 @@ const MODULES = [
           'Sei usar f-strings para formatar saídas, incluindo casas decimais.'
         ],
         finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte III — Tomada de Decisão, onde aprenderemos comparações, valores booleanos e as estruturas if, elif, else e match.'
+    }}
+  ]
+},
+{
+  id: 'cap12',
+  title: 'Capítulo 12 — Comparações',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Os operadores de comparação: ==, !=, >, <, >=, <=.',
+          'A diferença fundamental entre = (atribuição) e == (comparação).',
+          'Que toda comparação em Python resulta em um valor bool.',
+          'Como comparar números e como comparar textos.'
+        ],
+        antes: 'É necessário conhecer variáveis (Capítulo 5), tipos de dados (Capítulo 6) e operadores matemáticos (Capítulo 7).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, todos os nossos programas seguiam sempre o mesmo caminho, do início ao fim. Para que um programa tome decisões diferentes dependendo da situação, ele primeiro precisa <b>comparar</b> valores. Python oferece seis operadores de comparação: <span class="icode">==</span> (igual a), <span class="icode">!=</span> (diferente de), <span class="icode">&gt;</span> (maior que), <span class="icode">&lt;</span> (menor que), <span class="icode">&gt;=</span> (maior ou igual a) e <span class="icode">&lt;=</span> (menor ou igual a).',
+          'O resultado de <b>qualquer</b> comparação é sempre um valor <b>booleano</b> (True ou False) — o tipo bool, apresentado no Capítulo 6 e aprofundado no próximo capítulo.'
+        ],
+        glossary: [],
+        callout:'NÃO CONFUNDA: = versus ==: = é o operador de <b>atribuição</b>, usado para guardar um valor em uma variável (idade = 18). == é o operador de <b>comparação de igualdade</b>, usado para perguntar "esse valor é igual a esse outro?" (idade == 18). Confundir os dois é um dos erros mais comuns entre iniciantes em qualquer linguagem de programação.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'idade = 18\n        ↓\nidade == 18\n        ↓\nPython compara o valor de idade (18) com 18\n        ↓\nSão iguais?  →  Sim\n        ↓\nTrue\n\n\nidade = 15\n        ↓\nidade >= 18\n        ↓\nPython compara o valor de idade (15) com 18\n        ↓\n15 é maior ou igual a 18?  →  Não\n        ↓\nFalse',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Comparar se uma idade guardada é igual a 18.',
+        algoritmo:null,
+        code:'# Guarda a idade de uma pessoa\nidade = 18\n\n# Compara se a idade guardada é igual a 18, e exibe o resultado (True/False)\nprint(idade == 18)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'idade = 18',
+          'idade vale 18',
+          'idade == 18',
+          'Python compara: 18 == 18',
+          'São iguais → True',
+          'print(True)',
+          'Exibe: True'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'idade = 18', explanation:'Cria a variável idade, guardando o valor 18.' },
+          { code:'print(idade == 18)', explanation:'idade == 18 é uma <b>expressão de comparação</b>: o Python verifica se o valor guardado em idade é igual a 18. Como idade de fato vale 18, o resultado dessa comparação é True. print() exibe esse resultado booleano.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'True',
+        modIntro:'Vamos testar todos os operadores de comparação com os mesmos dois números:',
+        modCode:'a = 10\nb = 7\n\nprint(a == b)   # a é igual a b?\nprint(a != b)   # a é diferente de b?\nprint(a > b)    # a é maior que b?\nprint(a < b)    # a é menor que b?\nprint(a >= b)   # a é maior ou igual a b?\nprint(a <= b)   # a é menor ou igual a b?',
+        modResult:'False\nTrue\nTrue\nFalse\nTrue\nFalse',
+        modNote:null,
+        runnable:true,
+        extraBlocks:[
+          { title:'Comparando strings', intro:'Comparações também funcionam com strings, comparando-as em ordem alfabética (tecnicamente, pela posição de cada caractere segundo a tabela Unicode):', code:'print("banana" == "banana")   # True\nprint("banana" == "Banana")   # False (maiúscula é diferente de minúscula)\nprint("abacaxi" < "banana")   # True ("a" vem antes de "b")', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Usar = quando o objetivo é comparar', code:'idade = 18\nif idade = 18:\n    print("Maior de idade")', body:'Isso gera um erro de sintaxe: = não pode ser usado dentro de uma comparação como essa (o uso de if será estudado no Capítulo 14). O correto é: if idade == 18:' },
+          { title:'🐞 Esperar que "10" == 10 seja True', code:'print("10" == 10)', body:'Isso resulta em False: o Python considera o texto "10" (tipo str) e o número 10 (tipo int) como valores de tipos diferentes, e portanto nunca iguais, independentemente do que "parecem" representar.' },
+          { title:'🐞 Comparar textos esperando que maiúsculas e minúsculas sejam tratadas como iguais', code:'print("Python" == "python")', body:'Isso resulta em False — a comparação de strings em Python é sensível a maiúsculas e minúsculas (case sensitive). Se a intenção é ignorar essa diferença, converta ambos os lados com .lower() ou .upper() antes de comparar.' }
+        ],
+        howToRead:'O uso incorreto de = dentro de uma comparação gera: <span class="icode">SyntaxError: invalid syntax</span><br><br>O mesmo tipo de erro já visto no Capítulo 2 — a estrutura da linha não segue as regras da linguagem. Ao ver esse erro logo após uma tentativa de comparação, verifique se == não foi acidentalmente escrito como =.',
+        tryIt:true,
+        tryItCode:'print("10" == 10)\nprint("Python" == "python")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Verificar se duas notas de prova são iguais, e comparar qual delas é maior.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'nota_prova1 = 8.5\nnota_prova2 = 7.0\n\nnotas_iguais = 8.5 == 7.0   →  False\nprimeira_maior = 8.5 > 7.0  →  True',
+        code:'# Notas de duas provas\nnota_prova1 = 8.5\nnota_prova2 = 7.0\n\n# Verifica se as notas são iguais\nnotas_iguais = nota_prova1 == nota_prova2\n\n# Verifica se a primeira nota é maior que a segunda\nprimeira_maior = nota_prova1 > nota_prova2\n\n# Exibe os resultados\nprint(notas_iguais)\nprint(primeira_maior)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que 5 == 5 retorna?', gabarito:'True.' },
+          { kind:'text', prompt:'O que 5 != 5 retorna?', gabarito:'False.' },
+          { kind:'text', prompt:'Qual é a diferença entre = e ==?', gabarito:'= guarda um valor (atribuição); == compara dois valores (igualdade).' },
+          { kind:'text', prompt:'O que "10" == 10 retorna? Por quê?', gabarito:'False, porque "10" (str) e 10 (int) são tipos diferentes.' },
+          { kind:'text', prompt:'O que "maçã" == "maçã" retorna?', gabarito:'True.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie duas variáveis, preco1 e preco2, com valores diferentes, e exiba o resultado de todas as seis comparações entre elas.', starter:'', gabarito:'preco1 = 50\npreco2 = 80\nprint(preco1 == preco2)\nprint(preco1 != preco2)\nprint(preco1 > preco2)\nprint(preco1 < preco2)\nprint(preco1 >= preco2)\nprint(preco1 <= preco2)' },
+          { kind:'code', prompt:'Escreva um programa que peça duas palavras ao usuário (input()) e exiba se elas são iguais, ignorando diferenças entre maiúsculas e minúsculas.', starter:'', gabarito:'palavra1 = input("Primeira palavra: ")\npalavra2 = input("Segunda palavra: ")\nprint(palavra1.lower() == palavra2.lower())' },
+          { kind:'text', prompt:'Explique por que "Python" == "python" resulta em False, e como fazer essa comparação ignorando a diferença de caixa.', gabarito:'Porque a comparação de strings é sensível a maiúsculas/minúsculas (case sensitive); usar .lower() (ou .upper()) nos dois lados resolve isso.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário dois números inteiros (input() + int()) e exiba, para cada um dos seis operadores de comparação, uma frase explicando o resultado, como: "10 é maior que 7? True" (use f-strings).', starter:'', gabarito:'a = int(input("Primeiro número: "))\nb = int(input("Segundo número: "))\nprint(f"{a} é maior que {b}? {a > b}")\nprint(f"{a} é menor que {b}? {a < b}")\nprint(f"{a} é igual a {b}? {a == b}")' },
+          { kind:'code', prompt:'Desafio: peça uma senha ao usuário (input()) e compare com uma senha fixa definida no código ("python123"), exibindo True se forem iguais e False caso contrário. (Ainda não é necessário usar if.)', starter:'', gabarito:'print(input("Senha: ") == "python123")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'==   igual a\n!=   diferente de\n>    maior que\n<    menor que\n>=   maior ou igual a\n<=   menor ou igual a\n\nTODA comparação resulta em True ou False (bool)\n\n=   ATRIBUI um valor        idade = 18\n==  COMPARA dois valores    idade == 18'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar os seis operadores de comparação.',
+          'Sei explicar a diferença entre = e ==.',
+          'Sei que toda comparação resulta em True ou False.',
+          'Sei que comparar tipos diferentes ("10" e 10) resulta em False.',
+          'Sei que comparação de strings é sensível a maiúsculas/minúsculas.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que 7 == 7 retorna?', options:['7','True','False','Erro'], correct:1, explanation:'7 == 7 é True.' },
+          { q:'Qual símbolo é usado para comparar igualdade em Python?', options:['=','==','!=','equals'], correct:1, explanation:'== compara igualdade.' },
+          { q:'O que "5" == 5 retorna?', options:['True','False','5','Erro'], correct:1, explanation:'Tipos diferentes (str e int) nunca são iguais: False.' },
+          { q:'O que "Casa" == "casa" retorna?', options:['True','False','Erro','"Casa"'], correct:1, explanation:'Comparação de strings é sensível a maiúsculas/minúsculas: False.' },
+          { q:'O que acontece ao escrever if idade = 18: (com um único =)?', options:['Funciona normalmente','Gera SyntaxError','Sempre retorna True','Sempre retorna False'], correct:1, explanation:'= não pode ser usado como comparação: SyntaxError.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Instrução if (uso introdutório de comparações)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#if-statements' },
+          { label:'Referência da linguagem — comparações', url:'https://docs.python.org/pt-br/3/reference/expressions.html#comparisons' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap13',
+  title: 'Capítulo 13 — Valores booleanos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é o tipo bool e seus dois únicos valores possíveis.',
+          'Como resultados de comparações se tornam valores booleanos.',
+          'Como guardar um valor booleano em uma variável.',
+          'Que valores diferentes de True/False também podem ser interpretados como verdadeiros ou falsos ("truthy" e "falsy").'
+        ],
+        antes: 'É necessário conhecer tipos de dados (Capítulo 6) e operadores de comparação (Capítulo 12).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'O tipo <b>booleano</b> (bool) tem apenas dois valores possíveis: True e False. Note que são escritos exatamente assim, com a primeira letra maiúscula, sem aspas — eles não são strings, são valores do próprio tipo bool.',
+          'Como vimos no capítulo anterior, toda comparação (==, !=, &gt;, &lt;, &gt;=, &lt;=) já produz automaticamente um valor booleano — não é necessário "criar" esse valor manualmente na maioria dos casos. Booleanos são o tipo de dado que as estruturas de decisão (if, a partir do Capítulo 14) usam para decidir qual caminho o programa deve seguir.'
+        ],
+        glossary: [
+          { term:'booleano', def:'tipo de dado com apenas dois valores possíveis, True (verdadeiro) e False (falso)', example:'em homenagem ao matemático George Boole.' }
+        ],
+        callout:'NÃO CONFUNDA: bool versus str: True e False (sem aspas) são valores do tipo bool. Já "True" e "False" (com aspas) são apenas textos comuns, do tipo str, e <b>não</b> funcionam da mesma forma em comparações ou decisões. print(True == "True") resulta em False — tipos diferentes.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'bool\n  │\n  ├── True   (verdadeiro)\n  └── False  (falso)\n\n10 == 10   →  True\n10 == 5    →  False\n\nesta_ativo = True\n        ↓\nesta_ativo é um valor do tipo bool',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Guardar diretamente um valor booleano.',
+        algoritmo:null,
+        code:'# Guarda diretamente um valor booleano, representando uma condição do dia\nesta_chovendo = True\n\n# Exibe o valor guardado\nprint(esta_chovendo)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'esta_chovendo = True',
+          'Python cria o valor True, do tipo bool',
+          'Associa esse valor ao nome esta_chovendo',
+          'print(esta_chovendo)',
+          'Exibe: True'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'esta_chovendo = True', explanation:'Cria a variável esta_chovendo, guardando o valor booleano True, diretamente, sem passar por uma comparação.' },
+          { code:'print(esta_chovendo)', explanation:'Exibe o valor guardado, True.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'True',
+        modIntro:'Vamos guardar o resultado de uma comparação em uma variável booleana, o que é extremamente comum na prática:',
+        modCode:'idade = 20\n\n# Guarda o resultado da comparação em uma variável booleana\nmaior_de_idade = idade >= 18\n\nprint(maior_de_idade)\nprint(type(maior_de_idade))',
+        modResult:'True\n<class \'bool\'>',
+        modNote:null,
+        runnable:true,
+        extraBlocks:[
+          { title:'Valores "truthy" e "falsy"', intro:'Além de True e False propriamente ditos, o Python permite usar outros tipos de valores em contextos que esperam um booleano (como veremos a partir do Capítulo 14, dentro de um if). De forma geral, valores "vazios" ou "zerados" (0, 0.0, "") são considerados falsos; praticamente qualquer outro valor é considerado verdadeiro.', code:'print(bool(0))        # False\nprint(bool(1))        # True\nprint(bool(""))       # False (string vazia)\nprint(bool("Python")) # True (string não vazia)', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Escrever true/false em minúsculas', code:'esta_ativo = true', body:'Em Python, os valores booleanos são escritos com a primeira letra <b>maiúscula</b>: True e False. Escrever true (minúsculo) faz o Python procurar por uma variável chamada true, que não existe, gerando NameError.' },
+          { title:'🐞 Colocar True/False entre aspas', code:'esta_ativo = "True"', body:'Isso cria uma <b>string</b> contendo o texto "True", não o valor booleano True. Embora pareçam parecidos visualmente, são tipos diferentes, com comportamentos diferentes.' }
+        ],
+        howToRead:'Ao escrever true em minúsculas, o Python mostra: <span class="icode">NameError: name \'true\' is not defined</span><br><br>O mesmo erro já estudado no Capítulo 5: o Python está tratando true como o nome de uma variável (por causa da letra minúscula), e essa variável não existe. A solução é sempre usar True e False, com a primeira letra maiúscula.',
+        tryIt:true,
+        tryItCode:'esta_ativo = true\nprint(esta_ativo)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Guardar, em variáveis booleanas, se um aluno foi aprovado (nota maior ou igual a 6) e se ele teve frequência mínima (maior ou igual a 75%).',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Dados do aluno\nnota = 7.5\nfrequencia = 80\n\n# Verifica aprovação por nota\naprovado_por_nota = nota >= 6\n\n# Verifica aprovação por frequência\naprovado_por_frequencia = frequencia >= 75\n\n# Exibe os resultados\nprint(aprovado_por_nota)\nprint(aprovado_por_frequencia)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Quais são os dois únicos valores possíveis do tipo bool?', gabarito:'True e False.' },
+          { kind:'text', prompt:'Como esses valores devem ser escritos em Python (maiúsculas ou minúsculas)?', gabarito:'Com a primeira letra maiúscula, sem aspas.' },
+          { kind:'text', prompt:'Qual é o tipo do resultado de 10 > 5?', gabarito:'bool.' },
+          { kind:'text', prompt:'True e "True" são a mesma coisa em Python? Explique.', gabarito:'Não — True é bool; "True" é str.' },
+          { kind:'text', prompt:'O que bool(0) retorna? E bool(5)?', gabarito:'bool(0) → False; bool(5) → True.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma variável esta_logado com o valor True, e exiba tanto o valor quanto o seu tipo.', starter:'', gabarito:'esta_logado = True\nprint(esta_logado)\nprint(type(esta_logado))' },
+          { kind:'code', prompt:'Escreva um programa que guarde, em uma variável booleana, se um número (numero = 15) é maior que 10, e exiba o resultado.', starter:'numero = 15', gabarito:'numero = 15\nmaior_que_10 = numero > 10\nprint(maior_que_10)' },
+          { kind:'code', prompt:'Teste e explique o resultado de bool("") e bool("qualquer texto").', starter:'', gabarito:'print(bool(""))              # False — string vazia\nprint(bool("qualquer texto")) # True — string não vazia' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Para um produto com preco = 0 e outro com preco = 49.90, use bool() sobre cada preço e exiba o resultado, explicando em um comentário por que bool(0) é False mas bool(49.90) é True.', starter:'', gabarito:'preco1 = 0\npreco2 = 49.90\nprint(bool(preco1))\nprint(bool(preco2))\n# bool(0) é False porque 0 é um valor "zerado" (falsy);\n# qualquer outro número, como 49.90, é considerado "truthy".' },
+          { kind:'code', prompt:'Desafio: crie três variáveis booleanas relacionadas a um mesmo aluno: passou_na_prova, entregou_trabalho e teve_boa_frequencia, e exiba as três, uma por linha, usando f-strings.', starter:'', gabarito:'passou_na_prova = True\nentregou_trabalho = True\nteve_boa_frequencia = False\nprint(f"Passou na prova: {passou_na_prova}")\nprint(f"Entregou trabalho: {entregou_trabalho}")\nprint(f"Teve boa frequência: {teve_boa_frequencia}")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'bool → True ou False (sem aspas, com maiúscula inicial)\n\nComparações (==, !=, >, <, >=, <=) → sempre produzem um bool\n\nbool(valor) → converte outros tipos para True/False\n   0, 0.0, "" → False\n   qualquer outro valor → True'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é o tipo bool e seus dois valores.',
+          'Sei escrever True e False corretamente.',
+          'Sei que toda comparação produz um valor booleano.',
+          'Sei diferenciar True (bool) de "True" (str).',
+          'Sei que alguns valores são interpretados como verdadeiros ou falsos ao serem convertidos com bool().'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Quais são os dois valores possíveis do tipo bool?', options:['"true" e "false"','1 e 0','True e False','yes e no'], correct:2, explanation:'True e False.' },
+          { q:'O que 10 > 5 retorna?', options:['10','5','True','"maior"'], correct:2, explanation:'10 > 5 é True.' },
+          { q:'True e "True" são o mesmo tipo de dado?', options:['Sim','Não — True é bool, "True" é str','Sim, ambos são str','Sim, ambos são bool'], correct:1, explanation:'São tipos diferentes.' },
+          { q:'O que bool(0) retorna?', options:['True','False','0','Erro'], correct:1, explanation:'0 é falsy: bool(0) é False.' },
+          { q:'O que acontece ao escrever variavel = true (minúsculo)?', options:['Funciona normalmente, equivalente a True','Gera NameError, pois true não é uma palavra reconhecida','Gera SyntaxError','É convertido automaticamente para True'], correct:1, explanation:'true minúsculo não existe: NameError.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Comparando sequências e outros tipos', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#comparing-sequences-and-other-types' },
+          { label:'Referência da biblioteca padrão — Testes de valor verdade', url:'https://docs.python.org/pt-br/3/library/stdtypes.html#truth-value-testing' },
+          { label:'Referência da biblioteca padrão — bool()', url:'https://docs.python.org/pt-br/3/library/functions.html#bool' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap14',
+  title: 'Capítulo 14 — if',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como fazer um programa tomar uma decisão com if.',
+          'O papel dos dois-pontos (:) e da indentação em Python.',
+          'Como uma condição False faz o bloco do if ser simplesmente pulado.',
+          'Como combinar if com o que já aprendemos (input(), conversão, comparação).'
+        ],
+        antes: 'É necessário conhecer comparações (Capítulo 12) e valores booleanos (Capítulo 13).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, todo programa que escrevemos executava <b>todas</b> as suas linhas, sempre, na mesma ordem. A instrução <span class="icode">if</span> (do inglês, "se") permite que um trecho do programa seja executado <b>somente quando uma condição for verdadeira</b>.',
+          'A estrutura de um if tem três partes fixas: a palavra if, seguida de uma <b>condição</b> (uma expressão que resulta em True ou False); dois-pontos (<span class="icode">:</span>) no final da linha, indicando que um bloco de código vai começar; e o <b>bloco</b>: uma ou mais linhas <b>indentadas</b> (deslocadas para a direita, geralmente com 4 espaços), que só são executadas se a condição for True.'
+        ],
+        glossary: [
+          { term:'if', def:'instrução que executa um bloco de código apenas quando a condição associada a ela é True', example:'se a condição for False, o bloco é simplesmente ignorado, e o programa continua depois dele.' },
+          { term:'indentação', def:'o espaçamento à esquerda de uma linha de código, usado em Python para indicar que aquela linha faz parte de um bloco', example:'ao contrário de outras linguagens, em Python a indentação não é apenas estética: ela é obrigatória e define a estrutura do programa.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'idade = 18\n        ↓\nidade >= 18\n        ↓\n18 >= 18  →  True\n        ↓\nA condição é True, então o bloco do if É executado\n        ↓\nprint("Maior de idade")\n        ↓\nSaída: Maior de idade\n\n\nidade = 15\n        ↓\nidade >= 18\n        ↓\n15 >= 18  →  False\n        ↓\nA condição é False, então o bloco do if é IGNORADO\n        ↓\n(nada é exibido pelo if — o programa segue para a próxima instrução, se houver)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Verificar se uma idade indica maioridade.',
+        algoritmo:null,
+        code:'# Guarda a idade de uma pessoa\nidade = 18\n\n# Verifica se a idade é maior ou igual a 18\nif idade >= 18:\n    # Este bloco só executa quando a condição acima é True\n    print("Maior de idade")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'idade = 18',
+          'idade vale 18',
+          'if idade >= 18:',
+          'Python avalia a condição: 18 >= 18',
+          'Resultado: True',
+          'Como a condição é True, o Python executa o bloco indentado',
+          'print("Maior de idade")',
+          'Exibe: Maior de idade'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'idade = 18', explanation:'Cria a variável idade, guardando 18.' },
+          { code:'if idade >= 18:', explanation:'if inicia uma estrutura de decisão. idade >= 18 é a condição: uma comparação que resulta em True ou False. O : no final indica que, na próxima linha, começa o bloco a ser executado caso a condição seja True.' },
+          { code:'    print("Maior de idade")', explanation:'Esta linha está <b>indentada</b> (com espaços antes de print), o que a identifica como parte do bloco do if. Ela só é executada se a condição da linha anterior for True.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Maior de idade',
+        modIntro:'Vamos testar o mesmo programa com uma idade que não satisfaz a condição:',
+        modCode:'idade = 15\n\nif idade >= 18:\n    print("Maior de idade")\n\nprint("Fim do programa")',
+        modTrace:'idade = 15\n        ↓\nif idade >= 18:\n        ↓\n15 >= 18  →  False\n        ↓\nO bloco do if NÃO é executado (é pulado inteiramente)\n        ↓\nprint("Fim do programa")   ← esta linha está FORA do if, então sempre executa',
+        modResult:'Fim do programa',
+        modNote:'Note que, quando a idade é 15, a mensagem "Maior de idade" não aparece — mas "Fim do programa" aparece normalmente, pois essa linha não está indentada dentro do if.',
+        runnable:true,
+        naoConfunda:'print() dentro do bloco do if (indentado) versus print() fora do bloco (sem indentação, alinhado com o próprio if): apenas o que está indentado depende da condição. O que não está indentado sempre executa, independentemente do resultado da condição.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer os dois-pontos', code:'idade = 18\nif idade >= 18\n    print("Maior de idade")', body:'O : no final da linha do if é obrigatório. Sem ele, o Python não entende onde o bloco começa, e gera erro de sintaxe.' },
+          { title:'🐞 Esquecer de indentar o bloco', code:'idade = 18\nif idade >= 18:\nprint("Maior de idade")', body:'Sem indentação, o Python não consegue identificar que essa linha pertence ao bloco do if, e gera um erro.' },
+          { title:'🐞 Indentar de forma inconsistente', code:'idade = 18\nif idade >= 18:\n    print("Maior de idade")\n     print("Bem-vindo")', body:'Misturar quantidades diferentes de espaços na indentação gera erro. Todas as linhas de um mesmo bloco devem ter exatamente a mesma indentação — o recomendado é sempre usar 4 espaços por nível (Capítulo 54, PEP 8).' }
+        ],
+        howToRead:'Ao esquecer os dois-pontos, o Python mostra: <span class="icode">SyntaxError: expected \':\'</span><br><br>Ao esquecer a indentação, o Python mostra: <span class="icode">IndentationError: expected an indented block after \'if\' statement on line 2</span><br><br>IndentationError → erro relacionado à indentação do código. A mensagem já aponta que era esperado um bloco indentado depois da linha do if.',
+        tryIt:true,
+        tryItCode:'idade = 18\nif idade >= 18:\nprint("Maior de idade")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Verificar se um número digitado pelo usuário é positivo.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'numero = int("7")\n        ↓\nnumero = 7\n\nif numero > 0:\n        ↓\n7 > 0  →  True\n        ↓\nprint("O número é positivo")',
+        code:'# Pergunta um número ao usuário e converte para inteiro\nnumero = int(input("Digite um número: "))\n\n# Verifica se o número é maior que zero\nif numero > 0:\n    print("O número é positivo")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Quais três elementos são obrigatórios em um if?', gabarito:'A condição, os dois-pontos e o bloco indentado.' },
+          { kind:'text', prompt:'O que acontece com o bloco de um if quando a condição é False?', gabarito:'O bloco é ignorado, e o programa continua na próxima instrução fora do if.' },
+          { kind:'text', prompt:'Por que a indentação é importante em Python?', gabarito:'Porque a indentação é o que define, em Python, quais linhas pertencem a um bloco.' },
+          { kind:'code', prompt:'Encontre o erro no código abaixo:\nnota = 8\nif nota >= 7\n    print("Aprovado")', starter:'nota = 8\nif nota >= 7\n    print("Aprovado")', gabarito:'Falta o : no final da linha do if.\nCorreção:\nnota = 8\nif nota >= 7:\n    print("Aprovado")' },
+          { kind:'code', prompt:'Escreva um if que exiba "Você acertou!" quando a variável resposta for igual a "Python".', starter:'resposta = "Python"', gabarito:'if resposta == "Python":\n    print("Você acertou!")' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que peça uma nota ao usuário (input() + float()) e exiba "Aprovado" se a nota for maior ou igual a 6.', starter:'', gabarito:'nota = float(input("Nota: "))\nif nota >= 6:\n    print("Aprovado")' },
+          { kind:'code', prompt:'Escreva um programa que peça um número ao usuário e exiba "É par" quando o resto da divisão desse número por 2 for igual a 0.', starter:'', gabarito:'numero = int(input("Número: "))\nif numero % 2 == 0:\n    print("É par")' },
+          { kind:'text', prompt:'🐞 Encontre o bug:\nidade = input("Digite sua idade: ")\nif idade >= 18:\n    print("Maior de idade")\nPor que esse programa apresenta um problema, mesmo sem gerar erro imediato de sintaxe?', gabarito:'idade vem de input(), então é uma str; comparar str com int usando >= gera erro (TypeError), pois o Python não sabe comparar tipos diferentes dessa forma. É necessário converter com int(idade) antes da comparação.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário o preço de um produto e exiba a mensagem "Produto caro" quando o preço for maior que 100. Teste com um valor acima e um abaixo de 100.', starter:'', gabarito:'preco = float(input("Preço: "))\nif preco > 100:\n    print("Produto caro")' },
+          { kind:'code', prompt:'Desafio: peça ao usuário para digitar uma senha, e exiba "Acesso liberado" apenas se a senha digitada for exatamente igual a "python2026".', starter:'', gabarito:'senha = input("Senha: ")\nif senha == "python2026":\n    print("Acesso liberado")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'if CONDIÇÃO:\n    BLOCO (indentado, executado só se a condição for True)\n\nPRÓXIMA LINHA (sem indentação)\n    → sempre executa, independentemente da condição'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei escrever um if com condição, dois-pontos e bloco indentado.',
+          'Sei explicar o que acontece quando a condição é False.',
+          'Sei identificar erros de indentação e de dois-pontos faltando.',
+          'Sei combinar if com input() e conversão de tipos.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é obrigatório no final da linha de um if?', options:['Um ponto final .','Dois-pontos :','Um ponto e vírgula ;','Nada, é opcional'], correct:1, explanation:'Dois-pontos : é obrigatório.' },
+          { q:'O que acontece se a condição de um if for False?', options:['O programa é interrompido com erro','O bloco do if é ignorado, e o programa continua depois dele','O bloco do if executa mesmo assim','O Python pergunta novamente ao usuário'], correct:1, explanation:'O bloco é ignorado.' },
+          { q:'Como o Python identifica quais linhas pertencem ao bloco de um if?', options:['Pelas chaves {}','Pela indentação (espaços antes da linha)','Pelo ponto e vírgula','Pelo nome da variável usada'], correct:1, explanation:'Pela indentação.' },
+          { q:'O que gera o erro IndentationError?', options:['Um if sem dois-pontos','Um bloco que deveria estar indentado e não está','Uma variável que não existe','Uma divisão por zero'], correct:1, explanation:'Bloco esperado e ausente.' },
+          { q:'No código: idade=15; if idade>=18: print("Maior de idade"); print("Fim") — o que é exibido?', options:['Maior de idade e depois Fim','Apenas Maior de idade','Apenas Fim','Nada é exibido'], correct:2, explanation:'A condição é False; só "Fim" (fora do if) é exibido.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Instrução if', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#if-statements' },
+          { label:'Referência da linguagem — instrução composta if', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#the-if-statement' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap15',
+  title: 'Capítulo 15 — if e else',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como definir um caminho alternativo para quando a condição do if é False, usando else.',
+          'Que exatamente um dos dois blocos (if ou else) é executado, nunca os dois.',
+          'Como estruturar decisões de "sim ou não" de forma mais completa.'
+        ],
+        antes: 'É necessário conhecer o if simples (Capítulo 14).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'No capítulo anterior, vimos que o bloco de um if só executa quando a condição é True. Muitas vezes, porém, queremos definir explicitamente o que fazer também no caso <b>contrário</b>. Para isso, usamos <span class="icode">else</span> (do inglês, "senão").',
+          '<b>Exatamente um</b> dos dois blocos é executado a cada vez que esse trecho do programa roda — nunca os dois, e nunca nenhum dos dois.'
+        ],
+        glossary: [
+          { term:'else', def:'bloco de código executado quando a condição do if correspondente é False', example:'sempre vem logo após o bloco do if, sem nenhuma condição própria.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'idade = 15\n        ↓\nidade >= 18 ?\n        ↓\n   ┌────┴────┐\n  True      False\n   │          │\nBloco do if   Bloco do else\n   │          │\n"Maior de     "Menor de\n idade"        idade"\n\n\nFLUXOGRAMA TEXTUAL:\n\n           ┌───────────────┐\n           │ idade >= 18 ?  │\n           └───────┬────────┘\n              Sim  │  Não\n        ┌──────────┴──────────┐\n        ▼                     ▼\n"Maior de idade"      "Menor de idade"',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Classificar maioridade com dois caminhos: maior e menor de idade.',
+        algoritmo:null,
+        code:'# Guarda a idade de uma pessoa\nidade = 15\n\n# Verifica se a idade é maior ou igual a 18\nif idade >= 18:\n    # Executado apenas quando a condição acima é True\n    print("Maior de idade")\nelse:\n    # Executado apenas quando a condição acima é False\n    print("Menor de idade")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'idade = 15',
+          'idade vale 15',
+          'if idade >= 18:',
+          'Python avalia: 15 >= 18',
+          'Resultado: False',
+          'Como a condição é False, o bloco do if é IGNORADO',
+          'O Python executa o bloco do else',
+          'print("Menor de idade")',
+          'Exibe: Menor de idade'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'if idade >= 18:', explanation:'Testa se idade é maior ou igual a 18. Aqui, o resultado é False.' },
+          { code:'    print("Maior de idade")', explanation:'Parte do bloco do if. Como a condição foi False, esta linha <b>não</b> executa.' },
+          { code:'else:', explanation:'Marca o início do bloco alternativo, executado quando a condição do if é False. Não recebe nenhuma condição própria — ele "herda" o resultado contrário do if correspondente.' },
+          { code:'    print("Menor de idade")', explanation:'Parte do bloco do else. Como a condição do if foi False, esta linha <b>executa</b>.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Menor de idade',
+        modIntro:'Vamos testar o mesmo programa com uma idade que satisfaz a condição do if:',
+        modCode:'idade = 20\n\nif idade >= 18:\n    print("Maior de idade")\nelse:\n    print("Menor de idade")',
+        modTrace:'idade = 20\n        ↓\nif idade >= 18:\n        ↓\n20 >= 18  →  True\n        ↓\nBloco do if executa; bloco do else é ignorado\n        ↓\nprint("Maior de idade")',
+        modResult:'Maior de idade',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'else não é uma nova condição — é o caminho que sobra quando a condição do if correspondente não é satisfeita. Por isso, else nunca é escrito com uma condição ao lado, apenas else:'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Escrever uma condição ao lado do else', code:'if idade >= 18:\n    print("Maior de idade")\nelse idade < 18:\n    print("Menor de idade")', body:'else não aceita condição — ele já representa "tudo que não satisfez o if". Colocar uma condição ali gera erro de sintaxe. (Quando é necessário testar uma condição diferente, o comando correto é elif, do próximo capítulo.)' },
+          { title:'🐞 Indentação inconsistente entre o if e o else', code:'if idade >= 18:\n    print("Maior de idade")\n  else:\n    print("Menor de idade")', body:'A palavra else deve estar exatamente alinhada (mesma indentação) com o if ao qual ela pertence. Aqui, o else está deslocado, o que gera erro.' },
+          { title:'🐞 Esquecer os dois-pontos depois de else', code:'if idade >= 18:\n    print("Maior de idade")\nelse\n    print("Menor de idade")', body:'Assim como o if, o else também exige : no final da linha.' }
+        ],
+        howToRead:'Ao desalinhar a indentação do else em relação ao if, o Python mostra: <span class="icode">IndentationError: unindent does not match any outer indentation level</span><br><br>Isso significa que o nível de indentação daquela linha não corresponde a nenhum bloco aberto anteriormente — geralmente causado por espaços a mais ou a menos, ou por misturar espaços com tabulações.',
+        tryIt:true,
+        tryItCode:'idade = 18\nif idade >= 18:\n    print("Maior de idade")\n  else:\n    print("Menor de idade")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Verificar se um número digitado pelo usuário é par ou ímpar.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'numero = 7\n\nif numero % 2 == 0:\n        ↓\n7 % 2  →  1\n        ↓\n1 == 0  →  False\n        ↓\nBloco do else executa\n        ↓\nprint("O número é ímpar")',
+        code:'# Pergunta um número ao usuário e converte para inteiro\nnumero = int(input("Digite um número: "))\n\n# Um número é par quando o resto da divisão por 2 é igual a 0\nif numero % 2 == 0:\n    print("O número é par")\nelse:\n    print("O número é ímpar")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Para que serve o else?', gabarito:'Definir o que fazer quando a condição do if é False.' },
+          { kind:'text', prompt:'É possível que os blocos do if e do else executem ao mesmo tempo?', gabarito:'Não, exatamente um dos dois blocos executa por vez.' },
+          { kind:'text', prompt:'O else pode ter sua própria condição? Justifique.', gabarito:'Não, else nunca recebe condição própria.' },
+          { kind:'text', prompt:'O que deve ser colocado no final da linha else?', gabarito:'Dois-pontos (:).' },
+          { kind:'code', prompt:'Complete o código para exibir "Aprovado" se nota >= 6, e "Reprovado" caso contrário:\nnota = 5\nif nota >= 6:\n    print("Aprovado")\n______:\n    print("Reprovado")', starter:'nota = 5\nif nota >= 6:\n    print("Aprovado")\n______:\n    print("Reprovado")', gabarito:'nota = 5\nif nota >= 6:\n    print("Aprovado")\nelse:\n    print("Reprovado")' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que peça um número ao usuário e exiba "Positivo ou zero" se o número for maior ou igual a 0, e "Negativo" caso contrário.', starter:'', gabarito:'numero = int(input("Número: "))\nif numero >= 0:\n    print("Positivo ou zero")\nelse:\n    print("Negativo")' },
+          { kind:'code', prompt:'Escreva um programa que peça uma senha ao usuário e exiba "Acesso liberado" se ela for igual a "python2026", e "Senha incorreta" caso contrário.', starter:'', gabarito:'senha = input("Senha: ")\nif senha == "python2026":\n    print("Acesso liberado")\nelse:\n    print("Senha incorreta")' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nidade = 20\nif idade >= 18\n    print("Maior de idade")\nelse:\n    print("Menor de idade")', starter:'idade = 20\nif idade >= 18\n    print("Maior de idade")\nelse:\n    print("Menor de idade")', gabarito:'Bug: falta o : depois de if idade >= 18.\nCorreção:\nidade = 20\nif idade >= 18:\n    print("Maior de idade")\nelse:\n    print("Menor de idade")' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário o valor de uma compra e informe se ele tem direito a frete grátis ("Frete grátis!" para compras a partir de R$ 150,00) ou se precisa pagar frete ("Frete: R$ 15,00" caso contrário).', starter:'', gabarito:'valor = float(input("Valor da compra: "))\nif valor >= 150:\n    print("Frete grátis!")\nelse:\n    print("Frete: R$ 15,00")' },
+          { kind:'code', prompt:'Desafio: peça dois números ao usuário e exiba qual deles é o maior — considerando também a possibilidade de os dois números serem iguais.', starter:'', gabarito:'a = float(input("Primeiro número: "))\nb = float(input("Segundo número: "))\nif a >= b:\n    print(a)\nelse:\n    print(b)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'if CONDIÇÃO:\n    BLOCO A   (executa se a condição for True)\nelse:\n    BLOCO B   (executa se a condição for False)\n\nExatamente um dos dois blocos executa — nunca os dois, nunca nenhum.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar if/else para definir dois caminhos possíveis.',
+          'Sei que o else não recebe condição própria.',
+          'Sei alinhar corretamente a indentação entre if e else.',
+          'Sei que exatamente um dos dois blocos é executado por vez.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O else pode ter uma condição própria, como else idade < 18:?', options:['Sim, sempre','Não, else nunca recebe condição','Sim, mas é opcional','Depende da versão do Python'], correct:1, explanation:'else nunca recebe condição própria.' },
+          { q:'No código com if/else, quantos blocos são executados por vez?', options:['Sempre os dois','Nenhum','Exatamente um dos dois','Depende da indentação'], correct:2, explanation:'Exatamente um dos dois.' },
+          { q:'O que deve estar alinhado com o if correspondente?', options:['O else','O print() de dentro do if','A variável usada na condição','Nada precisa estar alinhado'], correct:0, explanation:'O else deve estar alinhado com o if.' },
+          { q:'O que gera IndentationError neste contexto?', options:['Usar else: corretamente indentado','Desalinhar o else em relação ao if','Usar if sem else','Usar print() dentro do bloco'], correct:1, explanation:'Desalinhar o else gera IndentationError.' },
+          { q:'No código: x=10; if x>20: print("Grande") else: print("Pequeno") — o que é exibido?', options:['Grande','Pequeno','Ambos','Nada'], correct:1, explanation:'10 > 20 é False: executa o else, "Pequeno".' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Instrução if (uso de else)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#if-statements' },
+          { label:'Referência da linguagem — instrução composta if', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#the-if-statement' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap16',
+  title: 'Capítulo 16 — if, elif e else',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como testar várias condições em sequência com elif.',
+          'Como o Python avalia as condições de cima para baixo, parando na primeira verdadeira.',
+          'Como construir classificações com múltiplas faixas (notas, idade, faixas de preço).'
+        ],
+        antes: 'É necessário conhecer if/else (Capítulo 15).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'if/else cobre bem decisões de "duas opções". Mas muitos problemas reais têm <b>mais de duas</b> possibilidades. Para isso, usamos <span class="icode">elif</span> (contração de "else if", ou seja, "senão, se"), que permite testar uma nova condição quando a anterior não foi satisfeita.',
+          'O Python avalia as condições <b>em ordem, de cima para baixo</b>, e executa <b>apenas o bloco da primeira condição verdadeira que encontrar</b> — mesmo que outras condições abaixo dela também sejam verdadeiras, elas nem chegam a ser testadas. O else final, quando presente, só executa se <b>nenhuma</b> das condições acima foi True.'
+        ],
+        glossary: [
+          { term:'elif', def:'abreviação de "else if" ("senão, se")', example:'testa uma nova condição, mas somente se todas as condições anteriores (do if e dos elif acima dele) tiverem sido False.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'nota = 7\n\nif nota >= 9?     → 7 >= 9  → False → passa para o próximo\nelif nota >= 7?   → 7 >= 7  → True  → executa este bloco e PARA aqui\nelif nota >= 5?   → (nem chega a ser testado)\nelse:             → (nem chega a ser avaliado)\n\n\nFLUXOGRAMA TEXTUAL:\n\nnota >= 9?  ── Não ──► nota >= 7?  ── Não ──► nota >= 5?  ── Não ──► else\n    │                       │                      │\n   Sim                     Sim                    Sim\n    │                       │                      │\n"Excelente"               "Bom"               "Regular"',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Classificar uma nota em Excelente, Bom ou Precisa melhorar.',
+        algoritmo:null,
+        code:'# Guarda a nota de um aluno\nnota = 7\n\n# Verifica a faixa de classificação da nota, testando em ordem\nif nota >= 9:\n    print("Excelente")\nelif nota >= 7:\n    # Só é testado se "nota >= 9" foi False\n    print("Bom")\nelse:\n    # Só executa se nenhuma condição acima foi True\n    print("Precisa melhorar")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'nota = 7',
+          'nota vale 7',
+          'if nota >= 9:',
+          '7 >= 9  →  False',
+          'Passa para o próximo teste (elif)',
+          'elif nota >= 7:',
+          '7 >= 7  →  True',
+          'Executa o bloco correspondente e PARA (não testa mais nada abaixo)',
+          'print("Bom")',
+          'Exibe: Bom'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'if nota >= 9:', explanation:'Testa a primeira condição. Como 7 >= 9 é False, o bloco associado a ela é ignorado, e o Python passa a testar o próximo elif.' },
+          { code:'elif nota >= 7:', explanation:'Só é avaliado porque a condição do if foi False. Aqui, 7 >= 7 é True.' },
+          { code:'    print("Bom")', explanation:'Como a condição do elif acima foi True, este bloco executa. Depois dele, o Python <b>não</b> avalia o else — a estrutura inteira termina assim que um bloco é executado.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Bom',
+        modIntro:'Vamos testar o mesmo programa com uma nota diferente, cobrindo mais faixas de classificação:',
+        modCode:'nota = 4\n\nif nota >= 9:\n    print("Excelente")\nelif nota >= 7:\n    print("Bom")\nelif nota >= 5:\n    print("Regular")\nelse:\n    print("Insuficiente")',
+        modTrace:'nota >= 9  → 4 >= 9  → False\nnota >= 7  → 4 >= 7  → False\nnota >= 5  → 4 >= 5  → False\nelse       → (nenhuma condição precisa ser True) → executa',
+        modResult:'Insuficiente',
+        modNote:'Com nota = 10: if nota >= 9 → True → executa "Excelente" e PARA. O elif nota >= 7 nem é testado, mesmo sendo também True — o if já "capturou" a decisão.',
+        runnable:true,
+        naoConfunda:'Vários if separados versus if/elif encadeados: usar vários if independentes testa TODAS as condições, sempre, mesmo que uma anterior já tenha sido True. Usar elif testa as condições em sequência, parando na primeira verdadeira. Para classificações que devem ser mutuamente exclusivas, elif é o padrão correto.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Ordenar as condições de forma que uma "engula" a outra', code:'nota = 10\n\nif nota >= 5:\n    print("Regular")\nelif nota >= 9:\n    print("Excelente")', body:'Como nota >= 5 já é True para nota = 10, o Python nunca chega a testar nota >= 9, mesmo essa condição também sendo verdadeira. A ordem das condições importa: normalmente, organize da mais restritiva para a mais abrangente.' },
+          { title:'🐞 Esquecer o else final quando ele é necessário', code:'nota = -5\n\nif nota >= 9:\n    print("Excelente")\nelif nota >= 7:\n    print("Bom")', body:'Se nenhuma condição for satisfeita e não houver else, simplesmente nada é exibido — o que pode ser um comportamento indesejado, dependendo do problema.' },
+          { title:'🐞 Usar if em vez de elif por engano', code:'nota = 8\n\nif nota >= 7:\n    print("Bom")\nif nota >= 5:\n    print("Regular")', body:'Como o segundo teste é um if novo (não um elif), ambos os blocos são testados de forma independente. Como 8 >= 7 e 8 >= 5 são ambos True, as duas mensagens são exibidas, o que provavelmente não era a intenção.' }
+        ],
+        howToRead:'Estruturas if/elif/else mal ordenadas normalmente <b>não geram erro</b> — o programa executa sem interrupções, mas produz um resultado logicamente incorreto. Esse tipo de problema é chamado de <b>erro de lógica</b>, e não é detectado automaticamente pelo Python: é necessário testar o programa com diferentes valores de entrada para percebê-lo (Capítulo 55, depuração).',
+        tryIt:true,
+        tryItCode:'nota = 10\n\nif nota >= 5:\n    print("Regular")\nelif nota >= 9:\n    print("Excelente")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Classificar a faixa etária de uma pessoa em "criança" (até 12 anos), "adolescente" (13 a 17 anos) ou "adulto" (18 anos ou mais).',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'idade = 15\n\nif idade <= 12:     → 15 <= 12  → False\nelif idade <= 17:   → 15 <= 17  → True   → executa e PARA',
+        code:'# Pergunta a idade da pessoa\nidade = int(input("Digite sua idade: "))\n\n# Classifica a faixa etária, testando da mais restritiva à mais ampla\nif idade <= 12:\n    print("Criança")\nelif idade <= 17:\n    print("Adolescente")\nelse:\n    print("Adulto")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que elif significa e quando ele é avaliado?', gabarito:'Abreviação de "else if"; avaliado apenas se as condições anteriores foram False.' },
+          { kind:'text', prompt:'O Python testa todos os elif de uma estrutura, mesmo depois de encontrar uma condição verdadeira?', gabarito:'Não — o Python para no primeiro bloco cuja condição é True.' },
+          { kind:'text', prompt:'O else final é obrigatório em uma estrutura if/elif? Justifique.', gabarito:'Não, é opcional; se ausente e nenhuma condição for True, nada é executado.' },
+          { kind:'code', prompt:'Reescreva, usando if/elif/else, uma classificação de temperatura: "Frio" (abaixo de 15), "Agradável" (de 15 a 25) e "Quente" (acima de 25).', starter:'temperatura = 20', gabarito:'if temperatura < 15:\n    print("Frio")\nelif temperatura <= 25:\n    print("Agradável")\nelse:\n    print("Quente")' },
+          { kind:'text', prompt:'O que acontece se nenhuma condição de um if/elif (sem else) for verdadeira?', gabarito:'Nenhum bloco é executado.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que peça uma nota (0 a 10) e exiba a classificação: "A" (9 ou mais), "B" (de 7 a 8,99), "C" (de 5 a 6,99), "D" (abaixo de 5).', starter:'', gabarito:'nota = float(input("Nota: "))\nif nota >= 9:\n    print("A")\nelif nota >= 7:\n    print("B")\nelif nota >= 5:\n    print("C")\nelse:\n    print("D")' },
+          { kind:'code', prompt:'Escreva um programa que peça o valor de uma compra e calcule o desconto: 20% para compras acima de R$ 500, 10% para compras de R$ 200 a R$ 500, e nenhum desconto abaixo de R$ 200. Exiba o valor final já com desconto.', starter:'', gabarito:'valor = float(input("Valor da compra: "))\nif valor > 500:\n    valor_final = valor * 0.80\nelif valor >= 200:\n    valor_final = valor * 0.90\nelse:\n    valor_final = valor\nprint(valor_final)' },
+          { kind:'text', prompt:'🐞 Encontre o bug: idade=20; if idade>=0: "Criança" elif idade>=13: "Adolescente" elif idade>=18: "Adulto" — por que esse código nunca exibe "Adulto"?', gabarito:'A primeira condição (idade >= 0) é verdadeira para qualquer idade não negativa, "engolindo" todos os casos seguintes — a ordem deveria ser da mais restritiva (maior valor) para a mais ampla.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa de classificação de IMC. Peça o peso (kg) e a altura (m), calcule imc = peso / (altura ** 2), e classifique: "Abaixo do peso" (IMC < 18.5), "Peso normal" (18.5 a 24.9), "Sobrepeso" (25 a 29.9), "Obesidade" (30 ou mais).', starter:'', gabarito:'peso = float(input("Peso (kg): "))\naltura = float(input("Altura (m): "))\nimc = peso / (altura ** 2)\nif imc < 18.5:\n    print("Abaixo do peso")\nelif imc < 25:\n    print("Peso normal")\nelif imc < 30:\n    print("Sobrepeso")\nelse:\n    print("Obesidade")' },
+          { kind:'code', prompt:'Desafio: peça três notas de um aluno, calcule a média aritmética, e classifique em "Aprovado" (média >= 7), "Recuperação" (5 a 6,99) ou "Reprovado" (abaixo de 5).', starter:'', gabarito:'n1 = float(input("Nota 1: "))\nn2 = float(input("Nota 2: "))\nn3 = float(input("Nota 3: "))\nmedia = (n1 + n2 + n3) / 3\nif media >= 7:\n    print("Aprovado")\nelif media >= 5:\n    print("Recuperação")\nelse:\n    print("Reprovado")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'if CONDIÇÃO_1:\n    ...\nelif CONDIÇÃO_2:      ← só testado se CONDIÇÃO_1 foi False\n    ...\nelif CONDIÇÃO_3:      ← só testado se as anteriores foram False\n    ...\nelse:                 ← só executa se NENHUMA condição acima foi True\n    ...\n\nO Python para no primeiro bloco cuja condição é True.\nOrdem das condições importa!'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar elif para testar múltiplas condições em sequência.',
+          'Sei que o Python para na primeira condição verdadeira.',
+          'Sei ordenar condições para evitar que uma "engula" outra por engano.',
+          'Sei diferenciar elif de vários if independentes.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Quando um elif é avaliado?', options:['Sempre, independentemente do if','Apenas se as condições anteriores (do if e dos elif acima) forem False','Apenas se o else não existir','Apenas na primeira execução do programa'], correct:1, explanation:'Apenas se as condições anteriores forem False.' },
+          { q:'No código: if nota>=5: "Regular" elif nota>=9: "Excelente" — o que é exibido para nota=10?', options:['Regular','Excelente','Ambos','Nada'], correct:0, explanation:'nota>=5 já é True: "Regular", e o elif nem é testado.' },
+          { q:'O else final em um if/elif/else é obrigatório?', options:['Sim, sempre','Não, é opcional','Só é obrigatório se houver mais de um elif','Só é obrigatório para números'], correct:1, explanation:'É opcional.' },
+          { q:'Quantos blocos, no máximo, são executados em uma estrutura if/elif/else?', options:['Um','Dois','Todos que tiverem condição True','Depende da quantidade de elif'], correct:0, explanation:'No máximo um bloco é executado.' },
+          { q:'Por que a ordem das condições em um if/elif importa?', options:['Não importa, o Python reordena automaticamente','Porque o Python para na primeira condição verdadeira, mesmo que outras abaixo também sejam verdadeiras','Porque condições precisam estar em ordem alfabética','Porque elif só aceita números'], correct:1, explanation:'O Python para na primeira condição verdadeira.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Instrução if (uso de elif)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#if-statements' },
+          { label:'Referência da linguagem — instrução composta if', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#the-if-statement' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap17',
+  title: 'Capítulo 17 — Operadores lógicos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como combinar múltiplas condições com and, or e not.',
+          'Como o Python avalia cada um desses operadores (tabelas-verdade simples).',
+          'Como usar operadores lógicos dentro de um if para decisões mais elaboradas.'
+        ],
+        antes: 'É necessário conhecer comparações (Capítulo 12), booleanos (Capítulo 13) e if/elif/else (Capítulos 14 a 16).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, cada if testava <b>uma única condição</b> por vez. Muitos problemas reais exigem verificar <b>mais de uma condição ao mesmo tempo</b> — por exemplo, "a pessoa precisa ter mais de 18 anos <b>e</b> possuir carteira de motorista". Para isso, Python oferece três <b>operadores lógicos</b>: and ("e", True quando ambas as condições são True), or ("ou", True quando pelo menos uma é True) e not ("não", inverte o valor).'
+        ],
+        glossary: []
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'Tabelas-verdade de and, or e not:',
+        diagram:'A       B       A and B    A or B\nTrue    True    True       True\nTrue    False   False      True\nFalse   True    False      True\nFalse   False   False      False\n\nA       not A\nTrue    False\nFalse   True\n\n\nidade = 20            → idade >= 18   →  True\ntem_carteira = True   → tem_carteira  →  True\n\nTrue and True  →  True\n        ↓\npode_dirigir = True',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Verificar duas condições ao mesmo tempo: idade suficiente E possuir carteira.',
+        algoritmo:null,
+        code:'# Dados da pessoa\nidade = 20\ntem_carteira = True\n\n# Verifica DUAS condições ao mesmo tempo: idade suficiente E possuir carteira\nif idade >= 18 and tem_carteira:\n    print("Pode dirigir")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'idade = 20\ntem_carteira = True',
+          'idade >= 18',
+          '20 >= 18  →  True',
+          'True and tem_carteira',
+          'True and True',
+          'True',
+          'A condição do if é True, o bloco executa',
+          'print("Pode dirigir")'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'if idade >= 18 and tem_carteira:', explanation:'idade >= 18 é avaliado primeiro, resultando em True. tem_carteira já é um valor booleano (True), usado diretamente. and combina os dois resultados: só é True se <b>ambos</b> forem True. Como os dois são True, a condição inteira do if é True.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Pode dirigir',
+        modIntro:'Vamos testar or, verificando se uma pessoa tem desconto por ser estudante ou idoso:',
+        modCode:'eh_estudante = False\neh_idoso = True\n\nif eh_estudante or eh_idoso:\n    print("Tem direito a desconto")\nelse:\n    print("Sem desconto")',
+        modResult:'Tem direito a desconto',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'and versus or: and exige que TODAS as condições sejam verdadeiras; or exige que PELO MENOS UMA seja verdadeira. Um erro comum é usar or quando na verdade se quer dizer "as duas coisas precisam ser verdadeiras" (o que exigiria and), ou vice-versa.',
+        extraBlocks:[
+          { title:'Operador not', intro:'Agora, um exemplo com not, verificando o caso contrário de uma condição:', code:'esta_chovendo = False\n\nif not esta_chovendo:\n    print("Pode ir sem guarda-chuva")', result:'Pode ir sem guarda-chuva', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Repetir a variável em vez de usar o operador lógico corretamente', code:'idade = 20\nif idade >= 18 and <= 65:\n    print("Adulto em idade ativa")', body:'Isso gera erro de sintaxe. Cada lado do and/or precisa ser uma condição completa, com a variável repetida: if idade >= 18 and idade <= 65:' },
+          { title:'🐞 Usar and quando o correto seria or', code:'dia = "sábado"\nif dia == "sábado" and dia == "domingo":\n    print("É fim de semana")', body:'Como uma variável não pode ser igual a duas coisas diferentes ao mesmo tempo, essa condição nunca é True. O correto, neste caso, é or: if dia == "sábado" or dia == "domingo":' },
+          { title:'🐞 Esquecer que not inverte a condição inteira', code:'idade = 20\nif not idade >= 18:\n    print("Maior de idade")   # ERRADO: essa mensagem só aparece se for MENOR de idade', body:'not idade >= 18 significa "a idade NÃO é maior ou igual a 18" — ou seja, é o oposto do que o texto do print() sugere.' }
+        ],
+        howToRead:'O primeiro erro comum (idade >= 18 and &lt;= 65) gera: <span class="icode">SyntaxError: invalid syntax</span><br><br>A estrutura da condição não é válida, porque &lt;= 65 sozinho, sem um valor à esquerda, não forma uma expressão completa.',
+        tryIt:true,
+        tryItCode:'idade = 20\nif idade >= 18 and <= 65:\n    print("Adulto em idade ativa")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Verificar se uma pessoa pode participar de uma promoção que exige ser maior de idade E estar cadastrado no programa de fidelidade.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Dados da pessoa\nidade = 22\ncadastrado_fidelidade = True\n\n# Verifica as duas condições necessárias ao mesmo tempo\nif idade >= 18 and cadastrado_fidelidade:\n    print("Pode participar da promoção")\nelse:\n    print("Não pode participar da promoção")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Quando A and B resulta em True?', gabarito:'Quando ambas são True.' },
+          { kind:'text', prompt:'Quando A or B resulta em True?', gabarito:'Quando pelo menos uma é True.' },
+          { kind:'text', prompt:'O que not True retorna?', gabarito:'False.' },
+          { kind:'text', prompt:'Escreva a condição que verifica se idade está entre 18 e 65 (incluindo os dois limites).', gabarito:'idade >= 18 and idade <= 65' },
+          { kind:'text', prompt:'Escreva a condição que verifica se dia é "sábado" ou "domingo".', gabarito:'dia == "sábado" or dia == "domingo"' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que verifique se uma pessoa pode entrar em uma festa: idade maior ou igual a 18 E possuir convite (variável booleana tem_convite).', starter:'idade = 20\ntem_convite = True', gabarito:'idade = 20\ntem_convite = True\nif idade >= 18 and tem_convite:\n    print("Pode entrar")' },
+          { kind:'code', prompt:'Escreva um programa que conceda desconto se o cliente for estudante OU tiver mais de 60 anos.', starter:'eh_estudante = True\nidade = 30', gabarito:'eh_estudante = True\nidade = 30\nif eh_estudante or idade > 60:\n    print("Tem desconto")' },
+          { kind:'text', prompt:'Explique, com suas palavras, por que a condição dia == "sábado" and dia == "domingo" nunca é verdadeira.', gabarito:'Porque uma variável não pode ser igual a dois valores diferentes ao mesmo tempo — a condição exige que dia seja "sábado" e "domingo" simultaneamente, o que nunca acontece.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Verifique se um número está FORA do intervalo de 10 a 20 (menor que 10 OU maior que 20), exibindo "Fora do intervalo" ou "Dentro do intervalo". Depois, reescreva usando not sobre "está dentro do intervalo".', starter:'', gabarito:'numero = int(input("Número: "))\nif numero < 10 or numero > 20:\n    print("Fora do intervalo")\nelse:\n    print("Dentro do intervalo")\n\n# Versão equivalente usando not:\nif not (numero >= 10 and numero <= 20):\n    print("Fora do intervalo")\nelse:\n    print("Dentro do intervalo")' },
+          { kind:'code', prompt:'Desafio: decida se uma pessoa pode tirar carteira de motorista: idade >= 18 E não ter nenhuma pendência judicial (variável booleana tem_pendencia, onde True significa que a pessoa TEM pendência — use not).', starter:'idade = 20\ntem_pendencia = False', gabarito:'idade = 20\ntem_pendencia = False\nif idade >= 18 and not tem_pendencia:\n    print("Pode tirar carteira")\nelse:\n    print("Não pode tirar carteira")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'A and B   → True somente se A e B forem ambos True\nA or B    → True se A ou B (ou ambos) forem True\nnot A     → inverte o valor de A\n\nTABELAS-VERDADE:\n\nA       B       A and B    A or B\nTrue    True    True       True\nTrue    False   False      True\nFalse   True    False      True\nFalse   False   False      False\n\nA       not A\nTrue    False\nFalse   True'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar and, or e not para combinar condições.',
+          'Sei montar as tabelas-verdade básicas desses três operadores.',
+          'Sei escrever condições compostas corretamente, repetindo a variável em cada lado do operador lógico.',
+          'Sei identificar quando usar and em vez de or, e vice-versa.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Quando A and B é True?', options:['Quando A ou B é True','Quando A e B são ambos True','Sempre','Nunca'], correct:1, explanation:'and exige que ambos sejam True.' },
+          { q:'Quando A or B é True?', options:['Somente quando ambos são True','Quando pelo menos um dos dois é True','Somente quando ambos são False','Nunca'], correct:1, explanation:'or exige pelo menos um True.' },
+          { q:'O que not False retorna?', options:['False','True','0','Erro'], correct:1, explanation:'not inverte: not False é True.' },
+          { q:'Qual é a forma correta de verificar se idade está entre 18 e 65?', options:['idade >= 18 and <= 65','idade >= 18 and idade <= 65','idade >= 18 or idade <= 65','18 <= idade or 65'], correct:1, explanation:'A variável deve ser repetida em cada lado.' },
+          { q:'Por que dia == "sábado" and dia == "domingo" nunca é True?', options:['Porque and sempre retorna False','Porque uma variável não pode ser igual a dois valores diferentes ao mesmo tempo','Porque dia não é uma variável válida','Porque faltam parênteses'], correct:1, explanation:'Uma variável não pode valer duas coisas ao mesmo tempo.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Instrução if (condições compostas)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#if-statements' },
+          { label:'Referência da linguagem — operações booleanas (and, or, not)', url:'https://docs.python.org/pt-br/3/reference/expressions.html#boolean-operations' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap18',
+  title: 'Capítulo 18 — match',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Para que serve a instrução match, e quando ela é uma boa escolha em vez de if/elif/else.',
+          'Como comparar um valor com várias opções possíveis.',
+          'Como usar o caso curinga (case _) para cobrir qualquer outro valor.',
+          'Que match está disponível a partir do Python 3.10.'
+        ],
+        antes: 'É necessário dominar if/elif/else (Capítulos 14 a 16). Este capítulo apresenta uma alternativa mais adequada para um tipo específico de decisão.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Já sabemos resolver decisões com múltiplas opções usando elif. Quando o objetivo é comparar <b>um único valor</b> com várias opções possíveis (e não testar condições diferentes entre si), o Python 3.10 e versões posteriores oferecem uma alternativa: a instrução <span class="icode">match</span>.',
+          'O <span class="icode">case _</span> (com um sublinhado) funciona como um "curinga": ele corresponde a <b>qualquer</b> valor que não tenha sido capturado pelos case anteriores — é equivalente ao else final de um if/elif/else.'
+        ],
+        glossary: [
+          { term:'match', def:'instrução que compara um valor com uma série de padrões possíveis (case), executando o bloco do primeiro padrão que corresponder', example:'disponível a partir do Python 3.10; em versões anteriores, é necessário usar if/elif/else.' }
+        ],
+        callout:'NÃO CONFUNDA: match não substitui if/elif/else em todos os casos — ele é mais indicado quando existe um único valor sendo comparado com várias opções específicas (como um dia da semana, uma opção de menu). Para condições variadas e combinadas (com and e or), if/elif/else continua sendo a ferramenta mais adequada.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'dia = "qua"\n        ↓\nmatch dia:\n        ↓\ncase "seg"?  → "qua" == "seg"?  →  Não\ncase "ter"?  → "qua" == "ter"?  →  Não\ncase "qua"?  → "qua" == "qua"?  →  Sim → executa este bloco e PARA\ncase _:      → (nem chega a ser avaliado)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Comparar uma opção de menu com valores possíveis.',
+        algoritmo:null,
+        code:'# Guarda a opção escolhida em um menu simples\nopcao = "2"\n\n# Compara a opção com cada caso possível, em ordem\nmatch opcao:\n    case "1":\n        print("Você escolheu Cadastrar")\n    case "2":\n        print("Você escolheu Consultar")\n    case "3":\n        print("Você escolheu Sair")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'opcao = "2"',
+          'opcao vale "2"',
+          'match opcao:',
+          'case "1":  → "2" == "1"?  →  Não corresponde',
+          'case "2":  → "2" == "2"?  →  Corresponde!',
+          'Executa o bloco deste case e PARA (não avalia mais nada)',
+          'print("Você escolheu Consultar")'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'match opcao:', explanation:'Inicia a estrutura, informando qual valor será comparado com cada case a seguir: o valor guardado em opcao.' },
+          { code:'    case "1":\n        print("Você escolheu Cadastrar")', explanation:'Testa se opcao é igual a "1". Como não é, este bloco é ignorado.' },
+          { code:'    case "2":\n        print("Você escolheu Consultar")', explanation:'Testa se opcao é igual a "2". Como é, este bloco executa.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Você escolheu Consultar',
+        modIntro:'Vamos adicionar um caso curinga, para cobrir opções não previstas:',
+        modCode:'opcao = "9"\n\nmatch opcao:\n    case "1":\n        print("Você escolheu Cadastrar")\n    case "2":\n        print("Você escolheu Consultar")\n    case "3":\n        print("Você escolheu Sair")\n    case _:\n        print("Opção inválida")',
+        modTrace:'opcao = "9"\n\ncase "1"?  → Não\ncase "2"?  → Não\ncase "3"?  → Não\ncase _     → sempre corresponde, se chegar até aqui\n        ↓\nprint("Opção inválida")',
+        modResult:'Opção inválida',
+        modNote:null,
+        runnable:true,
+        extraBlocks:[
+          { title:'Testando mais de um valor no mesmo case', intro:'É possível testar mais de um valor no mesmo case, separando-os com | (o símbolo de "ou"):', code:'dia = "sáb"\n\nmatch dia:\n    case "sáb" | "dom":\n        print("Fim de semana")\n    case _:\n        print("Dia de semana")', result:'Fim de semana', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Usar match em uma versão do Python anterior à 3.10', code:'match opcao:\n    case "1":\n        print("Cadastrar")', body:'Em versões do Python anteriores à 3.10, match não existe como instrução, e esse código gera erro de sintaxe. Esta apostila usa Python 3.14 como referência, então match funciona normalmente.' },
+          { title:'🐞 Esquecer o caso curinga quando ele é necessário', code:'match opcao:\n    case "1":\n        print("Cadastrar")\n    case "2":\n        print("Consultar")', body:'Se opcao for "5", nenhum case corresponde, e nada é exibido — nenhum erro acontece, o match simplesmente não executa bloco algum. Se o programa precisa tratar valores inesperados, inclua case _:' },
+          { title:'🐞 Esquecer os dois-pontos em match ou em algum case', code:'match opcao\n    case "1":\n        print("Cadastrar")', body:'Assim como if e for, tanto match VALOR: quanto cada case OPÇÃO: exigem : no final da linha.' }
+        ],
+        howToRead:'Ao esquecer os dois-pontos em match ou case, o Python mostra: <span class="icode">SyntaxError: invalid syntax</span><br><br>Se esse erro aparecer especificamente ao usar match, vale confirmar a versão do Python em uso (por exemplo, executando python --version no terminal).',
+        tryIt:true,
+        tryItCode:'opcao = "1"\nmatch opcao\n    case "1":\n        print("Cadastrar")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Exibir o nome de um mês a partir de seu número (1 a 12), usando match.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'mes = 2\n\ncase 1?  → 2 == 1?  →  Não\ncase 2?  → 2 == 2?  →  Sim  → executa e PARA',
+        code:'# Pergunta o número do mês e converte para inteiro\nmes = int(input("Digite o número do mês (1-12): "))\n\nmatch mes:\n    case 1:\n        print("Janeiro")\n    case 2:\n        print("Fevereiro")\n    case 3:\n        print("Março")\n    case _:\n        print("Mês não reconhecido ou fora do intervalo tratado neste exemplo")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'A partir de qual versão do Python a instrução match está disponível?', gabarito:'Python 3.10.' },
+          { kind:'text', prompt:'Para que serve o case _?', gabarito:'Cobrir qualquer valor não tratado pelos case anteriores.' },
+          { kind:'text', prompt:'O match para de testar cases assim que encontra uma correspondência? Explique.', gabarito:'Sim, para na primeira correspondência.' },
+          { kind:'code', prompt:'Reescreva, usando match, uma verificação de opção de menu com três opções: "1", "2" e "3".', starter:'opcao = "1"', gabarito:'match opcao:\n    case "1":\n        print("Opção 1")\n    case "2":\n        print("Opção 2")\n    case "3":\n        print("Opção 3")' },
+          { kind:'text', prompt:'Como testar, em um único case, se o valor é "a" ou "b"?', gabarito:'case "a" | "b":' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que use match para exibir o nome de um dia da semana, a partir de uma abreviação ("seg", "ter", "qua", "qui", "sex", "sáb", "dom"), incluindo um case _ para entradas inválidas.', starter:'', gabarito:'dia = input("Dia (seg/ter/qua/qui/sex/sáb/dom): ")\nmatch dia:\n    case "seg":\n        print("Segunda-feira")\n    case "ter":\n        print("Terça-feira")\n    case "qua":\n        print("Quarta-feira")\n    case "qui":\n        print("Quinta-feira")\n    case "sex":\n        print("Sexta-feira")\n    case "sáb":\n        print("Sábado")\n    case "dom":\n        print("Domingo")\n    case _:\n        print("Dia inválido")' },
+          { kind:'code', prompt:'Escreva um programa que use match para simular um semáforo: "verde" exibe "Siga", "amarelo" exibe "Atenção", "vermelho" exibe "Pare", e qualquer outro valor exibe "Cor inválida".', starter:'', gabarito:'cor = input("Cor: ")\nmatch cor:\n    case "verde":\n        print("Siga")\n    case "amarelo":\n        print("Atenção")\n    case "vermelho":\n        print("Pare")\n    case _:\n        print("Cor inválida")' },
+          { kind:'code', prompt:'Reescreva o exercício do semáforo usando if/elif/else em vez de match, e compare a legibilidade das duas versões.', starter:'', gabarito:'cor = input("Cor: ")\nif cor == "verde":\n    print("Siga")\nelif cor == "amarelo":\n    print("Atenção")\nelif cor == "vermelho":\n    print("Pare")\nelse:\n    print("Cor inválida")' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa de menu simples para um sistema de biblioteca, usando match, com as opções "1" (Emprestar livro), "2" (Devolver livro), "3" (Consultar acervo) e "4" (Sair), tratando qualquer opção inválida com case _.', starter:'', gabarito:'opcao = input("Escolha (1-4): ")\nmatch opcao:\n    case "1":\n        print("Emprestar livro")\n    case "2":\n        print("Devolver livro")\n    case "3":\n        print("Consultar acervo")\n    case "4":\n        print("Sair")\n    case _:\n        print("Opção inválida")' },
+          { kind:'text', prompt:'Desafio: em que situações match deixaria o código mais legível do que if/elif/else, e em quais situações if/elif/else continuaria sendo mais adequado?', gabarito:'Resposta aberta — espera-se a conclusão de que match é mais legível quando há muitas opções fixas para um único valor, enquanto if/elif/else continua melhor para condições combinadas ou comparações de intervalo.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'match VALOR:\n    case OPÇÃO_1:\n        ...\n    case OPÇÃO_2:\n        ...\n    case OPÇÃO_A | OPÇÃO_B:    ← corresponde a qualquer uma das duas\n        ...\n    case _:                     ← curinga, cobre qualquer outro valor\n        ...\n\nDisponível a partir do Python 3.10.\nMais indicado quando: um único valor é comparado com várias opções fixas.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei escrever uma estrutura match/case básica.',
+          'Sei usar case _ como caso padrão.',
+          'Sei combinar múltiplos valores em um único case com |.',
+          'Sei que match exige Python 3.10 ou superior.',
+          'Sei identificar quando match é mais adequado que if/elif/else.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'A partir de qual versão do Python match está disponível?', options:['2.7','3.0','3.10','Todas as versões'], correct:2, explanation:'match está disponível a partir do Python 3.10.' },
+          { q:'O que case _ representa?', options:['Um erro de sintaxe','Um caso curinga, que corresponde a qualquer valor não tratado antes','O primeiro caso a ser testado','Um comentário'], correct:1, explanation:'case _ é o caso curinga.' },
+          { q:'O que acontece se nenhum case corresponder e não houver case _?', options:['O programa gera um erro','Nenhum bloco é executado, sem erro','O primeiro case é executado por padrão','O programa trava'], correct:1, explanation:'Nenhum bloco é executado, sem erro.' },
+          { q:'Como testar se um valor é "a" ou "b" em um único case?', options:['case "a" and "b":','case "a" | "b":','case "a", "b":','case "a" or "b":'], correct:1, explanation:'Use | para "ou" dentro de um case.' },
+          { q:'match é mais indicado quando:', options:['Existem condições combinadas com and/or','Um único valor é comparado com várias opções específicas','Não há nenhuma condição a testar','Apenas números estão envolvidos'], correct:1, explanation:'match é ideal para um único valor comparado a várias opções.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — A instrução match', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#match-statements' },
+          { label:'Referência da linguagem — instrução composta match', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#the-match-statement' },
+          { label:'PEP 634 — Structural Pattern Matching', url:'https://peps.python.org/pep-0634/' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'revisao3',
+  title: 'Parada para Revisão 3 — Fim da Parte III',
+  screens: [
+    { id:'mapa', title:'Mapa mental', type:'diagram', data:{
+        intro:'Um resumo visual de tudo que vimos nos Capítulos 12 a 18.',
+        diagram:'TOMADA DE DECISÃO\n   │\n   ├── Comparações: == != > < >= <=  → sempre produzem bool\n   │\n   ├── bool: True / False\n   │\n   ├── if CONDIÇÃO:\n   │      BLOCO (indentado, executa se True)\n   │\n   ├── if / else\n   │      exatamente um dos dois blocos executa\n   │\n   ├── if / elif / else\n   │      testa em ordem, para na primeira condição True\n   │\n   ├── Operadores lógicos\n   │      and → True se ambos forem True\n   │      or  → True se pelo menos um for True\n   │      not → inverte o valor\n   │\n   └── match / case (Python 3.10+)\n          compara um valor com várias opções fixas\n          case _ → curinga',
+        note:null
+    }},
+    { id:'tabela', title:'Comandos vistos até aqui', type:'table', data:{
+        headers:['Comando/conceito','Para que serve','Exemplo'],
+        rows:[
+          ['<code>==, !=, &gt;, &lt;, &gt;=, &lt;=</code>','comparar valores','<code>idade &gt;= 18</code>'],
+          ['<code>if</code>','decisão simples','<code>if nota &gt;= 6:</code>'],
+          ['<code>else</code>','caminho alternativo','<code>else:</code>'],
+          ['<code>elif</code>','testar mais condições em sequência','<code>elif nota &gt;= 5:</code>'],
+          ['<code>and, or, not</code>','combinar/inverter condições','<code>idade &gt;= 18 and tem_carteira</code>'],
+          ['<code>match</code> / <code>case</code>','comparar um valor com várias opções','<code>match opcao:</code>']
+        ]
+    }},
+    { id:'errosfreq', title:'Erros frequentes', type:'list', data:{
+        intro:'Os erros mais comuns desta etapa:',
+        items:[
+          'Confundir = (atribuição) com == (comparação).',
+          'Esquecer os dois-pontos (:) em if, else, elif, match ou case.',
+          'Esquecer ou errar a indentação do bloco.',
+          'Ordenar mal as condições de um if/elif, fazendo uma "engolir" outra.',
+          'Usar and quando o correto seria or (ou vice-versa).',
+          'Usar match sem lembrar que ele exige Python 3.10+.'
+        ]
+    }},
+    { id:'perguntas', title:'Perguntas rápidas', type:'qa', data:{
+        intro:'Tente responder mentalmente antes de clicar para revelar.',
+        items:[
+          { q:'Qual é a diferença entre = e ==?', a:'= atribui um valor; == compara dois valores.' },
+          { q:'Quantos blocos, no máximo, executam em um if/elif/else?', a:'Exatamente um.' },
+          { q:'Quando A and B é True?', a:'Quando ambos os lados são True.' },
+          { q:'Para que serve o case _ em um match?', a:'Cobrir qualquer valor que não corresponda aos case anteriores.' },
+          { q:'Por que a ordem das condições em um if/elif é importante?', a:'Porque o Python para na primeira condição verdadeira, então uma condição mais abrangente colocada antes pode "engolir" as seguintes.' }
+        ]
+    }},
+    { id:'exrevisao', title:'Exercícios de revisão', type:'exercises', data:{
+        level:'Exercícios de revisão',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que classifique um número digitado pelo usuário como "Positivo", "Negativo" ou "Zero".', starter:'', gabarito:'numero = float(input("Número: "))\nif numero > 0:\n    print("Positivo")\nelif numero < 0:\n    print("Negativo")\nelse:\n    print("Zero")' },
+          { kind:'code', prompt:'Escreva um programa que verifique se uma pessoa pode se inscrever em uma maratona: idade maior ou igual a 16 E ter atestado médico (variável booleana tem_atestado).', starter:'idade = 20\ntem_atestado = True', gabarito:'idade = 20\ntem_atestado = True\nif idade >= 16 and tem_atestado:\n    print("Pode se inscrever")\nelse:\n    print("Não pode se inscrever")' },
+          { kind:'code', prompt:'Usando match, exiba o nome de uma peça de xadrez a partir de sua abreviação ("P"=Peão, "C"=Cavalo, "B"=Bispo, "T"=Torre, "D"=Dama, "R"=Rei), com um caso curinga para abreviações inválidas.', starter:'', gabarito:'peca = input("Abreviação: ")\nmatch peca:\n    case "P":\n        print("Peão")\n    case "C":\n        print("Cavalo")\n    case "B":\n        print("Bispo")\n    case "T":\n        print("Torre")\n    case "D":\n        print("Dama")\n    case "R":\n        print("Rei")\n    case _:\n        print("Abreviação inválida")' }
+        ]
+    }},
+    { id:'desafio', title:'Pequeno desafio', type:'exercises', data:{
+        level:'Pequeno desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa classificador_de_triangulos.py que peça três valores representando os lados de um triângulo e classifique-o como "Equilátero" (os três lados iguais), "Isósceles" (exatamente dois lados iguais) ou "Escaleno" (todos os lados diferentes), usando if, elif, else e operadores lógicos.', starter:'', gabarito:'a = float(input("Lado A: "))\nb = float(input("Lado B: "))\nc = float(input("Lado C: "))\nif a == b and b == c:\n    print("Equilátero")\nelif a == b or b == c or a == c:\n    print("Isósceles")\nelse:\n    print("Escaleno")' }
+        ]
+    }},
+    { id:'checklist', title:'Checklist de domínio da Parte III', type:'checklist', data:{
+        items:[
+          'Sei usar os seis operadores de comparação.',
+          'Sei diferenciar = de ==.',
+          'Sei escrever if, if/else e if/elif/else corretamente.',
+          'Sei usar indentação de forma consistente.',
+          'Sei combinar condições com and, or e not.',
+          'Sei usar match/case para comparar um valor com várias opções.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte IV — Repetições, onde aprenderemos while, for, range(), break, continue e laços aninhados.'
     }}
   ]
 }
