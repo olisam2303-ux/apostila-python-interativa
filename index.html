@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apostila Python Interativa — Parte I</title>
+<style>
+:root {
+  --bg: #f6f7fb;
+  --panel: #ffffff;
+  --panel-2: #eef1f8;
+  --border: #dbe0ec;
+  --text: #202433;
+  --text-dim: #5b6178;
+  --accent: #306998;
+  --accent-2: #ffd43b;
+  --accent-2-text: #4a3b00;
+  --ok: #1b8a5a;
+  --ok-bg: #e6f6ee;
+  --err: #c9333a;
+  --err-bg: #fdecec;
+  --code-bg: #1e2333;
+  --code-text: #e8ebf5;
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(20,25,45,0.08), 0 1px 2px rgba(20,25,45,0.06);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161f;
+    --panel: #1c1f2b;
+    --panel-2: #232739;
+    --border: #323752;
+    --text: #e9ebf5;
+    --text-dim: #a3a8c2;
+    --accent: #6fa8d8;
+    --accent-2: #ffd43b;
+    --accent-2-text: #3a2e00;
+    --ok: #4fd398;
+    --ok-bg: #113328;
+    --err: #ff8080;
+    --err-bg: #3a1a1c;
+    --code-bg: #0f1220;
+    --code-text: #e8ebf5;
+    --shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.55;
+}
+code, pre, .mono {
+  font-family: "Cascadia Code", "Fira Code", Consolas, "Courier New", monospace;
+}
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+
+header.top {
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+header.top .brand { display: flex; flex-direction: column; flex: 0 0 auto; }
+header.top .brand strong { font-size: 15px; }
+header.top .brand span { font-size: 12px; color: var(--text-dim); }
+#menuBtn {
+  display: none;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.progress-wrap { flex: 1; display: flex; align-items: center; gap: 10px; }
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--panel-2);
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.progress-bar > div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  width: 0%;
+  transition: width .3s ease;
+}
+.progress-label { font-size: 12px; color: var(--text-dim); white-space: nowrap; }
+
+.layout { flex: 1; display: flex; min-height: 0; }
+
+nav#sidebar {
+  width: 300px;
+  flex: 0 0 300px;
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+  overflow-y: auto;
+  padding: 12px 8px 40px;
+}
+nav#sidebar .mod {
+  margin-bottom: 6px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+nav#sidebar .mod-title {
+  font-weight: 600;
+  font-size: 13px;
+  padding: 9px 10px;
+  background: var(--panel-2);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+nav#sidebar .mod-screens {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+}
+nav#sidebar .mod-screens li {
+  padding: 6px 10px 6px 20px;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+nav#sidebar .mod-screens li:hover { background: var(--panel-2); }
+nav#sidebar .mod-screens li.active {
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+}
+nav#sidebar .mod-screens li .chk {
+  width: 14px; flex: 0 0 14px; text-align: center; font-size: 11px; color: var(--ok);
+}
+nav#sidebar .mod-screens li.active .chk { color: var(--accent-2); }
+
+main#content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px 60px;
+  max-width: 880px;
+  margin: 0 auto;
+  width: 100%;
+}
+@media (max-width: 900px) {
+  #menuBtn { display: inline-block; }
+  nav#sidebar {
+    position: fixed;
+    left: 0; top: 53px; bottom: 0;
+    z-index: 30;
+    transform: translateX(-105%);
+    transition: transform .2s ease;
+    box-shadow: var(--shadow);
+  }
+  nav#sidebar.open { transform: translateX(0); }
+  main#content { padding: 20px 16px 60px; }
+}
+
+.screen-kicker { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin-bottom: 4px; }
+.screen-title { font-size: 24px; font-weight: 800; margin: 0 0 18px; }
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.card h3 { margin-top: 0; font-size: 15px; }
+ul.plain, ol.plain { margin: 8px 0; padding-left: 22px; }
+ul.plain li, ol.plain li { margin-bottom: 6px; }
+
+.glossary {
+  border-left: 4px solid var(--accent);
+  background: var(--panel-2);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin: 12px 0;
+}
+.glossary .term { font-weight: 700; color: var(--accent); }
+.glossary .ex { color: var(--text-dim); font-size: 13px; margin-top: 4px; }
+
+pre.diagram {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 8px;
+  padding: 16px;
+  overflow-x: auto;
+  font-size: 13.5px;
+  white-space: pre;
+}
+pre.codeblock {
+  background: var(--code-bg);
+  color: var(--code-text);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 13.5px;
+  margin: 0;
+}
+
+.step-list { margin: 0; padding: 0; list-style: none; }
+.step-list li {
+  display: none;
+  padding: 10px 12px;
+  background: var(--panel-2);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 13.5px;
+  white-space: pre-wrap;
+  border-left: 3px solid var(--accent);
+  animation: fadein .25s ease;
+}
+.step-list li.shown { display: block; }
+@keyframes fadein { from { opacity: 0; transform: translateY(-4px);} to { opacity: 1; transform: translateY(0);} }
+.btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn.secondary {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn.small { padding: 6px 11px; font-size: 12.5px; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+.line-item { margin-bottom: 10px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.line-item .lhead {
+  padding: 10px 12px;
+  background: var(--panel-2);
+  cursor: pointer;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 13.5px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.line-item .lbody { display: none; padding: 12px 14px; border-top: 1px solid var(--border); font-size: 14px; }
+.line-item.open .lbody { display: block; }
+.line-item .arrow { color: var(--text-dim); }
+
+.errbox { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+.errbox .ehead {
+  background: var(--err-bg);
+  color: var(--err);
+  padding: 10px 12px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.errbox .ebody { display: none; padding: 12px 14px; }
+.errbox.open .ebody { display: block; }
+
+.code-runner { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.code-runner textarea {
+  width: 100%;
+  min-height: 110px;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border: none;
+  padding: 12px 14px;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 13.5px;
+  resize: vertical;
+  tab-size: 4;
+}
+.code-runner textarea:focus { outline: 2px solid var(--accent); outline-offset: -2px; }
+.runner-bar {
+  padding: 8px 10px;
+  background: var(--panel-2);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.runner-out {
+  background: #0c0e17;
+  color: #cfe8d6;
+  padding: 10px 14px;
+  font-family: "Cascadia Code", Consolas, monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  min-height: 20px;
+  border-top: 1px solid var(--border);
+}
+.runner-out.error { color: #ff9b9b; }
+.pyodide-note { font-size: 12px; color: var(--text-dim); }
+
+.exercise { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+.exercise .exnum { font-weight: 700; color: var(--accent); margin-right: 6px; }
+.exercise textarea.answer {
+  width: 100%;
+  min-height: 70px;
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 13.5px;
+  font-family: inherit;
+  margin-top: 8px;
+}
+.gabarito-box {
+  display: none;
+  margin-top: 10px;
+  background: var(--ok-bg);
+  border: 1px dashed var(--ok);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13.5px;
+}
+.gabarito-box.open { display: block; }
+.gabarito-box .tag { color: var(--ok); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .03em; }
+
+.checklist-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 4px; border-bottom: 1px solid var(--border); }
+.checklist-item:last-child { border-bottom: none; }
+.checklist-item input { margin-top: 3px; width: 16px; height: 16px; }
+.checklist-item.done label { color: var(--ok); }
+.checklist-progress { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; }
+
+.quiz-q { border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 14px; }
+.quiz-q .qtext { font-weight: 600; margin-bottom: 10px; }
+.quiz-opt {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 13.5px;
+  color: var(--text);
+}
+.quiz-opt:hover { border-color: var(--accent); }
+.quiz-opt.correct { background: var(--ok-bg); border-color: var(--ok); color: var(--ok); font-weight: 600; }
+.quiz-opt.wrong { background: var(--err-bg); border-color: var(--err); color: var(--err); font-weight: 600; }
+.quiz-opt:disabled { cursor: default; }
+.quiz-explain { display: none; font-size: 13px; color: var(--text-dim); margin-top: 6px; padding-top: 8px; border-top: 1px dashed var(--border); }
+.quiz-explain.open { display: block; }
+.quiz-score { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; }
+
+table.cmdtable { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+table.cmdtable th, table.cmdtable td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; }
+table.cmdtable th { background: var(--panel-2); }
+table.cmdtable code { background: var(--panel-2); padding: 1px 5px; border-radius: 4px; }
+
+.qa-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; overflow: hidden; }
+.qa-item .qhead { padding: 10px 12px; background: var(--panel-2); cursor: pointer; font-weight: 600; font-size: 13.5px; }
+.qa-item .qbody { display: none; padding: 10px 14px; border-top: 1px solid var(--border); font-size: 13.5px; }
+.qa-item.open .qbody { display: block; }
+
+.icode { background: var(--panel-2); padding: 1px 6px; border-radius: 4px; font-family: "Cascadia Code", Consolas, monospace; font-size: .93em; }
+.callout {
+  border-left: 4px solid var(--accent-2);
+  background: color-mix(in srgb, var(--accent-2) 14%, var(--panel));
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin: 12px 0;
+  font-size: 13.5px;
+}
+
+footer.bottomnav {
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+}
+footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text-align: center; flex: 1; }
+
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.35);
+  display: none; z-index: 25;
+}
+.overlay.show { display: block; }
+@media (max-width: 900px) { .overlay.show { display: block; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <button id="menuBtn" aria-label="Abrir menu">☰</button>
+    <div class="brand">
+      <strong>Python do Zero — Modo Interativo</strong>
+      <span>Parte I · Primeiros Passos</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div id="progressFill"></div></div>
+      <span class="progress-label" id="progressLabel">0 / 0 telas</span>
+    </div>
+  </header>
+  <div class="layout">
+    <div class="overlay" id="overlay"></div>
+    <nav id="sidebar"></nav>
+    <main id="content"></main>
+  </div>
+  <footer class="bottomnav">
+    <button class="btn secondary" id="prevBtn">← Anterior</button>
+    <span class="center-label" id="footerLabel"></span>
+    <button class="btn" id="nextBtn">Próximo →</button>
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   CONTEÚDO — Apostila Python do Zero, Parte I (Cap. 1-3 + Revisão 1)
+   ========================================================= */
+const MODULES = [
+{
+  id: 'cap1',
+  title: 'Capítulo 1 — O que é programação?',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um programa de computador.',
+          'O que é um algoritmo e por que ele vem antes do código.',
+          'O que é uma linguagem de programação.',
+          'O que é código-fonte e o que é um interpretador.',
+          'O que significam entrada, processamento e saída.',
+          'Por que vamos aprender Python especificamente.'
+        ],
+        antes: 'Não é necessário nenhum conhecimento prévio. Este é o primeiro capítulo da apostila.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Um computador não "pensa" sozinho. Ele apenas executa instruções, uma atrás da outra, exatamente na ordem em que recebe. Um <b>programa</b> é justamente essa sequência de instruções escritas para que o computador realize uma tarefa.',
+          'Antes de escrever qualquer instrução para o computador, uma pessoa programadora pensa primeiro <b>no papel</b> (ou na cabeça) sobre os passos necessários para resolver o problema. Essa sequência de passos, escrita em linguagem natural, chama-se <b>algoritmo</b>.',
+          'Um algoritmo pode ser executado por uma pessoa, mas um computador só entende instruções escritas em uma <b>linguagem de programação</b> — um conjunto de palavras, símbolos e regras que o computador (por meio de um programa especial) consegue interpretar e transformar em ações reais, como somar números, exibir um texto na tela ou salvar um arquivo.',
+          'O texto que escrevemos usando essa linguagem é chamado de <b>código-fonte</b>. É simplesmente um arquivo de texto, escrito seguindo as regras da linguagem escolhida.',
+          'Só que o computador, no fundo, só entende uma linguagem própria dele, feita de números binários (0s e 1s). Ele não lê "Python" diretamente. É necessário um programa especial que leia o código-fonte escrito por nós e traduza (ou execute) essas instruções para o computador. No caso do Python, esse programa especial é chamado de <b>interpretador</b>.'
+        ],
+        glossary: [
+          { term:'algoritmo', def:'uma sequência finita e ordenada de passos para resolver um problema', example:'uma receita de bolo é um algoritmo (misturar ingredientes, colocar na forma, assar por 40 minutos, retirar do forno).' },
+          { term:'linguagem de programação', def:'um conjunto de regras e palavras usado para escrever instruções que o computador consegue executar', example:'Python, mas existem centenas de outras, como Java, C e JavaScript.' },
+          { term:'código-fonte', def:'o texto do programa, escrito em uma linguagem de programação, antes de ser executado', example:'um arquivo chamado programa.py contendo instruções em Python.' },
+          { term:'interpretador', def:'um programa que lê o código-fonte, linha por linha, e manda o computador executar cada instrução', example:'quando você "roda" um arquivo Python, é o interpretador do Python que está fazendo esse trabalho.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'Praticamente todo programa de computador segue o mesmo esquema geral: ele recebe alguma informação, faz algo com essa informação, e devolve um resultado.',
+        diagram: 'ENTRADA → PROCESSAMENTO → SAÍDA\n\n- Entrada: a informação que o programa recebe (o que o usuário digita,\n  o conteúdo de um arquivo, um valor já definido no código, etc.).\n- Processamento: o que o programa faz com essa informação (cálculos,\n  comparações, organização de dados).\n- Saída: o resultado que o programa mostra ou produz (um texto na tela,\n  um arquivo salvo, um valor calculado).\n\nExemplo do dia a dia — calculadora de troco em uma loja:\n\nENTRADA\n  valor da compra: R$ 18,50\n  valor pago: R$ 20,00\n        ↓\nPROCESSAMENTO\n  troco = valor pago - valor da compra\n  troco = 20,00 - 18,50\n  troco = 1,50\n        ↓\nSAÍDA\n  "Seu troco é R$ 1,50"',
+        note:'Repare que existe uma ordem clara: primeiro recebemos os dados, depois calculamos, só então mostramos o resultado. Todo programa desta apostila seguirá essa mesma lógica.'
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Ainda não vamos escrever código Python de verdade — isso começa no Capítulo 2. Por enquanto, vamos escrever um algoritmo em linguagem natural, o primeiro passo de qualquer programador antes de programar.',
+        problem:'Calcular o troco de uma compra.',
+        algoritmo:[
+          'Perguntar o valor da compra.',
+          'Perguntar o valor pago pelo cliente.',
+          'Calcular o troco (valor pago - valor da compra).',
+          'Mostrar o troco para o cliente.'
+        ],
+        code:null,
+        codeNote:'Como este é o primeiro capítulo, ainda não há código Python. Observe como o algoritmo acima já está organizado em passos pequenos e numerados — essa é a mesma organização que o código Python terá, capítulo depois de capítulo.'
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Vamos simular, com valores concretos, os quatro passos do algoritmo. Clique em "Próximo passo" para revelar cada etapa.',
+        steps:[
+          'Passo 1: perguntar o valor da compra\n   → cliente informa: R$ 18,50',
+          'Passo 2: perguntar o valor pago\n   → cliente informa: R$ 20,00',
+          'Passo 3: calcular o troco\n   → troco = 20,00 - 18,50\n   → troco = 1,50',
+          'Passo 4: mostrar o troco\n   → exibir: "Seu troco é R$ 1,50"'
+        ],
+        after:'Note que cada passo depende do anterior: só é possível calcular o troco (passo 3) depois de já termos os dois valores (passos 1 e 2). Essa dependência entre passos é a <b>ordem de execução</b> — o computador nunca "adivinha" a ordem, ele segue exatamente a sequência escrita.'
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Como ainda não há código Python, vamos explicar cada linha do algoritmo — a base do que será convertido em código no próximo capítulo. Clique em cada linha.',
+        lines:[
+          { code:'1. Perguntar o valor da compra.', explanation:'Esta linha representa uma <b>entrada</b> de dados: o programa precisa obter uma informação de fora (do usuário) antes de continuar.' },
+          { code:'2. Perguntar o valor pago pelo cliente.', explanation:'Outra entrada. Note que pedimos os dois valores necessários antes de tentar calcular qualquer coisa — não daria para calcular o troco sem saber ambos.' },
+          { code:'3. Calcular o troco (valor pago - valor da compra).', explanation:'Esta linha é o <b>processamento</b>: uma operação matemática (subtração) feita sobre os valores obtidos nos passos anteriores.' },
+          { code:'4. Mostrar o troco para o cliente.', explanation:'Esta linha é a <b>saída</b>: o resultado do processamento é entregue para quem está usando o programa.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Seu troco é R$ 1,50',
+        modIntro:'Vamos alterar o algoritmo para uma situação ligeiramente diferente: e se o cliente pagar exatamente o valor da compra?',
+        modTrace:'1. Perguntar o valor da compra.        → R$ 20,00\n2. Perguntar o valor pago pelo cliente. → R$ 20,00\n3. Calcular o troco.                    → 20,00 - 20,00 = 0,00\n4. Mostrar o troco.                     → "Seu troco é R$ 0,00"',
+        modNote:'O algoritmo continua funcionando sem nenhuma alteração na sua estrutura — apenas os valores de entrada mudaram, e o resultado mudou de acordo. Isso é uma característica importante de um bom algoritmo: ele deve funcionar para diferentes valores de entrada, não apenas para um caso específico.',
+        naoConfunda:null
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Pular direto para o código sem pensar no algoritmo', body:'Iniciantes costumam tentar escrever código Python imediatamente, sem planejar os passos antes. Isso costuma gerar programas confusos e cheios de erros de lógica. A partir desta apostila, sempre que um problema for um pouco mais elaborado, escreva primeiro o algoritmo em linguagem natural.' },
+          { title:'🐞 Confundir a ordem dos passos', body:'Um algoritmo que pede para "calcular o troco" antes de "perguntar o valor pago" não funciona, porque o passo 3 depende de uma informação que ainda não existe no passo em que é executado. A ordem em programação <b>sempre</b> importa.' }
+        ],
+        howToRead:'Ainda não existem mensagens de erro do Python neste capítulo (elas começam a aparecer a partir do Capítulo 3, quando executarmos código de verdade). Por enquanto, o "erro" possível é um erro de raciocínio: um algoritmo mal organizado, com passos fora de ordem ou passos faltando.'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Uma pessoa quer saber quantos anos ela tem em relação a um ano futuro qualquer.',
+        entrada:'ano de nascimento da pessoa; ano que queremos calcular a idade.',
+        processamento:'idade = ano futuro − ano de nascimento.',
+        saida:'a idade calculada.',
+        algoritmo:[
+          'Perguntar o ano de nascimento.',
+          'Perguntar o ano para o qual queremos calcular a idade.',
+          'Calcular a idade (ano futuro - ano de nascimento).',
+          'Mostrar a idade calculada.'
+        ],
+        simulation:'Passo 1 → ano de nascimento = 2008\nPasso 2 → ano futuro = 2026\nPasso 3 → idade = 2026 - 2008 = 18\nPasso 4 → exibir: "A idade será 18 anos"',
+        code:null
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Em suas palavras, explique o que é um algoritmo.', gabarito:'Um algoritmo é uma sequência ordenada e finita de passos usada para resolver um problema, escrita antes de qualquer código.' },
+          { kind:'text', prompt:'Dê um exemplo de algoritmo do seu dia a dia que não envolva computadores.', gabarito:'Exemplo válido: uma receita culinária, o manual de montagem de um móvel, o passo a passo para trocar um pneu.' },
+          { kind:'text', prompt:'O que é código-fonte?', gabarito:'Código-fonte é o texto do programa, escrito em uma linguagem de programação, antes de ser executado.' },
+          { kind:'text', prompt:'Para que serve um interpretador?', gabarito:'O interpretador lê o código-fonte e manda o computador executar cada instrução.' },
+          { kind:'text', prompt:'Complete: um programa recebe uma ______, faz um ______ e produz uma ______.', gabarito:'Um programa recebe uma entrada, faz um processamento e produz uma saída.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'text', prompt:'Escreva, em linguagem natural, um algoritmo para calcular a média de duas notas de um aluno.', gabarito:'1. Perguntar a primeira nota.\n2. Perguntar a segunda nota.\n3. Somar as duas notas.\n4. Dividir a soma por 2.\n5. Mostrar o resultado.' },
+          { kind:'text', prompt:'Escreva um algoritmo para decidir se uma pessoa pode ou não votar, sabendo que o voto é permitido a partir de 16 anos.', gabarito:'1. Perguntar a idade da pessoa.\n2. Verificar se a idade é maior ou igual a 16.\n3. Se for, informar que a pessoa pode votar.\n4. Se não for, informar que a pessoa ainda não pode votar.' },
+          { kind:'text', prompt:'Identifique a entrada, o processamento e a saída de: "calcular quantos litros de tinta são necessários para pintar uma parede, sabendo a área da parede e que cada litro cobre 5 m²".', gabarito:'Entrada: área da parede.\nProcessamento: dividir a área pela cobertura de um litro (5 m²).\nSaída: quantidade de litros necessários.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Escreva um algoritmo em linguagem natural: uma loja dá 10% de desconto para compras acima de R$ 100,00. Descreva os passos para perguntar o valor da compra, decidir se o desconto se aplica, calcular o valor final e mostrá-lo.', gabarito:'1. Perguntar o valor da compra.\n2. Verificar se o valor é maior que R$ 100,00.\n3. Se for, calcular 10% de desconto e subtrair do valor da compra.\n4. Se não for, manter o valor da compra sem alteração.\n5. Mostrar o valor final a ser pago.' },
+          { kind:'text', prompt:'Desafio: pense em um aplicativo de celular que você usa com frequência (ex.: delivery de comida). Descreva, em linguagem natural, o algoritmo geral por trás de uma única ação dentro dele (ex.: "fazer um pedido"), identificando entrada, processamento e saída.', gabarito:'Resposta aberta — o importante é identificar claramente uma entrada (ex.: itens escolhidos e endereço), um processamento (ex.: cálculo do valor total, tempo estimado de entrega) e uma saída (ex.: confirmação do pedido na tela).' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'PROGRAMA\n   = sequência de instruções que o computador executa\n\nALGORITMO\n   = os passos pensados antes de programar, em linguagem natural\n\nLINGUAGEM DE PROGRAMAÇÃO\n   = o conjunto de regras usado para escrever essas instruções\n\nCÓDIGO-FONTE\n   = o texto do programa, escrito na linguagem escolhida\n\nINTERPRETADOR\n   = o programa que lê e executa o código-fonte\n\nTODO PROGRAMA SEGUE:\n   ENTRADA → PROCESSAMENTO → SAÍDA'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei explicar o que é um programa.',
+          'Sei explicar o que é um algoritmo e por que ele vem antes do código.',
+          'Sei o que é código-fonte e o que é um interpretador.',
+          'Sei identificar entrada, processamento e saída em um problema simples.',
+          'Consigo escrever um algoritmo simples em linguagem natural.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um algoritmo?', options:['Um tipo de computador','Uma sequência ordenada de passos para resolver um problema','Um erro de programação','Um tipo de linguagem de programação apenas'], correct:1, explanation:'Um algoritmo é uma sequência ordenada de passos.' },
+          { q:'O que é o código-fonte?', options:['O resultado final mostrado na tela','O computador em si','O texto do programa, escrito em uma linguagem de programação','Um tipo de erro'], correct:2, explanation:'Código-fonte é o texto do programa.' },
+          { q:'Para que serve o interpretador do Python?', options:['Para traduzir textos entre idiomas','Para ler o código-fonte e executar as instruções nele contidas','Para desenhar a interface do programa','Para armazenar arquivos na internet'], correct:1, explanation:'O interpretador lê e executa o código-fonte.' },
+          { q:'Em "ENTRADA → PROCESSAMENTO → SAÍDA", o que representa a SAÍDA?', options:['A informação que o usuário fornece','O cálculo ou decisão feita pelo programa','O resultado apresentado pelo programa','O nome do arquivo do programa'], correct:2, explanation:'A saída é o resultado apresentado pelo programa.' },
+          { q:'Por que é importante planejar o algoritmo antes de escrever o código?', options:['Porque o Python exige isso','Porque ajuda a organizar o raciocínio e evitar erros de ordem e de lógica','Porque deixa o programa mais rápido de executar','Não é importante, pode-se pular essa etapa sempre'], correct:1, explanation:'Planejar evita erros de ordem e de lógica.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial: Abrindo seu Apetite', url:'https://docs.python.org/pt-br/3/tutorial/appetite.html' },
+          { label:'Página oficial do Python', url:'https://www.python.org/' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap2',
+  title: 'Capítulo 2 — Conhecendo Python',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é a linguagem Python e por que ela é uma boa escolha para começar.',
+          'A diferença entre o modo interativo e os scripts (arquivos .py).',
+          'Como usar print() para exibir uma mensagem na tela.',
+          'Como ler, com calma, cada parte de uma linha de código Python.'
+        ],
+        antes: 'É necessário ter lido o Capítulo 1 (o que é programação, algoritmo, código-fonte e interpretador).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          '<b>Python</b> é uma linguagem de programação criada por Guido van Rossum, cuja primeira versão foi lançada em 1991. Ela é mantida até hoje por uma comunidade internacional e por uma organização sem fins lucrativos, a Python Software Foundation.',
+          'Python é conhecida por uma sintaxe (conjunto de regras de escrita) relativamente próxima da linguagem humana, o que a torna uma linguagem frequentemente recomendada para quem está começando a programar. Ela é usada tanto para aprender lógica de programação quanto profissionalmente, em áreas como desenvolvimento web, automação, ciência de dados e inteligência artificial.',
+          'Existem duas formas principais de executar código Python: <b>modo interativo</b> (você digita uma instrução por vez, e o interpretador responde imediatamente) e <b>script</b> (arquivo .py com várias instruções, executadas em ordem, de cima para baixo).',
+          'Nesta apostila, usaremos principalmente <b>scripts</b>, pois é assim que programas de verdade são escritos, salvos e reutilizados.'
+        ],
+        glossary: [
+          { term:'modo interativo', def:'forma de usar o Python digitando um comando de cada vez e vendo o resultado na hora', example:'normalmente acessado digitando python (ou python3) no terminal, sem indicar nenhum arquivo.' },
+          { term:'script', def:'um arquivo de texto (.py) contendo uma sequência de instruções Python, executadas em ordem, de cima para baixo, quando o arquivo é executado', example:'um arquivo chamado programa.py.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'Compare os dois modos de trabalhar com Python:',
+        diagram:'MODO INTERATIVO                          SCRIPT (arquivo .py)\n\nVocê digita uma linha                    Você escreve várias linhas\n        ↓                                          ↓\nPython executa aquela linha              Você salva o arquivo\n        ↓                                          ↓\nVocê vê o resultado na hora               Você manda executar o arquivo\n        ↓                                          ↓\nVocê digita a próxima linha              Python executa TODAS as linhas,\n                                          de cima para baixo, em ordem',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'O primeiro programa tradicional de qualquer curso de programação é exibir uma mensagem de saudação na tela. Em Python, isso é feito com a função print().',
+        problem:'Exibir "Olá, mundo!" na tela.',
+        algoritmo:null,
+        code:'# Exibe a mensagem "Olá, mundo!" na tela\nprint("Olá, mundo!")',
+        codeNote:'Clique em "Executar" para ver o Python de verdade rodando esse código.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Vamos acompanhar o que o interpretador faz com a linha print("Olá, mundo!"). Clique em "Próximo passo".',
+        steps:[
+          'Código escrito:\n   print("Olá, mundo!")',
+          'O interpretador Python lê a linha',
+          'Reconhece "print" como um comando para exibir algo na tela',
+          'Identifica o texto entre aspas: "Olá, mundo!"',
+          'Envia esse texto para a tela (a saída padrão do programa)',
+          'Resultado exibido:\n   Olá, mundo!'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha de código para ver a explicação de cada parte.',
+        lines:[
+          { code:'print("Olá, mundo!")', explanation:'<b>print</b> é o nome de uma <b>função</b> já pronta, que faz parte do próprio Python. Por enquanto, entenda função como "um comando que realiza uma ação específica". Especificamente, a função print serve para <b>exibir algo na tela</b>.<br><br>Os parênteses <span class="icode">()</span> logo depois de print indicam que estamos "chamando" (usando) essa função, e é dentro deles que colocamos o que queremos que ela exiba.<br><br><span class="icode">"Olá, mundo!"</span> é um <b>texto</b> (chamado tecnicamente de <i>string</i>, assunto do Capítulo 8). Textos em Python são sempre escritos entre aspas — podem ser aspas duplas ou aspas simples.<br><br>Quando essa linha é executada, o Python exibe exatamente o que está entre as aspas, sem as aspas, na tela.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Olá, mundo!',
+        modIntro:'Vamos exibir duas mensagens, cada uma em uma linha:',
+        modCode:'# Exibe uma mensagem de boas-vindas\nprint("Olá, mundo!")\n\n# Exibe uma segunda mensagem, em uma nova linha\nprint("Estou aprendendo Python.")',
+        modResult:'Olá, mundo!\nEstou aprendendo Python.',
+        modNote:'Note que cada chamada de print() exibe seu conteúdo e, em seguida, pula para uma nova linha automaticamente — por isso a segunda mensagem aparece embaixo da primeira, não ao lado.',
+        runnable:true
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer as aspas', code:'print(Olá, mundo!)', body:'Sem as aspas, o Python tenta interpretar Olá como o nome de algo já definido no programa (uma variável, por exemplo — Capítulo 5), o que ainda não existe, e o programa não executa, mostrando um erro.' },
+          { title:'🐞 Misturar tipos de aspas na mesma string', code:'print("Olá, mundo!\')', body:'A aspa que abre o texto precisa ser do mesmo tipo da aspa que fecha o texto. Misturar aspas duplas e simples na mesma string gera erro.' },
+          { title:'🐞 Esquecer um dos parênteses', code:'print("Olá, mundo!"', body:'Todo parêntese aberto precisa ser fechado. Faltando o parêntese de fechamento, o Python entende que a instrução ainda não terminou e aponta um erro.' }
+        ],
+        howToRead:'Se você esquecer as aspas, o Python mostrará algo parecido com: <span class="icode">SyntaxError: invalid syntax</span>. SyntaxError significa <b>erro de sintaxe</b>: o Python não conseguiu nem entender a estrutura da linha, porque ela não segue as regras da linguagem. Ao ver SyntaxError, o problema está na forma como a linha foi escrita — muitas vezes aspas, parênteses ou dois-pontos faltando ou mal posicionados.',
+        tryIt:true
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Exibir seu nome e sua cidade, em duas linhas separadas.',
+        entrada:null, processamento:null, saida:null,
+        algoritmo:['Exibir o nome.','Exibir a cidade.'],
+        simulation:null,
+        code:'# Exibe o nome da pessoa\nprint("Samuel")\n\n# Exibe a cidade da pessoa\nprint("São Paulo")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que exiba a mensagem "Estou aprendendo Python!".', starter:'', gabarito:'print("Estou aprendendo Python!")' },
+          { kind:'code', prompt:'Escreva um programa que exiba seu nome completo.', starter:'', gabarito:'print("Samuel Oliveira")' },
+          { kind:'code', prompt:'Escreva um programa que exiba três linhas: seu nome, sua idade (como texto, entre aspas) e sua cidade, cada uma em um print() separado.', starter:'', gabarito:'print("Samuel")\nprint("17")\nprint("São Paulo")' },
+          { kind:'text', prompt:'O que aconteceria se você trocasse a ordem de duas chamadas de print() em um programa? Explique.', gabarito:'Trocar a ordem de duas chamadas de print() troca a ordem em que as mensagens aparecem na tela, pois o Python executa as instruções na ordem em que estão escritas, de cima para baixo.' },
+          { kind:'text', prompt:'Qual é a função do Python usada para exibir uma mensagem na tela?', gabarito:'print()' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que exiba um pequeno "cartão de visitas" com quatro linhas: nome, profissão (ou "estudante"), cidade e um hobby.', starter:'', gabarito:'print("Nome: Samuel")\nprint("Profissão: Estudante")\nprint("Cidade: São Paulo")\nprint("Hobby: Jogar xadrez")' },
+          { kind:'code', prompt:'Escreva um programa que exiba a figura abaixo usando vários print() (um para cada linha):\n*\n**\n***', starter:'', gabarito:'print("*")\nprint("**")\nprint("***")' },
+          { kind:'code', prompt:'Descubra e corrija o erro no código abaixo:\nprint(\'Bem-vindo ao curso de Python!")', starter:'print(\'Bem-vindo ao curso de Python!")', gabarito:'Erro: a linha mistura aspas simples e duplas. Correção:\nprint("Bem-vindo ao curso de Python!")' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que exiba, usando apenas chamadas de print(), uma pequena "caixa" de texto ao redor da frase "Python é divertido!", como:\n**********************\n* Python é divertido! *\n**********************', starter:'', gabarito:'print("**********************")\nprint("* Python é divertido! *")\nprint("**********************")' },
+          { kind:'text', prompt:'Desafio: por que Python é tão usada em ciência de dados e inteligência artificial? Escreva sua hipótese sobre o que torna uma linguagem popular.', gabarito:'Resposta aberta — espera-se uma reflexão simples, por exemplo: sintaxe próxima da linguagem natural, grande quantidade de bibliotecas prontas, e comunidade ativa.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'PYTHON\n   = linguagem de programação, criada em 1991, sintaxe próxima do português/inglês\n\nMODO INTERATIVO\n   = executa uma instrução de cada vez\n\nSCRIPT (.py)\n   = arquivo com várias instruções, executadas em ordem\n\nprint()\n   = função usada para exibir algo na tela\n   = o que está entre aspas dentro dos parênteses é exibido exatamente como escrito'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é Python e para que ela é usada.',
+          'Sei a diferença entre modo interativo e script.',
+          'Sei usar print() para exibir uma mensagem.',
+          'Sei explicar por que um texto precisa estar entre aspas em Python.',
+          'Consigo identificar e corrigir o erro de aspas ou parênteses faltando.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um script em Python?', options:['Um comando digitado diretamente no terminal','Um arquivo .py contendo uma sequência de instruções','Um tipo de erro do Python','O nome do interpretador'], correct:1, explanation:'Um script é um arquivo .py com uma sequência de instruções.' },
+          { q:'O que a função print() faz?', options:['Lê um valor digitado pelo usuário','Exibe algo na tela','Cria uma variável','Apaga a tela'], correct:1, explanation:'print() exibe algo na tela.' },
+          { q:'Qual das opções abaixo está escrita corretamente em Python?', options:['print(Olá!)','print("Olá!")','print("Olá!)','print(Olá!")'], correct:1, explanation:'print("Olá!"), com aspas do mesmo tipo abrindo e fechando, e parênteses corretamente fechados.' },
+          { q:'O que significa a mensagem SyntaxError?', options:['O programa rodou com sucesso','Houve um erro na estrutura/escrita da linha de código','O computador está sem memória','O arquivo .py não foi encontrado'], correct:1, explanation:'SyntaxError indica um problema na estrutura/escrita da linha.' },
+          { q:'Ao executar duas chamadas de print() seguidas, o resultado aparece:', options:['Sempre na mesma linha','Em linhas separadas, uma abaixo da outra, na ordem em que foram escritas','Em ordem aleatória','Apenas a última é exibida'], correct:1, explanation:'Cada print() gera uma nova linha, na ordem em que foi escrito.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial: Abrindo seu Apetite', url:'https://docs.python.org/pt-br/3/tutorial/appetite.html' },
+          { label:'Documentação Python — Usando o interpretador Python', url:'https://docs.python.org/pt-br/3/tutorial/interpreter.html' },
+          { label:'Referência da função embutida print()', url:'https://docs.python.org/pt-br/3/library/functions.html#print' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap3',
+  title: 'Capítulo 3 — Executando um programa',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como instalar e verificar se o Python está disponível no seu computador.',
+          'Como criar e salvar um arquivo .py.',
+          'Como executar esse arquivo a partir do terminal.',
+          'Como interpretar a saída exibida pelo terminal.',
+          'A diferença entre "escrever" código e "executar" código.'
+        ],
+        antes: 'É necessário ter lido os Capítulos 1 e 2 (o que é um programa, o que é Python e como funciona a função print()).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora vimos código Python apenas "no papel". Neste capítulo, vamos efetivamente colocar um programa para rodar no computador. Para isso, precisamos de três coisas: o <b>Python instalado</b> no computador (o interpretador), um <b>editor de texto</b> para escrever o código (como o VS Code), e um <b>terminal</b>.',
+          'É importante entender que <b>escrever código não é a mesma coisa que executar código</b>. Escrever é criar o arquivo de texto com as instruções. Executar é pedir ao interpretador Python para efetivamente ler esse arquivo e realizar o que está escrito nele. Um arquivo .py sozinho, sem ser executado, não faz nada — é apenas texto salvo.'
+        ],
+        glossary: [
+          { term:'terminal', def:'um programa que permite digitar comandos de texto para o computador executar, em vez de clicar em ícones', example:'no Windows, pode ser o "Prompt de Comando", o "PowerShell" ou o terminal integrado de um editor como o VS Code.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'O fluxo de trabalho básico, do início ao fim, é sempre este:',
+        diagram:'ESCREVER o código no editor\n        ↓\nSALVAR o arquivo com extensão .py\n        ↓\nABRIR o terminal na pasta onde o arquivo foi salvo\n        ↓\nEXECUTAR o arquivo através do interpretador Python\n        ↓\nLER o resultado exibido no terminal\n\n\nARQUIVO programa.py (texto salvo no computador)\n   print("Olá, mundo!")\n\n         ↓  (comando no terminal: python programa.py)\n\nINTERPRETADOR PYTHON lê o arquivo, linha por linha\n\n         ↓\n\nTERMINAL exibe o resultado:\n   Olá, mundo!',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Vamos usar o mesmo programa do capítulo anterior, mas agora descrevendo o processo completo de criação e execução.',
+        problem:'Passo 1 — Criar o arquivo ola.py.\nPasso 2 — Escrever o código.\nPasso 3 — Salvar o arquivo, por exemplo em meus_programas/ola.py.\nPasso 4 — Abrir o terminal nessa mesma pasta.\nPasso 5 — Executar: python ola.py\n\n💡 Dica: dependendo do sistema, o comando pode ser "python" ou "python3". Se "python ola.py" não funcionar, tente "python3 ola.py".',
+        algoritmo:null,
+        code:'# Exibe a mensagem "Olá, mundo!" na tela\nprint("Olá, mundo!")',
+        codeNote:'O código em si não muda em relação ao Capítulo 2 — o que muda agora é onde ele precisa estar (um arquivo .py salvo) e como mandamos o computador executá-lo (pelo terminal). Abaixo você pode simular a execução desse arquivo:',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Vamos acompanhar o que acontece quando você digita "python ola.py" no terminal. Clique em "Próximo passo".',
+        steps:[
+          'Terminal recebe o comando:\n   python ola.py',
+          'O sistema operacional localiza o programa "python" (o interpretador)',
+          'O interpretador abre e lê o arquivo ola.py',
+          'Encontra a linha: print("Olá, mundo!")',
+          'Executa essa linha: envia o texto "Olá, mundo!" para a saída',
+          'Chega ao fim do arquivo (não há mais linhas)',
+          'O interpretador termina a execução',
+          'Terminal exibe:\n   Olá, mundo!'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada item para ver a explicação.',
+        lines:[
+          { code:'python ola.py   (comando no terminal)', explanation:'<b>python</b> é o nome do programa (interpretador) que vamos usar.<br><br><b>ola.py</b> é o <b>argumento</b> passado para esse programa: o nome do arquivo que queremos que ele execute.<br><br>Ao pressionar Enter, o sistema operacional executa o interpretador, informando a ele qual arquivo deve ser lido e executado.' },
+          { code:'print("Olá, mundo!")   (linha do código)', explanation:'Já explicada no Capítulo 2: exibe o texto "Olá, mundo!" na tela.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Olá, mundo!\n\n(E, em seguida, o terminal volta a ficar disponível para receber um novo comando — o programa terminou de executar.)',
+        modIntro:'Vamos adicionar uma segunda linha ao arquivo ola.py. Depois de salvar (é preciso salvar novamente sempre que o código for alterado), executamos de novo: python ola.py',
+        modCode:'# Exibe uma primeira mensagem\nprint("Olá, mundo!")\n\n# Exibe uma segunda mensagem\nprint("Este é o meu primeiro programa em Python.")',
+        modResult:'Olá, mundo!\nEste é o meu primeiro programa em Python.',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'⚠ NÃO CONFUNDA: Salvar o arquivo ≠ executar o programa. Alterar o código no editor e esquecer de salvar é um dos erros mais comuns entre iniciantes: o terminal continuará mostrando o resultado da versão salva anteriormente, não da versão que está na tela do editor.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Executar o comando na pasta errada', code:"python ola.py\npython: can't open file 'ola.py': [Errno 2] No such file or directory", body:'Esse erro acontece quando o terminal está aberto em uma pasta diferente daquela onde o arquivo ola.py foi salvo. É necessário navegar até a pasta correta antes de executar o comando (por exemplo, usando o comando "cd nome_da_pasta").' },
+          { title:'🐞 Esquecer de salvar o arquivo antes de executar', code:null, body:'O terminal sempre executa a última versão salva do arquivo. Se você alterou o código no editor mas não salvou (Ctrl+S), o resultado exibido não vai refletir a mudança.' },
+          { title:'🐞 Digitar o nome do arquivo errado', code:'python ola.py.txt', body:'Alguns editores de texto simples (como o Bloco de Notas) podem salvar o arquivo com uma extensão dupla, como ola.py.txt, sem que isso fique visível dependendo da configuração do sistema. Vale a pena confirmar o nome exato do arquivo antes de executar.' }
+        ],
+        howToRead:'<span class="icode">python: can\'t open file \'ola.py\': [Errno 2] No such file or directory</span><br><br>"can\'t open file \'ola.py\'" → o interpretador não encontrou um arquivo chamado ola.py na pasta atual.<br>"No such file or directory" → confirma que o arquivo (ou a pasta) não existe no local onde o terminal está procurando.<br><br>Solução: verificar em qual pasta o arquivo foi realmente salvo, e usar o terminal para navegar até essa pasta antes de executar o comando novamente.'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar e executar um programa que exiba três informações suas: nome, idade (como texto) e um hobby.',
+        entrada:null, processamento:null, saida:null,
+        algoritmo:['Exibir o nome.','Exibir a idade.','Exibir o hobby.'],
+        simulation:null,
+        code:'# Exibe o nome da pessoa\nprint("Maria")\n\n# Exibe a idade da pessoa (ainda como texto, sem cálculos por enquanto)\nprint("17 anos")\n\n# Exibe um hobby da pessoa\nprint("Gosta de desenhar")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'code', prompt:'Crie (simule) um arquivo teste.py contendo print("Estou testando!") e execute-o abaixo.', starter:'print("Estou testando!")', gabarito:'O aluno deve criar o arquivo, salvar e executar com "python teste.py", observando a saída: Estou testando!' },
+          { kind:'text', prompt:'Qual comando é usado no terminal para executar um arquivo chamado programa.py?', gabarito:'python programa.py' },
+          { kind:'text', prompt:'O que acontece se você tentar executar um arquivo .py que não existe na pasta atual?', gabarito:'O Python exibe uma mensagem de erro informando que o arquivo não foi encontrado (No such file or directory), pois ele não existe na pasta em que o terminal está posicionado.' },
+          { kind:'text', prompt:'Explique, com suas palavras, a diferença entre escrever e executar um programa.', gabarito:'Escrever é criar/editar o texto do programa no editor. Executar é pedir ao interpretador Python para efetivamente ler esse arquivo e realizar o que está escrito nele.' },
+          { kind:'text', prompt:'Por que é necessário salvar o arquivo antes de executá-lo?', gabarito:'Porque o interpretador sempre executa a última versão salva do arquivo; alterações feitas no editor e não salvas não têm efeito na execução.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Simule cartao_visita.py: exiba, em quatro linhas separadas, seu nome, sua cidade, sua idade e algo que você gosta de fazer.', starter:'', gabarito:'print("Samuel")\nprint("São Paulo")\nprint("17 anos")\nprint("Gosto de desenhar")\n\nExecutar com: python cartao_visita.py' },
+          { kind:'text', prompt:'Se você modificasse cartao_visita.py adicionando mais uma linha de print(), salvasse e executasse de novo, o que aconteceria com a saída?', gabarito:'A nova execução deve mostrar uma linha adicional na saída, correspondente ao novo print().' },
+          { kind:'text', prompt:'Descreva o que provavelmente causou o erro abaixo e como corrigi-lo:\npython: can\'t open file \'mensagem.py\': [Errno 2] No such file or directory', gabarito:'O arquivo mensagem.py não foi encontrado na pasta em que o terminal estava posicionado. Solução: navegar até a pasta correta (por exemplo, com o comando cd) antes de executar python mensagem.py novamente, ou confirmar se o nome do arquivo está correto.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Simule figura.py: desenhe (usando vários print()) um pequeno triângulo feito de asteriscos:\n*\n**\n***\n****', starter:'', gabarito:'print("*")\nprint("**")\nprint("***")\nprint("****")' },
+          { kind:'text', prompt:'Desafio: se você criasse dois arquivos .py separados e os executasse, um depois do outro, no mesmo terminal, o resultado de um interferiria no outro?', gabarito:'Não. Cada execução é independente: o resultado de um programa não interfere no outro. Cada "python arquivo.py" é uma execução independente.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'FLUXO COMPLETO:\n\nEscrever código no editor\n        ↓\nSalvar como arquivo .py\n        ↓\nAbrir terminal na pasta correta\n        ↓\nExecutar: python nome_do_arquivo.py\n        ↓\nLer o resultado exibido no terminal'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei criar um arquivo .py.',
+          'Sei salvar esse arquivo corretamente.',
+          'Sei abrir um terminal na pasta correta.',
+          'Sei executar um script Python pelo terminal.',
+          'Sei interpretar a mensagem de erro "No such file or directory".',
+          'Entendo a diferença entre escrever e executar um programa.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual comando executa o arquivo programa.py pelo terminal?', options:['run programa.py','python programa.py','execute programa.py','open programa.py'], correct:1, explanation:'python programa.py.' },
+          { q:'O que acontece se você alterar o código, mas esquecer de salvar o arquivo antes de executá-lo?', options:['O Python avisa automaticamente que há alterações não salvas','O terminal executa a versão mais recente salva, ignorando as alterações não salvas','O programa não executa de forma alguma','O arquivo é salvo automaticamente antes de executar'], correct:1, explanation:'O terminal executa a versão mais recente salva, ignorando alterações não salvas.' },
+          { q:'O que significa a mensagem "No such file or directory"?', options:['O código tem um erro de sintaxe','O Python não está instalado','O arquivo indicado não foi encontrado na pasta atual','O programa executou com sucesso'], correct:2, explanation:'O arquivo indicado não foi encontrado na pasta atual.' },
+          { q:'O que é necessário fazer antes de executar um arquivo .py pelo terminal?', options:['Nada, apenas abrir qualquer terminal','Navegar (no terminal) até a pasta onde o arquivo foi salvo','Renomear o arquivo para .txt','Apagar arquivos antigos da pasta'], correct:1, explanation:'É necessário navegar até a pasta onde o arquivo .py foi salvo.' },
+          { q:'Escrever código e executar código são a mesma etapa?', options:['Sim, sempre acontecem ao mesmo tempo','Não — escrever é criar o arquivo de texto; executar é pedir ao interpretador para rodá-lo','Sim, porque o editor executa automaticamente','Não existe diferença relevante'], correct:1, explanation:'Escrever é criar o arquivo de texto; executar é pedir ao interpretador para rodá-lo.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Usando o interpretador Python', url:'https://docs.python.org/pt-br/3/tutorial/interpreter.html' },
+          { label:'Página oficial de downloads do Python', url:'https://www.python.org/downloads/' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'revisao1',
+  title: 'Parada para Revisão 1 — Fim da Parte I',
+  screens: [
+    { id:'mapa', title:'Mapa mental', type:'diagram', data:{
+        intro:'Um resumo visual de tudo que vimos nos Capítulos 1 a 3.',
+        diagram:'PROGRAMAÇÃO\n   │\n   ├── Programa = sequência de instruções\n   ├── Algoritmo = passos pensados antes do código\n   ├── Linguagem de programação = regras para escrever instruções\n   ├── Código-fonte = o texto do programa\n   └── Interpretador = quem lê e executa o código-fonte\n\nPYTHON\n   │\n   ├── Modo interativo → uma instrução por vez\n   ├── Script (.py) → várias instruções, executadas em ordem\n   └── print() → exibe algo na tela\n\nEXECUTANDO UM PROGRAMA\n   │\n   Escrever → Salvar (.py) → Abrir terminal na pasta certa → Executar (python arquivo.py) → Ler o resultado',
+        note:null
+    }},
+    { id:'tabela', title:'Comandos vistos até aqui', type:'table', data:{
+        headers:['Comando/conceito','Para que serve','Exemplo'],
+        rows:[
+          ['<code>print()</code>','Exibir um texto ou valor na tela','<code>print("Olá, mundo!")</code>'],
+          ['<code>python arquivo.py</code>','Executar um script Python pelo terminal','<code>python ola.py</code>']
+        ]
+    }},
+    { id:'errosfreq', title:'Erros frequentes', type:'list', data:{
+        intro:'Os erros mais comuns nesta etapa inicial:',
+        items:[
+          'Esquecer as aspas ao escrever um texto.',
+          'Misturar aspas simples e duplas na mesma string.',
+          'Esquecer de fechar um parêntese.',
+          'Executar o comando no terminal a partir da pasta errada.',
+          'Esquecer de salvar o arquivo antes de executar.'
+        ]
+    }},
+    { id:'perguntas', title:'Perguntas rápidas', type:'qa', data:{
+        intro:'Tente responder mentalmente antes de clicar para revelar.',
+        items:[
+          { q:'O que vem primeiro: o algoritmo ou o código? Por quê?', a:'O algoritmo vem primeiro — ele é o planejamento em linguagem natural dos passos necessários para resolver o problema, feito antes de qualquer código, para organizar o raciocínio e evitar erros de ordem e de lógica.' },
+          { q:'O que a função print() faz?', a:'Exibe um texto ou valor na tela.' },
+          { q:'Qual é o comando usado no terminal para executar um arquivo chamado jogo.py?', a:'python jogo.py' },
+          { q:'O que significa a mensagem "No such file or directory"?', a:'Significa que o arquivo indicado não foi encontrado na pasta em que o terminal está posicionado.' },
+          { q:'Por que é importante planejar os passos de um programa antes de escrevê-lo em Python?', a:'Porque planejar ajuda a organizar o raciocínio e evita erros de ordem e de lógica no programa.' }
+        ]
+    }},
+    { id:'exrevisao', title:'Exercícios de revisão', type:'exercises', data:{
+        level:'Exercícios de revisão',
+        items:[
+          { kind:'text', prompt:'Escreva, em linguagem natural, um algoritmo para "preparar um copo de suco", identificando claramente a entrada, o processamento e a saída.', gabarito:'Resposta aberta — exemplo:\nEntrada: frutas e água.\nProcessamento: lavar, cortar, bater no liquidificador, coar.\nSaída: o suco pronto, servido no copo.' },
+          { kind:'code', prompt:'Crie (simule) apresentacao.py: exiba, em quatro print() separados, seu nome, sua cidade, um curso ou assunto que gostaria de aprender, e a frase "Estou começando a programar em Python!".', starter:'', gabarito:'print("Samuel")\nprint("São Paulo")\nprint("Inteligência Artificial")\nprint("Estou começando a programar em Python!")' },
+          { kind:'code', prompt:'O código abaixo contém dois erros. Identifique-os e reescreva o código corrigido:\nprint(\'Bem-vindo!")\nprint("Vamos aprender Python!', starter:'print(\'Bem-vindo!")\nprint("Vamos aprender Python!', gabarito:'Erros: a primeira linha mistura aspas simples e duplas; a segunda linha não fecha as aspas do texto.\nCorreção:\nprint("Bem-vindo!")\nprint("Vamos aprender Python!")' }
+        ]
+    }},
+    { id:'desafio', title:'Pequeno desafio', type:'exercises', data:{
+        level:'Pequeno desafio',
+        items:[
+          { kind:'code', prompt:'Crie (simule) mini_curriculo.py: exiba um pequeno currículo de texto simples, com pelo menos cinco linhas: nome, idade, cidade, um curso/formação (ou "estudante") e um objetivo pessoal relacionado a aprender programação.', starter:'', gabarito:'Resposta prática — exemplo:\nprint("Nome: Samuel")\nprint("Idade: 17 anos")\nprint("Cidade: São Paulo")\nprint("Formação: Estudante")\nprint("Objetivo: Aprender Python para criar meus próprios programas")' }
+        ]
+    }},
+    { id:'checklist', title:'Checklist de domínio da Parte I', type:'checklist', data:{
+        items:[
+          'Sei explicar o que é um algoritmo e por que ele vem antes do código.',
+          'Sei o que é código-fonte e o que é um interpretador.',
+          'Sei usar print() para exibir mensagens.',
+          'Sei criar, salvar e executar um arquivo .py pelo terminal.',
+          'Sei interpretar os erros mais comuns desta etapa (aspas, parênteses, arquivo não encontrado).'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte II — Fundamentos, onde aprenderemos comentários, variáveis, tipos de dados e as primeiras operações matemáticas em Python.'
+    }}
+  ]
+}
+];
+
+/* =========================================================
+   ESTADO E PERSISTÊNCIA
+   ========================================================= */
+const STORAGE_KEY = 'apostilaPythonParte1_v1';
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { moduleIndex:0, screenIndex:0, visited:{}, checklist:{}, quizAnswers:{}, notes:{} };
+}
+let state = loadState();
+function saveState() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+/* =========================================================
+   PYODIDE (execução real de Python no navegador)
+   ========================================================= */
+let pyodideReadyPromise = null;
+function ensurePyodide() {
+  if (!pyodideReadyPromise) {
+    pyodideReadyPromise = (async () => {
+      const py = await loadPyodide();
+      return py;
+    })();
+  }
+  return pyodideReadyPromise;
+}
+function formatPythonError(raw) {
+  // O Pyodide adiciona vários quadros internos (_pyodide/_base.py) antes do
+  // erro real do código do aluno. Aqui mantemos só o que apareceria em um
+  // terminal comum: o quadro do próprio código ("<exec>") e a mensagem final.
+  const lines = raw.replace(/^PythonError:\s*/,'').split('\n');
+  const execIdx = lines.findIndex(l => l.includes('File "<exec>"'));
+  if (execIdx === -1) return raw;
+  const kept = ['Traceback (most recent call last):', ...lines.slice(execIdx)];
+  return kept.join('\n').trim();
+}
+async function runPythonCode(code, outEl, runBtn) {
+  outEl.classList.remove('error');
+  outEl.textContent = 'Carregando o interpretador Python (isso só demora na primeira vez)...';
+  if (runBtn) runBtn.disabled = true;
+  try {
+    const pyodide = await ensurePyodide();
+    outEl.textContent = 'Executando...';
+    let out = [];
+    pyodide.setStdout({ batched:(s)=> out.push(s) });
+    pyodide.setStderr({ batched:(s)=> out.push(s) });
+    await pyodide.runPythonAsync(code);
+    outEl.textContent = out.length ? out.join('\n') : '(nenhuma saída — programa executou sem usar print())';
+  } catch (err) {
+    outEl.classList.add('error');
+    outEl.textContent = formatPythonError(String(err));
+  } finally {
+    if (runBtn) runBtn.disabled = false;
+  }
+}
+
+/* =========================================================
+   HELPERS DE RENDER
+   ========================================================= */
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function el(tag, cls, html) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html !== undefined) e.innerHTML = html;
+  return e;
+}
+function codeRunnerHTML(starterCode, id) {
+  return '<div class="code-runner" id="'+id+'">' +
+    '<textarea spellcheck="false">'+esc(starterCode||'')+'</textarea>' +
+    '<div class="runner-bar">' +
+      '<button class="btn small run">▶ Executar</button>' +
+      '<button class="btn secondary small clear">Limpar saída</button>' +
+      '<span class="pyodide-note">Python real, rodando no seu navegador (Pyodide)</span>' +
+    '</div>' +
+    '<pre class="runner-out"></pre>' +
+  '</div>';
+}
+function wireCodeRunner(container) {
+  container.querySelectorAll('.code-runner').forEach(box => {
+    const ta = box.querySelector('textarea');
+    const out = box.querySelector('.runner-out');
+    const runBtn = box.querySelector('.run');
+    const clearBtn = box.querySelector('.clear');
+    ta.addEventListener('keydown', (e) => {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const s = ta.selectionStart, en = ta.selectionEnd;
+        ta.value = ta.value.slice(0,s) + '    ' + ta.value.slice(en);
+        ta.selectionStart = ta.selectionEnd = s+4;
+      }
+    });
+    runBtn.addEventListener('click', () => runPythonCode(ta.value, out, runBtn));
+    clearBtn.addEventListener('click', () => { out.textContent=''; out.classList.remove('error'); });
+  });
+}
+
+/* =========================================================
+   RENDERERS POR TIPO DE TELA
+   ========================================================= */
+function renderScreen(mod, screen) {
+  const c = document.getElementById('content');
+  c.innerHTML = '';
+  const kicker = el('div','screen-kicker', esc(mod.title));
+  const title = el('h1','screen-title', esc(screen.title));
+  c.appendChild(kicker);
+  c.appendChild(title);
+
+  const body = el('div');
+  c.appendChild(body);
+
+  const renderers = {
+    intro: renderIntro, concept: renderConcept, diagram: renderDiagram,
+    example: renderExample, trace: renderTrace, lines: renderLines,
+    resultmod: renderResultMod, errors: renderErrors, guided: renderGuided,
+    exercises: renderExercises, summary: renderSummary, checklist: renderChecklist,
+    quiz: renderQuiz, refs: renderRefs, table: renderTable, list: renderList, qa: renderQa
+  };
+  (renderers[screen.type] || function(){})(body, mod, screen);
+  wireCodeRunner(body);
+}
+
+function renderIntro(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '🎯 O que você vai aprender'));
+  const ul = el('ul','plain');
+  d.objetivos.forEach(o => ul.appendChild(el('li','', esc(o))));
+  card.appendChild(ul);
+  body.appendChild(card);
+  const card2 = el('div','card');
+  card2.appendChild(el('h3','', '📋 Antes de começar'));
+  card2.appendChild(el('p','', esc(d.antes)));
+  body.appendChild(card2);
+}
+
+function renderConcept(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  d.paragraphs.forEach(p => card.appendChild(el('p','', p)));
+  body.appendChild(card);
+  if (d.glossary && d.glossary.length) {
+    d.glossary.forEach(g => {
+      const gb = el('div','glossary');
+      gb.innerHTML = '<span class="term">'+esc(g.term)+'</span> → '+esc(g.def)+
+        '<div class="ex">Exemplo: '+esc(g.example)+'</div>';
+      body.appendChild(gb);
+    });
+  }
+}
+
+function renderDiagram(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  if (d.intro) card.appendChild(el('p','', esc(d.intro)));
+  card.appendChild(el('pre','diagram', esc(d.diagram)));
+  if (d.note) card.appendChild(el('p','', esc(d.note)));
+  body.appendChild(card);
+}
+
+function renderExample(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  if (d.intro) card.appendChild(el('p','', esc(d.intro)));
+  card.appendChild(el('h3','', '🧩 Problema'));
+  card.appendChild(el('p','', esc(d.problem).replace(/\n/g,'<br>')));
+  if (d.algoritmo) {
+    card.appendChild(el('h3','', 'Algoritmo em linguagem natural'));
+    const ol = el('ol','plain');
+    d.algoritmo.forEach(a => ol.appendChild(el('li','', esc(a))));
+    card.appendChild(ol);
+  }
+  body.appendChild(card);
+  if (d.code) {
+    const card2 = el('div','card');
+    card2.appendChild(el('h3','', '💻 Código totalmente comentado'));
+    card2.appendChild(el('pre','codeblock', esc(d.code)));
+    if (d.codeNote) card2.appendChild(el('p','', esc(d.codeNote)));
+    if (d.runnable) card2.insertAdjacentHTML('beforeend', codeRunnerHTML(d.code, 'runner-example'));
+    body.appendChild(card2);
+  } else if (d.codeNote) {
+    const card2 = el('div','card');
+    card2.appendChild(el('p','', esc(d.codeNote)));
+    body.appendChild(card2);
+  }
+}
+
+function renderTrace(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '🔍 O que acontece dentro do computador?'));
+  card.appendChild(el('p','', esc(d.intro)));
+  const list = el('ul','step-list');
+  d.steps.forEach(s => list.appendChild(el('li','', esc(s))));
+  card.appendChild(list);
+  const row = el('div','btn-row');
+  const nextBtn = el('button','btn small', 'Próximo passo →');
+  const resetBtn = el('button','btn secondary small', 'Reiniciar');
+  row.appendChild(nextBtn); row.appendChild(resetBtn);
+  card.appendChild(row);
+  const afterP = d.after ? el('p','', d.after) : null;
+  if (afterP) { afterP.style.display='none'; card.appendChild(afterP); }
+
+  let shown = 0;
+  const items = list.querySelectorAll('li');
+  function update() {
+    items.forEach((it,i) => it.classList.toggle('shown', i < shown));
+    nextBtn.disabled = shown >= items.length;
+    if (afterP) afterP.style.display = shown >= items.length ? 'block' : 'none';
+  }
+  nextBtn.addEventListener('click', () => { if (shown < items.length) shown++; update(); });
+  resetBtn.addEventListener('click', () => { shown = 0; update(); });
+  update();
+  body.appendChild(card);
+}
+
+function renderLines(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '🔎 Explicação linha por linha'));
+  card.appendChild(el('p','', esc(d.intro)));
+  d.lines.forEach(line => {
+    const item = el('div','line-item');
+    item.innerHTML = '<div class="lhead"><span>'+esc(line.code)+'</span><span class="arrow">▸</span></div>'+
+      '<div class="lbody">'+line.explanation+'</div>';
+    item.querySelector('.lhead').addEventListener('click', () => item.classList.toggle('open'));
+    card.appendChild(item);
+  });
+  body.appendChild(card);
+}
+
+function renderResultMod(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '✅ Resultado esperado'));
+  card.appendChild(el('pre','codeblock', esc(d.resultado)));
+  body.appendChild(card);
+
+  const card2 = el('div','card');
+  card2.appendChild(el('h3','', '🔧 Vamos modificar o programa'));
+  card2.appendChild(el('p','', esc(d.modIntro)));
+  if (d.modTrace) card2.appendChild(el('pre','diagram', esc(d.modTrace)));
+  if (d.modCode) card2.appendChild(el('pre','codeblock', esc(d.modCode)));
+  if (d.modResult) {
+    card2.appendChild(el('p','', '<b>Resultado esperado:</b>'));
+    card2.appendChild(el('pre','codeblock', esc(d.modResult)));
+  }
+  if (d.modNote) card2.appendChild(el('p','', esc(d.modNote)));
+  if (d.runnable && d.modCode) card2.insertAdjacentHTML('beforeend', codeRunnerHTML(d.modCode, 'runner-mod'));
+  body.appendChild(card2);
+
+  if (d.naoConfunda) {
+    const callout = el('div','callout', '⚠ '+esc(d.naoConfunda.replace(/^⚠\s*NÃO CONFUNDA:\s*/,'')));
+    body.appendChild(callout);
+  }
+}
+
+function renderErrors(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '🐞 Erros comuns'));
+  card.appendChild(el('p','', 'Clique em cada erro para ver a explicação.'));
+  body.appendChild(card);
+  d.items.forEach(item => {
+    const box = el('div','errbox');
+    let codeHtml = item.code ? '<pre class="codeblock" style="margin-top:8px;">'+esc(item.code)+'</pre>' : '';
+    box.innerHTML = '<div class="ehead"><span>▸</span><span>'+esc(item.title)+'</span></div>'+
+      '<div class="ebody">'+codeHtml+'<p>'+ (item.body||'') +'</p></div>';
+    box.querySelector('.ehead').addEventListener('click', () => box.classList.toggle('open'));
+    body.appendChild(box);
+  });
+  const card2 = el('div','card');
+  card2.appendChild(el('h3','', '🩺 Como interpretar o erro'));
+  card2.appendChild(el('p','', d.howToRead));
+  if (d.tryIt) {
+    card2.appendChild(el('p','', 'Quer ver o erro de verdade? Tente rodar um código sem aspas ou sem fechar o parêntese:'));
+    card2.insertAdjacentHTML('beforeend', codeRunnerHTML('print(Olá, mundo!)', 'runner-err'));
+  }
+  body.appendChild(card2);
+}
+
+function renderGuided(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '🧭 Prática guiada'));
+  card.appendChild(el('p','', '<b>Problema:</b> '+esc(d.problem)));
+  if (d.entrada) card.appendChild(el('p','', '<b>Entrada:</b> '+esc(d.entrada)));
+  if (d.processamento) card.appendChild(el('p','', '<b>Processamento:</b> '+esc(d.processamento)));
+  if (d.saida) card.appendChild(el('p','', '<b>Saída:</b> '+esc(d.saida)));
+  if (d.algoritmo) {
+    card.appendChild(el('h3','', 'Algoritmo'));
+    const ol = el('ol','plain');
+    d.algoritmo.forEach(a => ol.appendChild(el('li','', esc(a))));
+    card.appendChild(ol);
+  }
+  body.appendChild(card);
+  if (d.simulation) {
+    const card2 = el('div','card');
+    card2.appendChild(el('h3','', 'Simulação com valores concretos'));
+    card2.appendChild(el('pre','diagram', esc(d.simulation)));
+    body.appendChild(card2);
+  }
+  if (d.code) {
+    const card3 = el('div','card');
+    card3.appendChild(el('h3','', 'Código comentado'));
+    card3.appendChild(el('pre','codeblock', esc(d.code)));
+    if (d.runnable) card3.insertAdjacentHTML('beforeend', codeRunnerHTML(d.code, 'runner-guided'));
+    body.appendChild(card3);
+  }
+}
+
+function renderExercises(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', d.level));
+  body.appendChild(card);
+  d.items.forEach((item, idx) => {
+    const key = mod.id+'_'+screen.id+'_'+idx;
+    const box = el('div','exercise');
+    box.innerHTML = '<div><span class="exnum">'+(idx+1)+'.</span>'+esc(item.prompt).replace(/\n/g,'<br>')+'</div>';
+    if (item.kind === 'code') {
+      box.insertAdjacentHTML('beforeend', codeRunnerHTML(item.starter||'', 'runner-ex-'+key));
+    } else {
+      const ta = el('textarea','answer');
+      ta.placeholder = 'Digite sua resposta aqui...';
+      ta.value = state.notes[key] || '';
+      ta.addEventListener('input', () => { state.notes[key] = ta.value; saveState(); });
+      box.appendChild(ta);
+    }
+    const btnRow = el('div','btn-row');
+    const gabBtn = el('button','btn secondary small', 'Ver gabarito comentado');
+    btnRow.appendChild(gabBtn);
+    box.appendChild(btnRow);
+    const gabBox = el('div','gabarito-box');
+    gabBox.innerHTML = '<div class="tag">Gabarito</div><div>'+esc(item.gabarito).replace(/\n/g,'<br>')+'</div>';
+    box.appendChild(gabBox);
+    gabBtn.addEventListener('click', () => {
+      gabBox.classList.toggle('open');
+      gabBtn.textContent = gabBox.classList.contains('open') ? 'Esconder gabarito' : 'Ver gabarito comentado';
+    });
+    body.appendChild(box);
+  });
+}
+
+function renderSummary(body, mod, screen) {
+  const card = el('div','card');
+  card.appendChild(el('h3','', '🗺 Resumo visual'));
+  card.appendChild(el('pre','diagram', esc(screen.data.text)));
+  body.appendChild(card);
+}
+
+function renderChecklist(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '✔ Checklist'));
+  const progressLbl = el('div','checklist-progress','');
+  card.appendChild(progressLbl);
+  const items = [];
+  d.items.forEach((text, idx) => {
+    const key = mod.id+'_chk_'+idx;
+    const row = el('div','checklist-item');
+    const cb = document.createElement('input');
+    cb.type='checkbox'; cb.id='cb_'+key;
+    cb.checked = !!state.checklist[key];
+    const label = document.createElement('label');
+    label.htmlFor = 'cb_'+key;
+    label.textContent = text;
+    row.appendChild(cb); row.appendChild(label);
+    if (cb.checked) row.classList.add('done');
+    cb.addEventListener('change', () => {
+      state.checklist[key] = cb.checked;
+      row.classList.toggle('done', cb.checked);
+      saveState();
+      updateProgress();
+    });
+    card.appendChild(row);
+    items.push(key);
+  });
+  function updateProgress() {
+    const done = items.filter(k => state.checklist[k]).length;
+    progressLbl.textContent = done + ' de ' + items.length + ' itens concluídos';
+  }
+  updateProgress();
+  body.appendChild(card);
+  if (d.finalNote) {
+    const note = el('div','callout', '🎓 ' + esc(d.finalNote));
+    body.appendChild(note);
+  }
+}
+
+function renderQuiz(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '❓ Miniquiz'));
+  const scoreLbl = el('div','quiz-score','');
+  card.appendChild(scoreLbl);
+  body.appendChild(card);
+
+  const answered = state.quizAnswers[mod.id+'_'+screen.id] || {};
+  function updateScore() {
+    let total = d.questions.length, done = 0, correct = 0;
+    d.questions.forEach((q,i) => { if (answered[i] !== undefined) { done++; if (answered[i]===q.correct) correct++; } });
+    scoreLbl.textContent = 'Pontuação: '+correct+' / '+total+' ('+done+' de '+total+' respondidas)';
+  }
+
+  d.questions.forEach((q, qi) => {
+    const box = el('div','quiz-q');
+    box.appendChild(el('div','qtext', (qi+1)+'. '+esc(q.q)));
+    const explain = el('div','quiz-explain', '💬 '+esc(q.explanation));
+    const optButtons = [];
+    q.options.forEach((opt, oi) => {
+      const b = el('button','quiz-opt', esc(opt));
+      b.addEventListener('click', () => {
+        if (answered[qi] !== undefined) return;
+        answered[qi] = oi;
+        state.quizAnswers[mod.id+'_'+screen.id] = answered;
+        saveState();
+        applyState();
+        updateScore();
+      });
+      box.appendChild(b);
+      optButtons.push(b);
+    });
+    box.appendChild(explain);
+    function applyState() {
+      if (answered[qi] === undefined) return;
+      optButtons.forEach((b,oi) => {
+        b.disabled = true;
+        if (oi === q.correct) b.classList.add('correct');
+        else if (oi === answered[qi]) b.classList.add('wrong');
+      });
+      explain.classList.add('open');
+    }
+    applyState();
+    body.appendChild(box);
+  });
+  updateScore();
+}
+
+function renderRefs(body, mod, screen) {
+  const card = el('div','card');
+  card.appendChild(el('h3','', '📚 Referências oficiais'));
+  const ul = el('ul','plain');
+  screen.data.links.forEach(l => {
+    const li = document.createElement('li');
+    li.innerHTML = '<a href="'+l.url+'" target="_blank" rel="noopener">'+esc(l.label)+'</a>';
+    ul.appendChild(li);
+  });
+  card.appendChild(ul);
+  body.appendChild(card);
+}
+
+function renderTable(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  let html = '<table class="cmdtable"><thead><tr>';
+  d.headers.forEach(h => html += '<th>'+esc(h)+'</th>');
+  html += '</tr></thead><tbody>';
+  d.rows.forEach(r => { html += '<tr>'; r.forEach(cell => html += '<td>'+cell+'</td>'); html += '</tr>'; });
+  html += '</tbody></table>';
+  card.innerHTML = html;
+  body.appendChild(card);
+}
+
+function renderList(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  if (d.intro) card.appendChild(el('p','', esc(d.intro)));
+  const ul = el('ul','plain');
+  d.items.forEach(i => ul.appendChild(el('li','', esc(i))));
+  card.appendChild(ul);
+  body.appendChild(card);
+}
+
+function renderQa(body, mod, screen) {
+  const d = screen.data;
+  const card = el('div','card');
+  card.appendChild(el('h3','', '💭 Perguntas rápidas'));
+  if (d.intro) card.appendChild(el('p','', esc(d.intro)));
+  body.appendChild(card);
+  d.items.forEach(item => {
+    const box = el('div','qa-item');
+    box.innerHTML = '<div class="qhead">▸ '+esc(item.q)+'</div><div class="qbody">'+esc(item.a)+'</div>';
+    box.querySelector('.qhead').addEventListener('click', () => box.classList.toggle('open'));
+    body.appendChild(box);
+  });
+}
+
+/* =========================================================
+   NAVEGAÇÃO / SIDEBAR / PROGRESSO
+   ========================================================= */
+function totalScreens() { return MODULES.reduce((n,m)=>n+m.screens.length,0); }
+function visitedCount() { return Object.keys(state.visited).length; }
+
+function buildSidebar() {
+  const nav = document.getElementById('sidebar');
+  nav.innerHTML = '';
+  MODULES.forEach((mod, mi) => {
+    const wrap = el('div','mod');
+    const h = el('div','mod-title', esc(mod.title)+'<span>▾</span>');
+    const ul = el('ul','mod-screens');
+    mod.screens.forEach((scr, si) => {
+      const key = mi+'-'+si;
+      const li = el('li','', '<span class="chk">'+(state.visited[key] ? '✓' : '')+'</span><span>'+esc(scr.title)+'</span>');
+      li.dataset.mi = mi; li.dataset.si = si;
+      li.addEventListener('click', () => goTo(mi, si));
+      ul.appendChild(li);
+    });
+    h.addEventListener('click', () => { ul.style.display = ul.style.display==='none' ? '' : 'none'; });
+    wrap.appendChild(h); wrap.appendChild(ul);
+    nav.appendChild(wrap);
+  });
+}
+
+function updateSidebarActive() {
+  document.querySelectorAll('#sidebar li').forEach(li => {
+    const mi = +li.dataset.mi, si = +li.dataset.si;
+    li.classList.toggle('active', mi===state.moduleIndex && si===state.screenIndex);
+    const key = mi+'-'+si;
+    li.querySelector('.chk').textContent = state.visited[key] ? '✓' : '';
+  });
+}
+
+function updateProgressBar() {
+  const total = totalScreens(), done = visitedCount();
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = done+' / '+total+' telas';
+}
+
+function updateFooter() {
+  const mod = MODULES[state.moduleIndex];
+  const screen = mod.screens[state.screenIndex];
+  const globalIdx = MODULES.slice(0,state.moduleIndex).reduce((n,m)=>n+m.screens.length,0) + state.screenIndex + 1;
+  document.getElementById('footerLabel').textContent = 'Tela '+globalIdx+' de '+totalScreens()+' · '+mod.title+' → '+screen.title;
+  document.getElementById('prevBtn').disabled = (state.moduleIndex===0 && state.screenIndex===0);
+  const isLast = (state.moduleIndex===MODULES.length-1 && state.screenIndex===mod.screens.length-1);
+  document.getElementById('nextBtn').disabled = isLast;
+  document.getElementById('nextBtn').textContent = isLast ? 'Fim da Parte I ✓' : 'Próximo →';
+}
+
+function goTo(mi, si) {
+  state.moduleIndex = mi;
+  state.screenIndex = si;
+  state.visited[mi+'-'+si] = true;
+  saveState();
+  render();
+  document.getElementById('content').scrollTop = 0;
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function render() {
+  const mod = MODULES[state.moduleIndex];
+  const screen = mod.screens[state.screenIndex];
+  renderScreen(mod, screen);
+  updateSidebarActive();
+  updateProgressBar();
+  updateFooter();
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => {
+  let mi = state.moduleIndex, si = state.screenIndex;
+  if (si > 0) si--;
+  else if (mi > 0) { mi--; si = MODULES[mi].screens.length-1; }
+  goTo(mi, si);
+});
+document.getElementById('nextBtn').addEventListener('click', () => {
+  let mi = state.moduleIndex, si = state.screenIndex;
+  const mod = MODULES[mi];
+  if (si < mod.screens.length-1) si++;
+  else if (mi < MODULES.length-1) { mi++; si = 0; }
+  goTo(mi, si);
+});
+document.addEventListener('keydown', (e) => {
+  const tag = document.activeElement.tagName;
+  if (tag === 'TEXTAREA' || tag === 'INPUT') return;
+  if (e.key === 'ArrowRight') document.getElementById('nextBtn').click();
+  if (e.key === 'ArrowLeft') document.getElementById('prevBtn').click();
+});
+document.getElementById('menuBtn').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+});
+document.getElementById('overlay').addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+});
+
+/* boot */
+buildSidebar();
+state.visited[state.moduleIndex+'-'+state.screenIndex] = true;
+render();
+</script>
+
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+</body>
+</html>
