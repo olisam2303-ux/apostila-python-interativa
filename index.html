@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a IV</title>
+<title>Apostila Python Interativa — Partes I a V</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a IV · Primeiros Passos, Fundamentos, Decisão e Repetições</span>
+      <span>Partes I a V · Primeiros Passos, Fundamentos, Decisão, Repetições e Estruturas de Dados</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -3984,6 +3984,1023 @@ const MODULES = [
           'Sei escrever e rastrear laços aninhados.'
         ],
         finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte V — Estruturas de Dados, onde aprenderemos listas, tuplas, conjuntos e dicionários.'
+    }}
+  ]
+},
+{
+  id: 'cap25',
+  title: 'Capítulo 25 — Listas',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é uma lista e para que ela serve.',
+          'Como criar uma lista, acessar itens por índice e alterar um item.',
+          'Que uma lista pode guardar vários valores, de qualquer tipo, em uma única variável.',
+          'A diferença entre alterar o conteúdo de uma lista e criar uma nova.'
+        ],
+        antes: 'É necessário conhecer variáveis (Capítulo 5), índices de string (Capítulo 8) e for (Capítulo 21).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, cada variável guardava <b>um único valor</b> por vez. Mas é muito comum precisar guardar <b>vários valores relacionados</b>, como os nomes de todos os alunos de uma turma. Para isso, Python oferece a <b>lista</b>.',
+          'Assim como nas strings (Capítulo 8), cada item de uma lista tem uma posição, chamada de índice, começando em 0. Diferente de uma string, uma lista é <b>mutável</b>: é possível alterar um item específico depois que a lista já foi criada, atribuindo um novo valor a uma posição.'
+        ],
+        glossary: [
+          { term:'lista', def:'uma estrutura de dados que guarda vários valores, em uma ordem definida, dentro de uma única variável', example:'criada com colchetes [], com os itens separados por vírgula: nomes = ["Ana", "Bruno", "Carla"]' },
+          { term:'mutável', def:'que pode ser alterado depois de criado', example:'uma lista é mutável (seus itens podem ser trocados); uma string não é.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'nomes = ["Ana", "Bruno", "Carla"]\n           ↑       ↑        ↑\n        índice 0  índice 1  índice 2\n\nnomes[0]  →  "Ana"\nnomes[2]  →  "Carla"\n\nnomes[1] = "Beatriz"\n           ↓\nnomes = ["Ana", "Beatriz", "Carla"]\n                    ↑\n             valor substituído',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Criar uma lista com os nomes de três alunos.',
+        algoritmo:null,
+        code:'# Cria uma lista com os nomes de três alunos\nnomes = ["Ana", "Bruno", "Carla"]\n\n# Exibe a lista inteira\nprint(nomes)',
+        codeNote:'O Python exibe strings dentro de listas com aspas simples por padrão, mesmo que tenham sido criadas com aspas duplas — isso não altera o valor.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'nomes = ["Ana", "Bruno", "Carla"]',
+          'Python cria uma lista com três itens, guardando suas posições:\n   índice 0 → "Ana"\n   índice 1 → "Bruno"\n   índice 2 → "Carla"',
+          'Associa essa lista ao nome "nomes"',
+          'print(nomes)',
+          'Exibe a lista inteira, com colchetes e vírgulas'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'nomes = ["Ana", "Bruno", "Carla"]', explanation:'Os colchetes [] delimitam a lista. Cada item é separado por vírgula. Aqui, todos os itens são strings, mas uma lista pode combinar itens de tipos diferentes ([1, "dois", 3.0, True] também é uma lista válida).' },
+          { code:'print(nomes)', explanation:'Exibe a lista inteira, exatamente no formato em que o Python a representa: colchetes, itens entre aspas (por serem strings) e vírgulas.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:"['Ana', 'Bruno', 'Carla']",
+        modIntro:'Vamos acessar itens individuais e depois alterar um deles. É possível também descobrir a quantidade de itens de uma lista com len():',
+        modCode:'nomes = ["Ana", "Bruno", "Carla"]\n\n# Acessa itens por índice\nprint(nomes[0])\nprint(nomes[2])\n\n# Altera o item do índice 1\nnomes[1] = "Beatriz"\n\n# Exibe a lista já modificada\nprint(nomes)\nprint(len(nomes))',
+        modResult:"Ana\nCarla\n['Ana', 'Beatriz', 'Carla']\n3",
+        modNote:null,
+        runnable:true,
+        naoConfunda:'Lista versus string, quanto à mutabilidade: em uma lista, lista[indice] = novo_valor é uma operação válida, que altera o item diretamente. Em uma string, texto[indice] = novo_valor gera erro — strings NÃO PODEM ser alteradas depois de criadas.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar acessar um índice que não existe', code:'nomes = ["Ana", "Bruno", "Carla"]\nprint(nomes[5])', body:'A lista só tem os índices 0, 1 e 2. Acessar o índice 5 gera erro, assim como acontecia com strings.' },
+          { title:'🐞 Esquecer que o índice começa em 0', code:'nomes = ["Ana", "Bruno", "Carla"]\nprint(nomes[1])  # esperando "Ana", mas o resultado é "Bruno"', body:'nomes[0] é o primeiro item; nomes[1] já é o segundo.' },
+          { title:'🐞 Confundir listas com múltiplas variáveis separadas', code:'nome1 = "Ana"\nnome2 = "Bruno"\nnome3 = "Carla"', body:'Isso funciona, mas não escala: para 50 nomes, seriam necessárias 50 variáveis separadas, impossíveis de percorrer com um for. Uma lista resolve exatamente esse problema (Capítulo 27).' }
+        ],
+        howToRead:'Ao acessar um índice inexistente em uma lista, o Python mostra: <span class="icode">IndexError: list index out of range</span><br><br>O mesmo tipo de erro já visto em strings (Capítulo 8), agora aplicado a listas. A solução é sempre confirmar o tamanho da lista (com len()) antes de acessar um índice específico.',
+        tryIt:true,
+        tryItCode:'nomes = ["Ana", "Bruno", "Carla"]\nprint(nomes[5])'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Guardar os preços de três produtos em uma lista, exibir cada um, e depois atualizar o preço do segundo produto (havia um erro de digitação).',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Lista com os preços de três produtos\nprecos = [19.90, 45.00, 12.50]\n\n# Exibe cada preço individualmente\nprint(precos[0])\nprint(precos[1])\nprint(precos[2])\n\n# Corrige o preço do segundo produto\nprecos[1] = 42.00\n\n# Exibe a lista já corrigida\nprint(precos)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Como se cria uma lista em Python?', gabarito:'Com colchetes: lista = [item1, item2, ...]' },
+          { kind:'text', prompt:'Qual é o índice do primeiro item de uma lista?', gabarito:'0' },
+          { kind:'text', prompt:'Dada frutas = ["maçã", "banana", "uva"], qual é o valor de frutas[1]?', gabarito:'"banana"' },
+          { kind:'code', prompt:'Como alterar o item do índice 0 de uma lista chamada cores, para o valor "azul"?', starter:'cores = ["vermelho", "verde"]', gabarito:'cores[0] = "azul"' },
+          { kind:'text', prompt:'Uma lista pode conter itens de tipos diferentes ao mesmo tempo? Dê um exemplo.', gabarito:'Sim: dados = [1, "dois", 3.0, True]' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma lista com os nomes de quatro cidades brasileiras, e exiba cada uma em uma linha separada, acessando por índice.', starter:'', gabarito:'cidades = ["São Paulo", "Rio de Janeiro", "Salvador", "Fortaleza"]\nprint(cidades[0])\nprint(cidades[1])\nprint(cidades[2])\nprint(cidades[3])' },
+          { kind:'code', prompt:'Crie uma lista idades = [15, 22, 17, 30], exiba a quantidade total de itens com len(), e depois altere o item do índice 2 para 18.', starter:'idades = [15, 22, 17, 30]', gabarito:'idades = [15, 22, 17, 30]\nprint(len(idades))\nidades[2] = 18\nprint(idades)' },
+          { kind:'code', prompt:'Encontre e corrija o erro no código abaixo:\nnumeros = [10, 20, 30]\nprint(numeros[3])', starter:'numeros = [10, 20, 30]\nprint(numeros[3])', gabarito:'Erro: a lista tem 3 itens (índices 0, 1, 2); índice 3 não existe.\nCorreção: acessar numeros[2] ou verificar len(numeros) antes.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma lista com os nomes dos dias da semana ("segunda" a "domingo", 7 itens), e escreva o código que exibe apenas o primeiro, o último e o item do meio (índice 3).', starter:'', gabarito:'dias = ["segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo"]\nprint(dias[0])\nprint(dias[6])\nprint(dias[3])' },
+          { kind:'code', prompt:'Desafio: crie carrinho = ["Caderno", "Caneta", "Borracha"], e represente a remoção do segundo item SEM usar nenhum método pronto de lista — apenas reatribuindo a lista com os itens que devem permanecer.', starter:'carrinho = ["Caderno", "Caneta", "Borracha"]', gabarito:'carrinho = ["Caderno", "Caneta", "Borracha"]\ncarrinho = [carrinho[0], carrinho[2]]\nprint(carrinho)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'lista = [item0, item1, item2, ...]\n\nlista[indice]           → acessa um item\nlista[indice] = valor   → altera um item\nlen(lista)               → quantidade de itens\n\nListas são MUTÁVEIS: podem ser alteradas depois de criadas.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei criar uma lista com [].',
+          'Sei acessar itens de uma lista por índice.',
+          'Sei alterar um item específico de uma lista.',
+          'Sei usar len() para descobrir o tamanho de uma lista.',
+          'Sei que listas são mutáveis, diferente de strings.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Como se cria uma lista vazia em Python?', options:['lista = ()','lista = {}','lista = []','lista = ""'], correct:2, explanation:'lista = [] cria uma lista vazia.' },
+          { q:'Dada numeros = [5, 10, 15], o que numeros[0] retorna?', options:['5','10','15','Erro'], correct:0, explanation:'Índice 0 é o primeiro item: 5.' },
+          { q:'É possível alterar um item de uma lista depois de criada?', options:['Não, listas são imutáveis','Sim, atribuindo um novo valor à posição desejada','Só é possível criar uma lista nova','Só com métodos especiais, nunca com ='], correct:1, explanation:'Listas são mutáveis.' },
+          { q:'O que len(["a", "b", "c"]) retorna?', options:['2','3','"abc"','Erro'], correct:1, explanation:'A lista tem 3 itens.' },
+          { q:'O que acontece ao acessar um índice que não existe em uma lista?', options:['Retorna None','Retorna um espaço em branco','Gera IndexError','A lista é reorganizada automaticamente'], correct:2, explanation:'Gera IndexError.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Listas (introdução)', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#lists' },
+          { label:'Documentação Python — Mais sobre Listas', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#more-on-lists' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap26',
+  title: 'Capítulo 26 — Métodos de listas',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como adicionar itens a uma lista com .append() e .insert().',
+          'Como remover itens com .remove() e .pop().',
+          'Como organizar uma lista com .sort() e .reverse().',
+          'Como buscar informações com .index() e .count().',
+          'Como copiar uma lista com .copy().'
+        ],
+        antes: 'É necessário conhecer listas (Capítulo 25) e o padrão valor.metodo(), já visto com strings no Capítulo 8.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'No capítulo anterior, criamos listas e alteramos itens já existentes. Mas listas também oferecem <b>métodos</b> prontos para adicionar, remover, organizar e consultar itens, sem a necessidade de recriar a lista inteira manualmente.',
+          'Para adicionar: <span class="icode">.append(item)</span> adiciona ao final; <span class="icode">.insert(indice, item)</span> insere em uma posição específica.'
+        ],
+        glossary: [
+          { term:'método', def:'uma função associada a um valor específico, chamada com um ponto (.) logo depois dele', example:'frutas.append("uva") chama o método append, associado à lista frutas.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'frutas = ["maçã", "banana"]\n              ↓\nfrutas.append("uva")\n              ↓\nfrutas = ["maçã", "banana", "uva"]\n                              ↑\n                       adicionado ao final\n\n\nfrutas = ["maçã", "banana", "uva"]\n              ↓\nfrutas.insert(0, "morango")\n              ↓\nfrutas = ["morango", "maçã", "banana", "uva"]\n              ↑\n    inserido na posição 0, empurrando os demais',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Adicionar uma fruta ao final de uma lista.',
+        algoritmo:null,
+        code:'# Lista inicial de frutas\nfrutas = ["maçã", "banana"]\n\n# Adiciona "uva" ao final da lista\nfrutas.append("uva")\n\n# Exibe a lista já atualizada\nprint(frutas)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'frutas = ["maçã", "banana"]',
+          'frutas.append("uva")',
+          'Python localiza a lista associada a "frutas"',
+          'Adiciona "uva" na última posição dessa lista',
+          'frutas agora é: ["maçã", "banana", "uva"]',
+          'print(frutas)',
+          "Exibe: ['maçã', 'banana', 'uva']"
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'frutas.append("uva")', explanation:'frutas.append(...) chama o método append sobre a lista frutas. "uva" é o item a ser adicionado. Diferente de uma atribuição (=), este método <b>modifica a lista original diretamente</b> — não é necessário (e nem correto) escrever frutas = frutas.append("uva"), pois append() não devolve uma nova lista, apenas altera a existente.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:"['maçã', 'banana', 'uva']",
+        modIntro:'Vamos apresentar, aos poucos, os métodos de remoção: .remove(valor) remove a primeira ocorrência; .pop(indice) remove e devolve um item (padrão: o último); .clear() remove todos os itens.',
+        modCode:'frutas = ["maçã", "banana", "uva"]\n\nfrutas.remove("banana")\nprint(frutas)          # [\'maçã\', \'uva\']\n\nultima = frutas.pop()\nprint(ultima)           # \'uva\'\nprint(frutas)           # [\'maçã\']',
+        modResult:"['maçã', 'uva']\nuva\n['maçã']",
+        modNote:null,
+        runnable:true,
+        naoConfunda:{ text:'.append() versus .extend(): .append() adiciona UM ÚNICO ITEM ao final da lista, mesmo que esse item seja, ele próprio, uma lista (nesse caso, a lista inteira vira um único item aninhado). Já .extend() adiciona, individualmente, CADA ITEM de outra lista ao final da lista original.', code:'a = [1, 2]\nb = [3, 4]\n\na.append(b)\nprint(a)   # [1, 2, [3, 4]]  ← b inteiro virou um único item\n\nc = [1, 2]\nc.extend(b)\nprint(c)   # [1, 2, 3, 4]    ← cada item de b foi adicionado individualmente' },
+        extraBlocks:[
+          { title:'Organizando e consultando a lista', intro:'.sort() organiza em ordem crescente/alfabética; .reverse() inverte a ordem; .index() devolve a posição da primeira ocorrência; .count() conta ocorrências; .copy() cria uma cópia independente.', code:'numeros = [5, 2, 8, 1]\nnumeros.sort()\nprint(numeros)     # [1, 2, 5, 8]\nnumeros.reverse()\nprint(numeros)     # [8, 5, 2, 1]\n\nfrutas = ["maçã", "banana", "uva", "banana"]\nprint(frutas.index("uva"))     # 2\nprint(frutas.count("banana"))  # 2', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar guardar o retorno de .append() em uma variável', code:'frutas = ["maçã"]\nfrutas = frutas.append("banana")\nprint(frutas)', body:'.append() não devolve a lista modificada — ele devolve None. Ao fazer frutas = frutas.append(...), a variável frutas passa a valer None, perdendo a lista original. O correto é apenas frutas.append("banana"), sem reatribuição.' },
+          { title:'🐞 Tentar remover um valor que não existe na lista', code:'frutas = ["maçã", "banana"]\nfrutas.remove("uva")', body:'Isso gera erro, porque "uva" não está na lista. .remove() só funciona para valores realmente presentes.' },
+          { title:'🐞 Confundir .copy() com uma simples atribuição (=)', code:'lista_a = [1, 2, 3]\nlista_b = lista_a\nlista_b.append(4)\nprint(lista_a)   # [1, 2, 3, 4]  ← lista_a também mudou!', body:'lista_b = lista_a NÃO cria uma cópia independente — ambos os nomes passam a apontar para a MESMA lista na memória. Para copiar de verdade: lista_b = lista_a.copy()' }
+        ],
+        howToRead:'Ao tentar remover um valor inexistente, o Python mostra: <span class="icode">ValueError: list.remove(x): x not in list</span><br><br>A solução é sempre confirmar, antes de remover, que o valor realmente existe na lista (por exemplo, usando o operador in).',
+        tryIt:true,
+        tryItCode:'frutas = ["maçã", "banana"]\nfrutas.remove("uva")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Gerenciar uma lista de tarefas simples: adicionar uma nova tarefa, remover uma já concluída, e exibir a lista organizada em ordem alfabética.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'tarefas = ["Estudar Python", "Lavar louça"]\n\ntarefas.append("Fazer exercícios")\n        ↓\ntarefas = ["Estudar Python", "Lavar louça", "Fazer exercícios"]\n\ntarefas.remove("Lavar louça")\n        ↓\ntarefas = ["Estudar Python", "Fazer exercícios"]\n\ntarefas.sort()\n        ↓\ntarefas = ["Estudar Python", "Fazer exercícios"]  (já estava em ordem alfabética)',
+        code:'# Lista inicial de tarefas\ntarefas = ["Estudar Python", "Lavar louça"]\n\n# Adiciona uma nova tarefa\ntarefas.append("Fazer exercícios")\n\n# Remove uma tarefa já concluída\ntarefas.remove("Lavar louça")\n\n# Organiza a lista em ordem alfabética\ntarefas.sort()\n\n# Exibe o resultado final\nprint(tarefas)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Qual método adiciona um item ao final de uma lista?', gabarito:'.append()' },
+          { kind:'text', prompt:'Qual método remove e devolve um item de uma lista?', gabarito:'.pop()' },
+          { kind:'text', prompt:'Qual método organiza uma lista em ordem crescente?', gabarito:'.sort()' },
+          { kind:'text', prompt:'O que .index() devolve?', gabarito:'A posição da primeira ocorrência do valor.' },
+          { kind:'text', prompt:'O que .count() devolve?', gabarito:'Quantas vezes o valor aparece na lista.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma lista de compras, adicione três itens com .append(), remova um deles com .remove(), e exiba o resultado final.', starter:'', gabarito:'compras = []\ncompras.append("Arroz")\ncompras.append("Feijão")\ncompras.append("Leite")\ncompras.remove("Feijão")\nprint(compras)' },
+          { kind:'code', prompt:'Crie uma lista de números desorganizada, organize-a com .sort(), e depois inverta a ordem com .reverse(), exibindo o resultado a cada etapa.', starter:'', gabarito:'numeros = [4, 1, 8, 2]\nnumeros.sort()\nprint(numeros)\nnumeros.reverse()\nprint(numeros)' },
+          { kind:'text', prompt:'Explique, com suas palavras, por que lista = lista.append(item) é um erro comum, e o que acontece de fato quando isso é feito.', gabarito:'.append() devolve None, então lista = lista.append(item) substitui a lista por None, perdendo os dados.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma lista com os nomes de 5 alunos, em ordem aleatória. Organize em ordem alfabética; descubra a posição de um aluno específico com .index(); crie uma cópia independente com .copy(), adicionando um novo nome apenas à cópia (confirme que a original não mudou).', starter:'', gabarito:'alunos = ["Carla", "Ana", "Elisa", "Bruno", "Diego"]\nalunos.sort()\nprint(alunos.index("Bruno"))\ncopia = alunos.copy()\ncopia.append("Felipe")\nprint(alunos)\nprint(copia)' },
+          { kind:'code', prompt:'Desafio: crie uma lista de tarefas com pelo menos 5 itens, alguns repetidos. Use .count() para descobrir quantas vezes uma tarefa aparece, e remova todas as ocorrências usando while valor in lista: lista.remove(valor).', starter:'', gabarito:'tarefas = ["Estudar", "Ler", "Estudar", "Correr", "Estudar"]\nprint(tarefas.count("Estudar"))\nwhile "Estudar" in tarefas:\n    tarefas.remove("Estudar")\nprint(tarefas)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'ADICIONAR\n   .append(item)          → adiciona ao final\n   .insert(indice, item)  → insere em uma posição específica\n\nREMOVER\n   .remove(valor)   → remove a primeira ocorrência do valor\n   .pop(indice)     → remove e devolve um item (padrão: o último)\n   .clear()         → remove todos os itens\n\nORGANIZAR\n   .sort()      → ordem crescente/alfabética\n   .reverse()   → inverte a ordem atual\n\nCONSULTAR\n   .index(valor)  → posição da primeira ocorrência\n   .count(valor)  → quantas vezes o valor aparece\n   .copy()        → cópia independente da lista'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar .append() e .insert() para adicionar itens.',
+          'Sei usar .remove(), .pop() e .clear() para remover itens.',
+          'Sei usar .sort() e .reverse() para organizar uma lista.',
+          'Sei usar .index() e .count() para consultar uma lista.',
+          'Sei a diferença entre .append() e .extend().',
+          'Sei que lista_b = lista_a não cria uma cópia independente.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que lista.append(5) faz?', options:['Remove o valor 5','Adiciona 5 ao final da lista','Substitui todos os itens por 5','Gera erro'], correct:1, explanation:'Adiciona 5 ao final da lista.' },
+          { q:'O que lista.pop() faz, por padrão (sem argumento)?', options:['Remove e devolve o primeiro item','Remove e devolve o último item','Apenas exibe o último item, sem remover','Remove todos os itens'], correct:1, explanation:'Remove e devolve o último item.' },
+          { q:'Qual método organiza uma lista em ordem crescente?', options:['.reverse()','.sort()','.index()','.count()'], correct:1, explanation:'.sort() organiza a lista.' },
+          { q:'O que acontece ao tentar .remove() um valor que não está na lista?', options:['Nada, é ignorado','Gera ValueError','Gera IndexError','A lista é esvaziada'], correct:1, explanation:'Gera ValueError.' },
+          { q:'lista_b = lista_a cria uma cópia independente de lista_a?', options:['Sim, sempre','Não — ambos os nomes passam a apontar para a mesma lista','Sim, mas só para listas de números','Não é possível fazer essa atribuição'], correct:1, explanation:'Não cria cópia independente.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Mais sobre Listas (métodos)', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#more-on-lists' },
+          { label:'Referência da biblioteca padrão — tipo list', url:'https://docs.python.org/pt-br/3/library/stdtypes.html#list' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap27',
+  title: 'Capítulo 27 — Percorrendo listas',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como usar for para percorrer todos os itens de uma lista.',
+          'Como usar enumerate() para obter, ao mesmo tempo, o índice e o valor de cada item.',
+          'Como usar o operador in para verificar se um valor está em uma lista.',
+          'Como combinar for e if para filtrar ou processar itens de uma lista.'
+        ],
+        antes: 'É necessário conhecer listas (Capítulo 25), métodos de lista (Capítulo 26) e for (Capítulo 21).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Já usamos for para percorrer os caracteres de uma string. O mesmo padrão se aplica diretamente a listas: for item in lista: executa o bloco uma vez para cada item, na ordem em que aparecem.',
+          'Quando é necessário saber também a <b>posição</b> de cada item, Python oferece a função <span class="icode">enumerate()</span>, que devolve pares de índice e valor. Também é comum verificar se um valor está presente em uma lista, usando o operador <span class="icode">in</span>.'
+        ],
+        glossary: [
+          { term:'enumerate()', def:'função que, ao percorrer uma sequência, devolve tanto o índice quanto o valor de cada item', example:'for indice, fruta in enumerate(frutas): print(indice, fruta)' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'frutas = ["maçã", "banana", "uva"]\n\nfor fruta in frutas:\n    print(fruta)\n\n1ª repetição: fruta = "maçã"    → print("maçã")\n2ª repetição: fruta = "banana"  → print("banana")\n3ª repetição: fruta = "uva"     → print("uva")\n\n\nenumerate(frutas)\n        ↓\n(0, "maçã"), (1, "banana"), (2, "uva")\n\nfor indice, fruta in enumerate(frutas):\n   1ª: indice = 0, fruta = "maçã"\n   2ª: indice = 1, fruta = "banana"\n   3ª: indice = 2, fruta = "uva"',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Percorrer todas as frutas de uma lista.',
+        algoritmo:null,
+        code:'# Lista de frutas a serem percorridas\nfrutas = ["maçã", "banana", "uva"]\n\n# Percorre cada item da lista, um por vez\nfor fruta in frutas:\n    # A cada repetição, "fruta" guarda o item atual\n    print(fruta)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'frutas = ["maçã", "banana", "uva"]',
+          'for fruta in frutas:',
+          '1ª repetição: fruta = "maçã"     → print("maçã")',
+          '2ª repetição: fruta = "banana"   → print("banana")',
+          '3ª repetição: fruta = "uva"      → print("uva")',
+          'Lista esgotada → laço termina'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'for fruta in frutas:', explanation:'Percorre cada item da lista frutas, guardando o item atual na variável fruta a cada repetição.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'maçã\nbanana\nuva',
+        modIntro:'Vamos usar enumerate() para exibir também a posição de cada item, começando a numeração em 1:',
+        modCode:'frutas = ["maçã", "banana", "uva"]\n\nfor indice, fruta in enumerate(frutas):\n    print(f"{indice + 1}. {fruta}")',
+        modResult:'1. maçã\n2. banana\n3. uva',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'for item in lista: versus for indice in range(len(lista)):: a primeira forma acessa diretamente os VALORES, sendo a mais simples quando não é necessário o índice. A segunda percorre os ÍNDICES, útil quando é preciso alterar itens durante a repetição. Quando é necessário tanto o índice quanto o valor, enumerate() é a opção mais clara.',
+        extraBlocks:[
+          { title:'Combinando for com if, e o operador in', intro:'Vamos filtrar frutas cujo nome tem mais de 4 letras, e verificar presença com in:', code:'frutas = ["maçã", "banana", "uva", "melancia"]\n\nfor fruta in frutas:\n    if len(fruta) > 4:\n        print(fruta)\n\nif "banana" in frutas:\n    print("Temos banana!")\nelse:\n    print("Não temos banana")\n\nif "pera" in frutas:\n    print("Temos pera!")\nelse:\n    print("Não temos pera")', result:'banana\nmelancia\nTemos banana!\nNão temos pera', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar alterar a lista diretamente durante um for item in lista:', code:'numeros = [1, 2, 3]\nfor numero in numeros:\n    numero = numero * 2\nprint(numeros)', body:'Isso NÃO altera a lista original — numero é apenas uma cópia do valor durante aquela repetição. Para modificar a lista de verdade: for indice in range(len(numeros)): numeros[indice] = numeros[indice] * 2' },
+          { title:'🐞 Esquecer de desempacotar os dois valores de enumerate()', code:'frutas = ["maçã", "banana"]\nfor item in enumerate(frutas):\n    print(item)', body:'Sem separar em duas variáveis (indice, fruta), cada item é uma dupla (uma tupla — Capítulo 28), exibida como (0, \'maçã\'), (1, \'banana\').' },
+          { title:'🐞 Confundir in (verificação de presença) com in de um for', code:'if "banana" in frutas:\n    ...\nfor fruta in frutas:\n    ...', body:'Usam a mesma palavra in, mas com papéis diferentes: dentro de um if, in verifica presença e devolve um booleano; dentro de um for, in define a sequência a percorrer.' }
+        ],
+        howToRead:'Ao esquecer de desempacotar corretamente o resultado de enumerate() em duas variáveis quando o código espera duas, o Python pode mostrar: <span class="icode">ValueError: not enough values to unpack (expected 2, got 1)</span>',
+        tryIt:true,
+        tryItCode:'numeros = [1, 2, 3]\nfor numero in numeros:\n    numero = numero * 2\nprint(numeros)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Exibir uma lista de produtos numerada, e depois verificar se um produto específico está disponível.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Lista de produtos disponíveis\nprodutos = ["Caderno", "Caneta", "Borracha", "Lápis"]\n\n# Exibe a lista numerada, começando em 1\nfor indice, produto in enumerate(produtos):\n    print(f"{indice + 1}. {produto}")\n\n# Verifica se um produto específico está na lista\nproduto_buscado = "Caneta"\nif produto_buscado in produtos:\n    print(f"{produto_buscado} está disponível!")\nelse:\n    print(f"{produto_buscado} não está disponível.")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Como percorrer todos os itens de uma lista chamada numeros, usando for?', gabarito:'for numero in numeros: print(numero)' },
+          { kind:'text', prompt:'Para que serve enumerate()?', gabarito:'Devolver índice e valor juntos, a cada repetição.' },
+          { kind:'text', prompt:'O que o operador in faz quando usado dentro de um if?', gabarito:'Verifica se um valor está presente na sequência, devolvendo True/False.' },
+          { kind:'code', prompt:'Escreva um for que exiba, numerados a partir de 1, os itens da lista tarefas = ["Estudar", "Correr", "Ler"].', starter:'tarefas = ["Estudar", "Correr", "Ler"]', gabarito:'tarefas = ["Estudar", "Correr", "Ler"]\nfor indice, tarefa in enumerate(tarefas):\n    print(f"{indice + 1}. {tarefa}")' },
+          { kind:'text', prompt:'for numero in numeros: numero = numero * 2 altera a lista original? Justifique.', gabarito:'Não — numero é apenas uma cópia do valor durante a repetição.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que percorra uma lista de notas e exiba apenas as notas maiores ou iguais a 7.', starter:'notas = [8, 5, 9, 6, 7]', gabarito:'notas = [8, 5, 9, 6, 7]\nfor nota in notas:\n    if nota >= 7:\n        print(nota)' },
+          { kind:'code', prompt:'Verifique se um nome digitado pelo usuário está presente em uma lista de convidados pré-definida, exibindo uma mensagem apropriada para os dois casos.', starter:'convidados = ["Ana", "Bruno", "Carla"]', gabarito:'convidados = ["Ana", "Bruno", "Carla"]\nnome = input("Nome: ")\nif nome in convidados:\n    print("Você está na lista!")\nelse:\n    print("Você não está na lista.")' },
+          { kind:'code', prompt:'Use enumerate() para exibir uma lista de tarefas, numeradas, e exiba quantas tarefas existem ao final, usando len().', starter:'tarefas = ["Estudar", "Correr", "Ler"]', gabarito:'tarefas = ["Estudar", "Correr", "Ler"]\nfor indice, tarefa in enumerate(tarefas):\n    print(f"{indice + 1}. {tarefa}")\nprint(f"Total: {len(tarefas)}")' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Percorra uma lista de preços e calcule a soma total, usando um acumulador (variável que começa em 0 e é somada a cada repetição do for) — sem usar nenhuma função pronta de soma.', starter:'precos = [10.0, 25.5, 8.0]', gabarito:'precos = [10.0, 25.5, 8.0]\nsoma = 0\nfor preco in precos:\n    soma = soma + preco\nprint(soma)' },
+          { kind:'code', prompt:'Desafio: peça ao usuário para digitar 5 nomes, armazenando cada um em uma lista (com .append() dentro de um laço), e exiba a lista completa numerada, usando enumerate().', starter:'', gabarito:'nomes = []\nfor _ in range(5):\n    nomes.append(input("Nome: "))\nfor indice, nome in enumerate(nomes):\n    print(f"{indice + 1}. {nome}")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'for item in lista:                  → percorre os VALORES\nfor indice, item in enumerate(lista): → percorre ÍNDICE e VALOR juntos\nvalor in lista                       → verifica presença (True/False)\n\nAlterar "item" dentro de um for NÃO altera a lista original —\né necessário usar o índice: lista[indice] = novo_valor'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei percorrer uma lista com for item in lista:.',
+          'Sei usar enumerate() para obter índice e valor juntos.',
+          'Sei usar in para verificar se um valor está em uma lista.',
+          'Sei combinar for e if para filtrar itens de uma lista.',
+          'Sei que alterar a variável de um for não modifica a lista original.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que for item in lista: percorre?', options:['Os índices da lista','Os valores da lista','Apenas o primeiro item','Nada, gera erro'], correct:1, explanation:'Percorre os valores da lista.' },
+          { q:'O que enumerate(lista) devolve, a cada repetição?', options:['Apenas o valor','Apenas o índice','O índice e o valor juntos','A lista inteira'], correct:2, explanation:'Devolve índice e valor.' },
+          { q:'O que "uva" in ["maçã", "banana", "uva"] retorna?', options:['0','2','True','"uva"'], correct:2, explanation:'in retorna um booleano: True.' },
+          { q:'O código for n in numeros: n = n * 2 altera a lista numeros original?', options:['Sim, sempre','Não, n é apenas uma cópia do valor durante aquela repetição','Sim, mas só para números pares','Depende do tamanho da lista'], correct:1, explanation:'n é uma cópia; não altera a lista.' },
+          { q:'Qual é a forma mais indicada de obter, ao mesmo tempo, o índice e o valor de cada item?', options:['for item in lista:','for i in range(len(lista)):','for indice, item in enumerate(lista):','for item in range(lista):'], correct:2, explanation:'enumerate() é a forma mais clara.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Técnicas de iteração', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#looping-techniques' },
+          { label:'Referência da biblioteca padrão — enumerate()', url:'https://docs.python.org/pt-br/3/library/functions.html#enumerate' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap28',
+  title: 'Capítulo 28 — Tuplas',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é uma tupla e em que ela se diferencia de uma lista.',
+          'Como criar, acessar e percorrer uma tupla.',
+          'Por que tuplas são imutáveis, e quando isso é uma vantagem.',
+          'O que é "empacotamento" e "desempacotamento" de tuplas.'
+        ],
+        antes: 'É necessário conhecer listas (Capítulo 25) e percorrer sequências com for (Capítulo 27).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Uma <b>tupla</b> é muito parecida com uma lista: guarda vários valores, em ordem, acessíveis por índice. A diferença fundamental é que uma tupla é <b>imutável</b> — depois de criada, seus itens não podem ser alterados, adicionados ou removidos.'
+        ],
+        glossary: [
+          { term:'tupla', def:'uma sequência ordenada de valores, criada com parênteses (), que não pode ser alterada depois de criada', example:'coordenada = (10, 20)' }
+        ],
+        callout:'NÃO CONFUNDA: lista [] versus tupla (): ambas guardam sequências de valores acessíveis por índice. A lista é MUTÁVEL (pode ser alterada); a tupla é IMUTÁVEL (não pode). Use tupla quando os dados representam algo que não deveria mudar (coordenadas, dias da semana); use lista quando os dados precisam ser alterados (carrinho de compras).'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'coordenada = (10, 20)\n                0   1     ← índices\n\ncoordenada[0]  →  10\ncoordenada[1]  →  20\n\ncoordenada[0] = 99   ← ERRO! Tuplas não podem ser alteradas',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Criar uma tupla representando uma coordenada (x, y).',
+        algoritmo:null,
+        code:'# Cria uma tupla representando uma coordenada (x, y)\ncoordenada = (10, 20)\n\n# Exibe a tupla inteira\nprint(coordenada)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'coordenada = (10, 20)',
+          'Python cria uma tupla com dois itens, guardando suas posições:\n   índice 0 → 10\n   índice 1 → 20',
+          'Associa essa tupla ao nome "coordenada"',
+          'print(coordenada)',
+          'Exibe: (10, 20)'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'coordenada = (10, 20)', explanation:'Os parênteses () delimitam a tupla; os itens são separados por vírgula, assim como em uma lista.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'(10, 20)',
+        modIntro:'Vamos tentar alterar um item da tupla, para observar o erro:',
+        modCode:'coordenada = (10, 20)\ncoordenada[0] = 99',
+        modTrace:'coordenada = (10, 20)\n              ↓\ncoordenada[0] = 99\n              ↓\nPython tenta alterar o item do índice 0\n              ↓\nTuplas não permitem essa operação → ERRO',
+        modResult:"TypeError: 'tuple' object does not support item assignment",
+        modNote:null,
+        runnable:true,
+        extraBlocks:[
+          { title:'Percorrendo uma tupla, e empacotamento/desempacotamento', intro:'Tuplas são percorridas com for, exatamente como listas. Uma tupla pode ser criada implicitamente, sem parênteses (empacotamento); e cada item pode ser distribuído em variáveis separadas de uma vez (desempacotamento):', code:'dias_uteis = ("segunda", "terça", "quarta", "quinta", "sexta")\nfor dia in dias_uteis:\n    print(dia)\n\n# Empacotamento\nponto = 10, 20\nprint(ponto)   # (10, 20)\n\n# Desempacotamento\nx, y = ponto\nprint(x)   # 10\nprint(y)   # 20', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar alterar, adicionar ou remover itens de uma tupla', code:'frutas = ("maçã", "banana")\nfrutas.append("uva")', body:'Tuplas não possuem métodos como .append(), .remove() ou .sort() (que alteram o conteúdo), justamente porque são imutáveis.' },
+          { title:'🐞 Esquecer a vírgula ao criar uma tupla de um único item', code:'tupla_unica = (5)\nprint(type(tupla_unica))', body:'Isso NÃO cria uma tupla — (5) é apenas o número 5 entre parênteses de agrupamento. Para criar uma tupla de um único item: tupla_unica = (5,)' },
+          { title:'🐞 Desempacotar com uma quantidade errada de variáveis', code:'ponto = (10, 20, 30)\nx, y = ponto', body:'Isso gera erro, porque a tupla tem 3 itens, mas apenas 2 variáveis foram fornecidas para recebê-los.' }
+        ],
+        howToRead:'Ao tentar alterar um item de uma tupla: <span class="icode">TypeError: \'tuple\' object does not support item assignment</span><br><br>Ao desempacotar com quantidade errada de variáveis: <span class="icode">ValueError: too many values to unpack (expected 2)</span>',
+        tryIt:true,
+        tryItCode:'ponto = (10, 20, 30)\nx, y = ponto'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Guardar, em uma tupla, as informações fixas de um produto (nome e código de barras), que não devem mudar depois de cadastradas.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Tupla com dados fixos do produto: (nome, codigo_de_barras)\nproduto = ("Caderno universitário", "7891234567890")\n\n# Desempacota a tupla em duas variáveis separadas\nnome, codigo = produto\n\n# Exibe as informações\nprint(f"Produto: {nome}")\nprint(f"Código: {codigo}")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Qual é a principal diferença entre lista e tupla?', gabarito:'Lista é mutável; tupla é imutável.' },
+          { kind:'text', prompt:'Como se cria uma tupla com um único item?', gabarito:'Com uma vírgula: (item,)' },
+          { kind:'text', prompt:'O que acontece ao tentar alterar um item de uma tupla?', gabarito:'Gera TypeError.' },
+          { kind:'text', prompt:'O que é desempacotamento de tupla?', gabarito:'Atribuir, de uma vez, cada item de uma tupla a variáveis separadas.' },
+          { kind:'code', prompt:'Dada ponto = (3, 4), como obter os valores 3 e 4 em duas variáveis separadas, x e y?', starter:'ponto = (3, 4)', gabarito:'x, y = ponto' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma tupla com os nomes dos meses de um trimestre (3 itens), e percorra-a com for, exibindo cada mês.', starter:'', gabarito:'trimestre = ("Janeiro", "Fevereiro", "Março")\nfor mes in trimestre:\n    print(mes)' },
+          { kind:'code', prompt:'Crie uma tupla pessoa = ("Ana", 25, "Engenheira"), desempacote-a em três variáveis (nome, idade, profissao), e exiba uma frase combinando as três.', starter:'pessoa = ("Ana", 25, "Engenheira")', gabarito:'pessoa = ("Ana", 25, "Engenheira")\nnome, idade, profissao = pessoa\nprint(f"{nome}, {idade} anos, {profissao}")' },
+          { kind:'text', prompt:'Explique por que (5) não é uma tupla, mas (5,) é.', gabarito:'(5) é apenas o número 5 entre parênteses de agrupamento; (5,) é uma tupla de um item, graças à vírgula.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma lista de tuplas, cada uma representando um aluno e sua nota: [("Ana", 8.5), ("Bruno", 6.0), ("Carla", 9.2)]. Percorra com for, desempacotando cada tupla em nome e nota diretamente no cabeçalho do for.', starter:'', gabarito:'alunos = [("Ana", 8.5), ("Bruno", 6.0), ("Carla", 9.2)]\nfor nome, nota in alunos:\n    print(f"{nome}: {nota}")' },
+          { kind:'text', prompt:'Desafio: reflita sobre como uma tupla poderia "empacotar" quociente e resto de uma divisão em um único retorno (esse padrão será formalizado no Capítulo 35).', gabarito:'Uma tupla permite "empacotar" quociente e resto em um único valor de retorno, como (quociente, resto).' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'tupla = (item0, item1, ...)     ← imutável, criada com ()\nlista = [item0, item1, ...]     ← mutável, criada com []\n\ntupla[indice]        → acessa um item (igual à lista)\ntupla[indice] = novo ← ERRO! tuplas não podem ser alteradas\n\nEMPACOTAMENTO:      ponto = 10, 20\nDESEMPACOTAMENTO:   x, y = ponto'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei criar e acessar itens de uma tupla.',
+          'Sei explicar por que tuplas são imutáveis.',
+          'Sei quando usar tupla em vez de lista.',
+          'Sei empacotar e desempacotar tuplas.',
+          'Sei criar corretamente uma tupla de um único item.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Como se cria uma tupla em Python?', options:['Com colchetes []','Com chaves {}','Com parênteses ()','Com aspas ""'], correct:2, explanation:'Tuplas usam parênteses.' },
+          { q:'O que acontece ao tentar tupla[0] = 99?', options:['Funciona normalmente','Gera TypeError, pois tuplas são imutáveis','Cria um novo item','Remove o item antigo'], correct:1, explanation:'Gera TypeError.' },
+          { q:'O que (5) representa em Python?', options:['Uma tupla com um item','O número 5, entre parênteses de agrupamento','Uma lista com um item','Um erro de sintaxe'], correct:1, explanation:'(5) é apenas o número 5.' },
+          { q:'Como criar corretamente uma tupla com um único item, o número 5?', options:['(5)','(5,)','[5]','{5}'], correct:1, explanation:'(5,) com a vírgula.' },
+          { q:'O que é desempacotamento de tupla?', options:['Remover itens de uma tupla','Atribuir, de uma vez, cada item de uma tupla a uma variável distinta','Converter uma tupla em lista','Ordenar os itens de uma tupla'], correct:1, explanation:'Atribuir cada item a uma variável distinta.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tuplas e Sequências', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#tuples-and-sequences' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap29',
+  title: 'Capítulo 29 — Conjuntos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um conjunto (set) e como ele se diferencia de listas e tuplas.',
+          'Por que um conjunto nunca tem itens repetidos.',
+          'Por que um conjunto não mantém uma ordem fixa dos itens.',
+          'Como usar conjuntos para operações como união e interseção.'
+        ],
+        antes: 'É necessário conhecer listas (Capítulo 25) e o operador in (Capítulo 27).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Um <b>conjunto</b> (set) é uma coleção de valores, criada com chaves {}, com duas características que o diferenciam de listas e tuplas: <b>não permite itens repetidos</b> (se um valor for adicionado mais de uma vez, apenas uma cópia é mantida) e <b>não mantém uma ordem fixa</b> — por isso, não é possível acessar um item por índice.'
+        ],
+        glossary: [
+          { term:'conjunto (set)', def:'uma coleção de valores únicos, sem ordem garantida, criada com chaves {}', example:'útil para remover duplicatas e realizar operações de conjuntos (união, interseção, etc.).' }
+        ],
+        callout:'NÃO CONFUNDA: {} sozinho cria um DICIONÁRIO vazio (Capítulo 30), não um conjunto vazio. Para criar um conjunto vazio: conjunto_vazio = set() — nunca conjunto_vazio = {}'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'numeros = {1, 2, 3, 2, 1}\n              ↓\nPython monta o conjunto, eliminando repetições\n              ↓\nnumeros = {1, 2, 3}\n   (a ordem de exibição pode variar; não há índices)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Criar um conjunto a partir de valores com repetições.',
+        algoritmo:null,
+        code:'# Cria um conjunto a partir de valores com repetições\nnumeros = {1, 2, 3, 2, 1}\n\n# Exibe o conjunto: repare que as repetições já não aparecem\nprint(numeros)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          '{1, 2, 3, 2, 1}',
+          'Python processa cada valor: 1 → adicionado',
+          '2 → adicionado',
+          '3 → adicionado',
+          '2 → já existe, ignorado',
+          '1 → já existe, ignorado',
+          'Conjunto final: {1, 2, 3}'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'numeros = {1, 2, 3, 2, 1}', explanation:'Cria um conjunto a partir de cinco valores, mas como 1 e 2 aparecem repetidos, o conjunto resultante mantém apenas uma ocorrência de cada.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'{1, 2, 3}',
+        modIntro:'Um uso muito comum de conjuntos é remover duplicatas de uma lista, convertendo-a para set() e, se necessário, de volta para lista:',
+        modCode:'nomes = ["Ana", "Bruno", "Ana", "Carla", "Bruno"]\n\nnomes_sem_repeticao = list(set(nomes))\nprint(nomes_sem_repeticao)',
+        modResult:"['Ana', 'Bruno', 'Carla']  (a ordem pode variar)",
+        modNote:null,
+        runnable:true,
+        extraBlocks:[
+          { title:'Operações de conjuntos: união, interseção e diferença', intro:'| (ou .union()) para itens em qualquer um dos dois; & (ou .intersection()) para itens em ambos; - (ou .difference()) para itens só no primeiro. .add() e .remove() adicionam/removem itens.', code:'turma_matematica = {"Ana", "Bruno", "Carla"}\nturma_fisica = {"Bruno", "Carla", "Diego"}\n\nprint(turma_matematica | turma_fisica)   # união\nprint(turma_matematica & turma_fisica)   # interseção\nprint(turma_matematica - turma_fisica)   # diferença\n\nfrutas = {"maçã", "banana"}\nfrutas.add("uva")\nfrutas.remove("maçã")\nprint(frutas)', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar acessar um item de conjunto por índice', code:'numeros = {1, 2, 3}\nprint(numeros[0])', body:'Conjuntos não têm ordem garantida, então não é possível (nem faz sentido) acessar um item por posição. Essa operação gera erro.' },
+          { title:'🐞 Criar um conjunto vazio com {}', code:'vazio = {}\nprint(type(vazio))', body:"Isso cria um DICIONÁRIO vazio (<class 'dict'>), não um conjunto. O correto para um conjunto vazio é set()." },
+          { title:'🐞 Esperar que a ordem de exibição de um conjunto seja sempre a mesma', code:'numeros = {3, 1, 2}\nprint(numeros)', body:'A ordem em que os itens aparecem ao exibir um conjunto NÃO é garantida e pode variar. Se a ordem for importante, uma lista (possivelmente organizada com .sort()) é mais adequada.' }
+        ],
+        howToRead:"Ao tentar acessar um conjunto por índice, o Python mostra: <span class=\"icode\">TypeError: 'set' object is not subscriptable</span><br><br>Isso confirma que, para acessar itens individualmente por posição, é necessário usar uma lista ou tupla, não um conjunto.",
+        tryIt:true,
+        tryItCode:'numeros = {1, 2, 3}\nprint(numeros[0])'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Descobrir quais alunos estão matriculados em ambas as disciplinas de um curso.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Conjuntos com os alunos de cada disciplina\nalunos_portugues = {"Ana", "Bruno", "Carla", "Diego"}\nalunos_matematica = {"Bruno", "Carla", "Elisa"}\n\n# Interseção: alunos matriculados nas duas disciplinas\nalunos_em_ambas = alunos_portugues & alunos_matematica\n\nprint(alunos_em_ambas)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que acontece quando um conjunto recebe valores repetidos?', gabarito:'As repetições são removidas automaticamente.' },
+          { kind:'text', prompt:'Como criar um conjunto vazio corretamente?', gabarito:'set()' },
+          { kind:'text', prompt:'É possível acessar um item de um conjunto por índice? Justifique.', gabarito:'Não, conjuntos não têm ordem garantida nem acesso por índice.' },
+          { kind:'text', prompt:'Qual método adiciona um item a um conjunto?', gabarito:'.add()' },
+          { kind:'text', prompt:'Qual operador realiza a interseção entre dois conjuntos?', gabarito:'&' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma lista com nomes repetidos, converta-a para conjunto e depois de volta para lista, exibindo o resultado sem duplicatas.', starter:'', gabarito:'nomes = ["Ana", "Bruno", "Ana", "Carla"]\nnomes_unicos = list(set(nomes))\nprint(nomes_unicos)' },
+          { kind:'code', prompt:'Crie dois conjuntos representando os ingredientes de duas receitas, e exiba a união e a interseção entre eles.', starter:'', gabarito:'receita1 = {"farinha", "ovo", "leite"}\nreceita2 = {"ovo", "açúcar", "manteiga"}\nprint(receita1 | receita2)\nprint(receita1 & receita2)' },
+          { kind:'text', prompt:'Explique por que {} não pode ser usado para criar um conjunto vazio, e o que essa expressão cria de fato.', gabarito:'{} cria um dicionário vazio, não um conjunto. Para um conjunto vazio, use set().' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário para digitar 5 palavras (uma por vez, via input(), dentro de um laço), guarde todas em uma lista, e ao final exiba a quantidade total e a quantidade de palavras DIFERENTES (usando um conjunto).', starter:'', gabarito:'palavras = []\nfor _ in range(5):\n    palavras.append(input("Palavra: "))\nprint(len(palavras))\nprint(len(set(palavras)))' },
+          { kind:'code', prompt:'Desafio: dados dois conjuntos de alunos presentes em duas aulas diferentes, calcule os que foram a pelo menos uma (união), os que foram às duas (interseção), e os que foram apenas à primeira (diferença).', starter:'presentes_aula1 = {"Ana", "Bruno", "Carla"}\npresentes_aula2 = {"Bruno", "Diego"}', gabarito:'presentes_aula1 = {"Ana", "Bruno", "Carla"}\npresentes_aula2 = {"Bruno", "Diego"}\nprint(presentes_aula1 | presentes_aula2)\nprint(presentes_aula1 & presentes_aula2)\nprint(presentes_aula1 - presentes_aula2)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'conjunto = {item1, item2, ...}   ← criado com {}\nconjunto_vazio = set()            ← {} cria um DICIONÁRIO vazio, não um conjunto!\n\nCaracterísticas:\n   - sem itens repetidos\n   - sem ordem garantida\n   - sem acesso por índice\n\n.add(item)      → adiciona um item\n.remove(item)   → remove um item\n\n|  ou .union()         → união\n&  ou .intersection()  → interseção\n-  ou .difference()    → diferença'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei criar um conjunto e um conjunto vazio corretamente.',
+          'Sei explicar por que conjuntos não têm itens repetidos.',
+          'Sei que conjuntos não têm ordem garantida nem acesso por índice.',
+          'Sei usar .add() e .remove().',
+          'Sei realizar união, interseção e diferença entre conjuntos.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que acontece ao criar {1, 2, 2, 3}?', options:['Gera erro','O conjunto resultante é {1, 2, 3}','O conjunto resultante é {1, 2, 2, 3}','Apenas o último valor é mantido'], correct:1, explanation:'Duplicatas são removidas: {1, 2, 3}.' },
+          { q:'O que {} cria?', options:['Um conjunto vazio','Um dicionário vazio','Uma lista vazia','Uma tupla vazia'], correct:1, explanation:'{} cria um dicionário vazio.' },
+          { q:'É possível acessar conjunto[0]?', options:['Sim, sempre','Não, conjuntos não suportam acesso por índice','Só se o conjunto tiver um único item','Só para conjuntos de números'], correct:1, explanation:'Conjuntos não suportam índice.' },
+          { q:'Qual operador realiza a união entre dois conjuntos?', options:['&','-','|','+'], correct:2, explanation:'| realiza a união.' },
+          { q:'Qual é a principal utilidade de converter uma lista em conjunto?', options:['Ordenar os itens','Remover duplicatas','Acessar itens por índice mais rápido','Transformar números em texto'], correct:1, explanation:'Remove duplicatas.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Conjuntos', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#sets' },
+          { label:'Referência da biblioteca padrão — set e frozenset', url:'https://docs.python.org/pt-br/3/library/stdtypes.html#set-types-set-frozenset' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap30',
+  title: 'Capítulo 30 — Dicionários',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um dicionário e como ele organiza dados em pares chave-valor.',
+          'Como criar, acessar, alterar e adicionar itens em um dicionário.',
+          'Como percorrer um dicionário com for, usando .keys(), .values() e .items().',
+          'Como usar .get() para acessar uma chave com segurança.'
+        ],
+        antes: 'É necessário conhecer listas (Capítulo 25) e for (Capítulo 21).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, acessamos itens de listas e tuplas por posição numérica (índice). Um <b>dicionário</b> organiza dados de forma diferente: cada valor é acessado por meio de uma <b>chave</b> (geralmente um texto descritivo), não por posição.',
+          'Para acessar um valor, usamos colchetes [] com a chave desejada: aluno["nome"]'
+        ],
+        glossary: [
+          { term:'dicionário (dict)', def:'uma coleção de pares chave: valor, criada com chaves {}, em que cada valor é acessado pela sua chave, não por índice numérico', example:'aluno = {"nome": "João", "idade": 16}' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'aluno = {\n    "nome":  "João",\n    "idade": 16\n}\n\n    CHAVE        VALOR\n   "nome"    →   "João"\n   "idade"   →     16\n\naluno["nome"]   →  "João"\naluno["idade"]  →   16',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Acessar o valor de uma chave em um dicionário.',
+        algoritmo:null,
+        code:'# Cria um dicionário representando um aluno, com duas chaves\naluno = {"nome": "João", "idade": 16}\n\n# Acessa o valor associado à chave "nome"\nprint(aluno["nome"])',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'aluno = {"nome": "João", "idade": 16}',
+          'Python associa cada chave ao seu valor:\n   "nome"  → "João"\n   "idade" → 16',
+          'aluno["nome"]',
+          'Python busca a chave "nome" no dicionário',
+          'Encontra o valor: "João"',
+          'print("João")',
+          'Exibe: João'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'aluno = {"nome": "João", "idade": 16}', explanation:'As chaves {} delimitam o dicionário. Cada par é escrito como chave: valor, separado por vírgula. "nome" e "idade" são as chaves; "João" e 16 são os valores correspondentes.' },
+          { code:'print(aluno["nome"])', explanation:'Acessa o valor associado à chave "nome" — a chave vai entre colchetes, assim como um índice de lista, mas aqui é um texto, não um número.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'João',
+        modIntro:'Vamos alterar um valor existente, adicionar uma nova chave, e percorrer o dicionário inteiro. Repare que a mesma sintaxe (dicionario[chave] = valor) tanto altera uma chave existente quanto cria uma nova:',
+        modCode:'aluno = {"nome": "João", "idade": 16}\n\n# Altera o valor de uma chave já existente\naluno["idade"] = 17\n\n# Adiciona uma nova chave (que ainda não existia)\naluno["escola"] = "Escola Municipal"\n\n# Exibe o dicionário completo\nprint(aluno)',
+        modResult:"{'nome': 'João', 'idade': 17, 'escola': 'Escola Municipal'}",
+        modNote:null,
+        runnable:true,
+        naoConfunda:'dicionario[chave] versus dicionario.get(chave): a primeira forma GERA ERRO (KeyError) se a chave não existir. A segunda NUNCA gera erro por chave ausente — devolve None (ou um valor padrão informado). Use .get() sempre que não houver certeza de que a chave existe.',
+        extraBlocks:[
+          { title:'Percorrendo um dicionário, e acesso seguro com .get()', intro:'Por padrão, for chave in dicionario: percorre apenas as chaves. Para percorrer valores ou pares completos, use .values() e .items(). Para acessar sem risco de erro, use .get():', code:'aluno = {"nome": "João", "idade": 17, "escola": "Escola Municipal"}\n\nfor chave in aluno:\n    print(chave)\n\nfor valor in aluno.values():\n    print(valor)\n\nfor chave, valor in aluno.items():\n    print(f"{chave}: {valor}")\n\nprint(aluno.get("telefone"))                     # None\nprint(aluno.get("telefone", "Não informado"))    # "Não informado"', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Acessar uma chave que não existe, usando []', code:'aluno = {"nome": "João"}\nprint(aluno["idade"])', body:'Isso gera erro, porque "idade" não é uma chave presente no dicionário.' },
+          { title:'🐞 Confundir chave com índice numérico', code:'aluno = {"nome": "João", "idade": 16}\nprint(aluno[0])', body:'Diferente de listas, um dicionário não é acessado por posição numérica (a menos que 0 seja, ele próprio, uma das chaves cadastradas). Isso gera erro.' },
+          { title:'🐞 Usar uma chave repetida ao criar o dicionário', code:'aluno = {"nome": "João", "nome": "Pedro"}\nprint(aluno)', body:'Isso NÃO gera erro, mas o segundo valor SOBRESCREVE o primeiro — o dicionário final terá apenas {"nome": "Pedro"}.' }
+        ],
+        howToRead:"Ao acessar uma chave inexistente com [], o Python mostra: <span class=\"icode\">KeyError: 'idade'</span><br><br>KeyError → erro específico de uma chave que não existe no dicionário. A solução é confirmar se a chave existe (com o operador in) antes de acessá-la com [], ou usar .get() para acessar com segurança.",
+        tryIt:true,
+        tryItCode:'aluno = {"nome": "João"}\nprint(aluno["idade"])'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Cadastrar um produto com nome, preço e quantidade em estoque, e exibir suas informações formatadas.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Dicionário representando um produto\nproduto = {\n    "nome": "Caderno universitário",\n    "preco": 24.90,\n    "estoque": 15\n}\n\n# Exibe as informações formatadas, usando as chaves\nprint(f"Produto: {produto[\'nome\']}")\nprint(f"Preço: R$ {produto[\'preco\']:.2f}")\nprint(f"Em estoque: {produto[\'estoque\']} unidades")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Como um dicionário organiza seus dados?', gabarito:'Em pares chave-valor.' },
+          { kind:'text', prompt:'Como acessar o valor associado à chave "cidade" em um dicionário chamado endereco?', gabarito:'endereco["cidade"]' },
+          { kind:'text', prompt:'O que acontece ao tentar acessar, com [], uma chave que não existe?', gabarito:'Gera KeyError.' },
+          { kind:'text', prompt:'O que .get() devolve quando a chave não existe (sem valor padrão informado)?', gabarito:'None' },
+          { kind:'text', prompt:'Como adicionar uma nova chave a um dicionário já existente?', gabarito:'dicionario["nova_chave"] = valor' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie um dicionário representando um livro, com as chaves "titulo", "autor" e "ano", e exiba uma frase formatada combinando as três informações.', starter:'', gabarito:'livro = {"titulo": "Dom Casmurro", "autor": "Machado de Assis", "ano": 1899}\nprint(f"{livro[\'titulo\']}, de {livro[\'autor\']} ({livro[\'ano\']})")' },
+          { kind:'code', prompt:'Crie um dicionário de um funcionário com "nome" e "salario", e escreva o código que aumenta o salário em 10%, atualizando o dicionário.', starter:'funcionario = {"nome": "Carlos", "salario": 2000}', gabarito:'funcionario = {"nome": "Carlos", "salario": 2000}\nfuncionario["salario"] = funcionario["salario"] * 1.10\nprint(funcionario)' },
+          { kind:'code', prompt:'Percorra um dicionário de preços (chaves = nomes de produtos, valores = preços) usando .items(), exibindo cada par formatado.', starter:'precos = {"Caderno": 24.9, "Caneta": 3.5}', gabarito:'precos = {"Caderno": 24.9, "Caneta": 3.5}\nfor produto, preco in precos.items():\n    print(f"{produto}: R$ {preco:.2f}")' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário para cadastrar um cliente, perguntando nome, idade e cidade (via input()), armazenando em um dicionário, e exiba um "cartão de cliente" formatado.', starter:'', gabarito:'cliente = {}\ncliente["nome"] = input("Nome: ")\ncliente["idade"] = input("Idade: ")\ncliente["cidade"] = input("Cidade: ")\nprint(f"Cliente: {cliente[\'nome\']}, {cliente[\'idade\']} anos, {cliente[\'cidade\']}")' },
+          { kind:'code', prompt:'Desafio: crie um dicionário de estoque ({"Caderno": 10, "Caneta": 25, "Borracha": 0}). Percorra e exiba "Em estoque" ou "Esgotado" para cada produto.', starter:'estoque = {"Caderno": 10, "Caneta": 25, "Borracha": 0}', gabarito:'estoque = {"Caderno": 10, "Caneta": 25, "Borracha": 0}\nfor produto, quantidade in estoque.items():\n    if quantidade > 0:\n        print(f"{produto}: Em estoque")\n    else:\n        print(f"{produto}: Esgotado")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'dicionario = {"chave1": valor1, "chave2": valor2, ...}\n\ndicionario["chave"]           → acessa (gera erro se a chave não existir)\ndicionario["chave"] = valor   → altera ou cria a chave\ndicionario.get("chave")       → acessa com segurança (None se não existir)\n\nfor chave in dicionario:              → percorre as chaves\nfor valor in dicionario.values():     → percorre os valores\nfor chave, valor in dicionario.items(): → percorre pares chave-valor'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei criar um dicionário com pares chave-valor.',
+          'Sei acessar, alterar e adicionar valores por chave.',
+          'Sei percorrer um dicionário com .keys(), .values() e .items().',
+          'Sei usar .get() para acesso seguro.',
+          'Sei que acessar uma chave inexistente com [] gera KeyError.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Como os valores de um dicionário são acessados?', options:['Por índice numérico, como em uma lista','Por chave','Por ordem alfabética','Não é possível acessar valores individuais'], correct:1, explanation:'Por chave.' },
+          { q:'O que acontece ao acessar dicionario["chave_inexistente"]?', options:['Retorna None','Gera KeyError','Retorna uma lista vazia','Cria a chave automaticamente com valor 0'], correct:1, explanation:'Gera KeyError.' },
+          { q:'O que .get("chave_inexistente") retorna, sem valor padrão informado?', options:['Gera erro','None','0','Uma string vazia'], correct:1, explanation:'Retorna None.' },
+          { q:'Como adicionar a chave "telefone" a um dicionário pessoa?', options:['pessoa.add("telefone")','pessoa["telefone"] = valor','pessoa.append("telefone", valor)','Não é possível adicionar chaves depois de criado'], correct:1, explanation:'pessoa["telefone"] = valor.' },
+          { q:'O que .items() devolve ao percorrer um dicionário?', options:['Apenas as chaves','Apenas os valores','Pares de chave e valor','Apenas o tamanho do dicionário'], correct:2, explanation:'Pares de chave e valor.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Dicionários', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#dictionaries' },
+          { label:'Referência da biblioteca padrão — tipo dict', url:'https://docs.python.org/pt-br/3/library/stdtypes.html#mapping-types-dict' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap31',
+  title: 'Capítulo 31 — Estruturas de dados combinadas',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como combinar listas e dicionários para representar dados mais realistas (uma lista de vários registros).',
+          'Como acessar e percorrer uma lista de dicionários.',
+          'Como alterar um valor dentro de um dicionário que está dentro de uma lista.'
+        ],
+        antes: 'É necessário conhecer listas (Capítulo 25), percorrer listas (Capítulo 27) e dicionários (Capítulo 30).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, trabalhamos com listas de valores simples e dicionários isolados. Na prática, sistemas reais quase sempre precisam representar <b>várias entidades</b>, cada uma com <b>várias informações</b> — por exemplo, uma turma inteira de alunos, cada um com nome e nota. Isso é feito combinando as duas estruturas: uma <b>lista de dicionários</b>.',
+          'Aqui, alunos é uma <b>lista</b>, e cada item dessa lista é um <b>dicionário</b>, representando um aluno com suas próprias informações. Pense nisso como uma tabela — cada dicionário é uma "linha" (um registro completo), e cada chave é uma "coluna".'
+        ],
+        glossary: []
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'alunos = [\n    { "nome": "Ana",    "nota": 8.5 },   ← item 0 da lista (um dicionário)\n    { "nome": "Carlos", "nota": 7.0 }    ← item 1 da lista (outro dicionário)\n]\n\nalunos[0]              →  {"nome": "Ana", "nota": 8.5}\nalunos[0]["nome"]      →  "Ana"\nalunos[0]["nota"]      →  8.5\n\nalunos[1]              →  {"nome": "Carlos", "nota": 7.0}\nalunos[1]["nome"]      →  "Carlos"',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Acessar o nome do primeiro aluno de uma lista de dicionários.',
+        algoritmo:null,
+        code:'# Lista de alunos, cada um representado por um dicionário\nalunos = [\n    {"nome": "Ana", "nota": 8.5},\n    {"nome": "Carlos", "nota": 7.0}\n]\n\n# Acessa o item 0 da lista (o primeiro dicionário), e então a chave "nome" dele\nprint(alunos[0]["nome"])',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'alunos = [{"nome": "Ana", "nota": 8.5}, {"nome": "Carlos", "nota": 7.0}]',
+          'alunos[0]',
+          'Acessa o item de índice 0 da lista',
+          '{"nome": "Ana", "nota": 8.5}',
+          'alunos[0]["nome"]',
+          'Acessa a chave "nome" dentro desse dicionário',
+          '"Ana"',
+          'print("Ana") → Exibe: Ana'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'print(alunos[0]["nome"])', explanation:'alunos[0] acessa o <b>primeiro item da lista</b> (o dicionário da Ana), usando índice. ["nome"], encadeado logo em seguida, acessa a <b>chave "nome" daquele dicionário específico</b>. Os dois acessos são encadeados: primeiro escolhe o dicionário certo (pelo índice na lista), depois a informação certa dentro dele (pela chave).' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Ana',
+        modIntro:'Vamos percorrer a lista inteira, exibindo cada aluno formatado, e depois alterar um valor específico (corrigir a nota do Carlos):',
+        modCode:'alunos = [\n    {"nome": "Ana", "nota": 8.5},\n    {"nome": "Carlos", "nota": 7.0},\n    {"nome": "Beatriz", "nota": 9.2}\n]\n\nfor aluno in alunos:\n    print(f"{aluno[\'nome\']}: {aluno[\'nota\']}")\n\n# Altera a nota do Carlos (índice 1)\nalunos[1]["nota"] = 7.5\nprint(alunos)',
+        modResult:"Ana: 8.5\nCarlos: 7.0\nBeatriz: 9.2\n[{'nome': 'Ana', 'nota': 8.5}, {'nome': 'Carlos', 'nota': 7.5}, {'nome': 'Beatriz', 'nota': 9.2}]",
+        modNote:null,
+        runnable:true,
+        naoConfunda:'alunos[0] versus alunos[0]["nome"]: o primeiro acessa o DICIONÁRIO INTEIRO naquela posição da lista; o segundo acessa UM VALOR ESPECÍFICO dentro desse dicionário. É necessário combinar os dois tipos de acesso (por índice, depois por chave).',
+        extraBlocks:[
+          { title:'Combinando com if para filtrar registros', intro:'É muito comum combinar essa estrutura com if, para filtrar registros que atendem a uma condição:', code:'alunos = [\n    {"nome": "Ana", "nota": 8.5},\n    {"nome": "Carlos", "nota": 7.0},\n    {"nome": "Beatriz", "nota": 9.2}\n]\nfor aluno in alunos:\n    if aluno["nota"] >= 8:\n        print(f"{aluno[\'nome\']} foi aprovado com destaque")', result:'Ana foi aprovado com destaque\nBeatriz foi aprovado com destaque', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer que cada item da lista é um dicionário completo', code:'alunos = [{"nome": "Ana", "nota": 8.5}]\nprint(alunos["nome"])', body:'Isso gera erro: alunos é uma LISTA, então precisa ser acessada por índice primeiro (alunos[0]), e só então pela chave (alunos[0]["nome"]).' },
+          { title:'🐞 Misturar a ordem do índice e da chave', code:'print(alunos["nome"][0])', body:'A ordem correta é sempre: primeiro o índice da lista, depois a chave do dicionário — alunos[0]["nome"], nunca o contrário.' },
+          { title:'🐞 Tentar acessar uma chave que não existe em algum dos dicionários', code:'alunos = [\n    {"nome": "Ana", "nota": 8.5},\n    {"nome": "Carlos"}   # faltando a chave "nota"\n]\nfor aluno in alunos:\n    print(aluno["nota"])', body:'Se algum dicionário da lista não tiver a chave esperada, o acesso com [] gera KeyError para aquele item. .get() é mais seguro: aluno.get("nota", "Sem nota")' }
+        ],
+        howToRead:"Ao tentar acessar uma chave de dicionário diretamente em uma lista (sem primeiro indicar o índice), o Python mostra: <span class=\"icode\">TypeError: list indices must be integers or slices, not str</span><br><br>Isso indica que, provavelmente, um passo de acesso (o índice da lista) foi esquecido.",
+        tryIt:true,
+        tryItCode:'alunos = [{"nome": "Ana", "nota": 8.5}]\nprint(alunos["nome"])'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Cadastrar três produtos de uma loja (nome e preço), e exibir apenas os produtos com preço acima de R$ 20,00.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Lista de produtos, cada um representado por um dicionário\nprodutos = [\n    {"nome": "Caderno", "preco": 24.90},\n    {"nome": "Lápis", "preco": 3.50},\n    {"nome": "Mochila", "preco": 89.90}\n]\n\n# Percorre a lista, filtrando por preço\nfor produto in produtos:\n    if produto["preco"] > 20:\n        print(f"{produto[\'nome\']}: R$ {produto[\'preco\']:.2f}")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é uma "lista de dicionários"?', gabarito:'Uma lista cujos itens são, cada um, um dicionário.' },
+          { kind:'code', prompt:'Dado pessoas = [{"nome": "Ana"}, {"nome": "Bruno"}], como acessar o nome da segunda pessoa?', starter:'pessoas = [{"nome": "Ana"}, {"nome": "Bruno"}]', gabarito:'pessoas[1]["nome"]' },
+          { kind:'text', prompt:'Qual é a ordem correta de acesso: primeiro o índice ou primeiro a chave?', gabarito:'Primeiro o índice, depois a chave.' },
+          { kind:'text', prompt:'Como alterar a chave "nota" do primeiro item de uma lista de dicionários chamada alunos?', gabarito:'alunos[0]["nota"] = novo_valor' },
+          { kind:'text', prompt:'O que acontece ao tentar acessar uma chave inexistente em um dos dicionários da lista?', gabarito:'Gera KeyError para aquele item específico.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma lista com três dicionários representando produtos ("nome" e "quantidade"), e percorra-a exibindo cada produto formatado.', starter:'', gabarito:'produtos = [\n    {"nome": "Caderno", "quantidade": 10},\n    {"nome": "Caneta", "quantidade": 0},\n    {"nome": "Lápis", "quantidade": 5}\n]\nfor produto in produtos:\n    print(f"{produto[\'nome\']}: {produto[\'quantidade\']}")' },
+          { kind:'code', prompt:'Usando a lista do exercício anterior, escreva um for que exiba apenas os produtos com quantidade igual a 0 (esgotados).', starter:'produtos = [\n    {"nome": "Caderno", "quantidade": 10},\n    {"nome": "Caneta", "quantidade": 0},\n    {"nome": "Lápis", "quantidade": 5}\n]', gabarito:'for produto in produtos:\n    if produto["quantidade"] == 0:\n        print(produto["nome"])' },
+          { kind:'code', prompt:'Altere a quantidade do segundo produto da lista para um novo valor, e exiba a lista completa atualizada.', starter:'produtos = [\n    {"nome": "Caderno", "quantidade": 10},\n    {"nome": "Caneta", "quantidade": 0},\n    {"nome": "Lápis", "quantidade": 5}\n]', gabarito:'produtos[1]["quantidade"] = 30\nprint(produtos)' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário para cadastrar 3 alunos (nome e nota, via input()), armazenando cada um como um dicionário dentro de uma lista. Calcule e exiba a média da turma, e exiba também quais alunos ficaram acima dessa média.', starter:'', gabarito:'alunos = []\nfor _ in range(3):\n    nome = input("Nome: ")\n    nota = float(input("Nota: "))\n    alunos.append({"nome": nome, "nota": nota})\n\nsoma = 0\nfor aluno in alunos:\n    soma = soma + aluno["nota"]\nmedia = soma / len(alunos)\nprint(media)\nfor aluno in alunos:\n    if aluno["nota"] > media:\n        print(aluno["nome"])' },
+          { kind:'code', prompt:'Desafio: crie uma lista de dicionários representando um estoque (cada um com "nome", "preco" e "quantidade"). Calcule o valor total do estoque (soma de preco * quantidade para cada produto).', starter:'estoque = [\n    {"nome": "Caderno", "preco": 24.9, "quantidade": 10},\n    {"nome": "Caneta", "preco": 3.5, "quantidade": 50}\n]', gabarito:'valor_total = 0\nfor item in estoque:\n    valor_total = valor_total + item["preco"] * item["quantidade"]\nprint(valor_total)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'lista_de_dicionarios = [\n    {"chave1": valor, "chave2": valor},   ← índice 0\n    {"chave1": valor, "chave2": valor},   ← índice 1\n]\n\nlista_de_dicionarios[indice]            → o dicionário inteiro naquela posição\nlista_de_dicionarios[indice]["chave"]   → um valor específico daquele dicionário\n\nfor item in lista_de_dicionarios:\n    item["chave"]   → acessa a chave do dicionário atual, a cada repetição'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei criar uma lista de dicionários.',
+          'Sei acessar um valor combinando índice (da lista) e chave (do dicionário).',
+          'Sei percorrer uma lista de dicionários com for.',
+          'Sei alterar um valor específico dentro de um item da lista.',
+          'Sei combinar for e if para filtrar registros.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Dado pessoas = [{"nome": "Ana"}, {"nome": "Bruno"}], o que pessoas[1]["nome"] retorna?', options:['"Ana"','"Bruno"','{"nome": "Bruno"}','Erro'], correct:1, explanation:'Índice 1 é o segundo item, cuja chave "nome" vale "Bruno".' },
+          { q:'Qual é a ordem correta de acesso em uma lista de dicionários?', options:['Primeiro a chave, depois o índice','Primeiro o índice, depois a chave','A ordem não importa','Apenas o índice é necessário'], correct:1, explanation:'Primeiro o índice, depois a chave.' },
+          { q:'O que pessoas[0] retorna, na lista {"nome": "Ana"}, {"nome": "Bruno"}?', options:['"Ana"','O dicionário {"nome": "Ana"} inteiro','Erro','0'], correct:1, explanation:'Retorna o dicionário inteiro daquela posição.' },
+          { q:'O que acontece ao escrever pessoas["nome"] diretamente (sem índice)?', options:['Funciona normalmente','Gera TypeError, pois pessoas é uma lista, que exige índice numérico','Retorna todos os nomes','Retorna None'], correct:1, explanation:'Gera TypeError.' },
+          { q:'Como filtrar, em uma lista de dicionários de produtos, apenas os que têm "preco" maior que 50?', options:['produtos.filter(preco > 50)','for produto in produtos: if produto["preco"] > 50: ...','produtos["preco"] > 50','Não é possível filtrar uma lista de dicionários'], correct:1, explanation:'Use for combinado com if.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Estruturas de Dados', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'revisao5',
+  title: 'Parada para Revisão 5 — Fim da Parte V',
+  screens: [
+    { id:'mapa', title:'Mapa mental', type:'diagram', data:{
+        intro:'Um resumo visual de tudo que vimos nos Capítulos 25 a 31.',
+        diagram:'ESTRUTURAS DE DADOS\n   │\n   ├── Lista [ ]        → mutável, ordenada, com índices\n   │      métodos: .append() .insert() .remove() .pop() .clear()\n   │                .sort() .reverse() .index() .count() .copy()\n   │\n   ├── Percorrendo listas\n   │      for item in lista:\n   │      for indice, item in enumerate(lista):\n   │      valor in lista\n   │\n   ├── Tupla ( )         → imutável, ordenada, com índices\n   │      empacotamento / desempacotamento\n   │\n   ├── Conjunto { }      → sem repetição, sem ordem, sem índice\n   │      .add() .remove()\n   │      | (união)  & (interseção)  - (diferença)\n   │\n   ├── Dicionário {chave: valor}\n   │      acesso por chave, não por índice\n   │      .get() .keys() .values() .items()\n   │\n   └── Estruturas combinadas\n          lista de dicionários\n          lista[indice]["chave"]',
+        note:null
+    }},
+    { id:'tabela', title:'Comandos vistos até aqui', type:'table', data:{
+        headers:['Comando/conceito','Para que serve','Exemplo'],
+        rows:[
+          ['<code>lista[indice]</code>','acessar item de lista','<code>frutas[0]</code>'],
+          ['<code>.append(item)</code>','adicionar ao final da lista','<code>frutas.append("uva")</code>'],
+          ['<code>for item in lista:</code>','percorrer uma lista','<code>for f in frutas:</code>'],
+          ['<code>enumerate(lista)</code>','índice + valor juntos','<code>for i, f in enumerate(frutas):</code>'],
+          ['<code>(a, b)</code>','criar uma tupla','<code>ponto = (10, 20)</code>'],
+          ['<code>{a, b, c}</code>','criar um conjunto','<code>numeros = {1, 2, 3}</code>'],
+          ['<code>{"chave": valor}</code>','criar um dicionário','<code>aluno = {"nome": "Ana"}</code>'],
+          ['<code>.get(chave)</code>','acesso seguro a dicionário','<code>aluno.get("idade")</code>'],
+          ['<code>.items()</code>','pares chave-valor','<code>for k, v in aluno.items():</code>']
+        ]
+    }},
+    { id:'errosfreq', title:'Erros frequentes', type:'list', data:{
+        intro:'Os erros mais comuns desta etapa:',
+        items:[
+          'Acessar um índice que não existe (IndexError).',
+          'Tentar alterar um item de uma tupla (TypeError).',
+          'Criar um conjunto vazio com {} (na verdade cria um dicionário).',
+          'Acessar uma chave inexistente com [] em vez de .get() (KeyError).',
+          'Esquecer que lista_b = lista_a não cria uma cópia independente.',
+          'Misturar a ordem de acesso índice/chave em uma lista de dicionários.'
+        ]
+    }},
+    { id:'perguntas', title:'Perguntas rápidas', type:'qa', data:{
+        intro:'Tente responder mentalmente antes de clicar para revelar.',
+        items:[
+          { q:'Qual é a diferença entre lista e tupla?', a:'Lista é mutável (pode ser alterada); tupla é imutável (não pode).' },
+          { q:'Por que conjuntos não têm índices?', a:'Porque não mantêm uma ordem fixa dos itens.' },
+          { q:'Como acessar valores de um dicionário com segurança, mesmo sem saber se a chave existe?', a:'Usando .get(chave) ou .get(chave, valor_padrao).' },
+          { q:'O que alunos[0]["nome"] representa, em uma lista de dicionários?', a:'O valor da chave "nome" do primeiro dicionário (índice 0) da lista.' },
+          { q:'Qual método remove e devolve o último item de uma lista?', a:'.pop()' }
+        ]
+    }},
+    { id:'exrevisao', title:'Exercícios de revisão', type:'exercises', data:{
+        level:'Exercícios de revisão',
+        items:[
+          { kind:'code', prompt:'Crie uma lista de compras, adicione e remova itens usando os métodos apropriados, e organize-a em ordem alfabética ao final.', starter:'', gabarito:'compras = []\ncompras.append("Arroz")\ncompras.append("Leite")\ncompras.append("Feijão")\ncompras.remove("Leite")\ncompras.sort()\nprint(compras)' },
+          { kind:'code', prompt:'Crie um dicionário representando um produto, com "nome", "preco" e "estoque", e escreva um programa que reduza o estoque em 1 unidade sempre que o produto for "vendido" (simule três vendas seguidas).', starter:'produto = {"nome": "Caderno", "preco": 24.9, "estoque": 10}', gabarito:'produto = {"nome": "Caderno", "preco": 24.9, "estoque": 10}\nproduto["estoque"] = produto["estoque"] - 1\nproduto["estoque"] = produto["estoque"] - 1\nproduto["estoque"] = produto["estoque"] - 1\nprint(produto)' },
+          { kind:'code', prompt:'Crie uma lista de dicionários representando 3 funcionários (nome e salário), e escreva um programa que calcule a soma total da folha de pagamento.', starter:'', gabarito:'funcionarios = [\n    {"nome": "Ana", "salario": 3000},\n    {"nome": "Bruno", "salario": 2500},\n    {"nome": "Carla", "salario": 4000}\n]\nsoma = 0\nfor f in funcionarios:\n    soma = soma + f["salario"]\nprint(soma)' }
+        ]
+    }},
+    { id:'desafio', title:'Pequeno desafio', type:'exercises', data:{
+        level:'Pequeno desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa agenda_de_contatos.py que use uma lista de dicionários (cada um com "nome" e "telefone") para simular uma agenda simples: cadastre 3 contatos, exiba todos formatados, e depois busque e exiba as informações de um contato específico pelo nome, usando for e if.', starter:'', gabarito:'agenda = [\n    {"nome": "Ana", "telefone": "11111-1111"},\n    {"nome": "Bruno", "telefone": "22222-2222"},\n    {"nome": "Carla", "telefone": "33333-3333"}\n]\nfor contato in agenda:\n    print(f"{contato[\'nome\']}: {contato[\'telefone\']}")\n\nnome_buscado = "Bruno"\nfor contato in agenda:\n    if contato["nome"] == nome_buscado:\n        print(f"Encontrado: {contato[\'telefone\']}")' }
+        ]
+    }},
+    { id:'checklist', title:'Checklist de domínio da Parte V', type:'checklist', data:{
+        items:[
+          'Sei criar, acessar e alterar listas.',
+          'Sei usar os principais métodos de lista.',
+          'Sei percorrer listas com for e enumerate().',
+          'Sei criar e usar tuplas, incluindo empacotamento/desempacotamento.',
+          'Sei criar e usar conjuntos, incluindo união e interseção.',
+          'Sei criar, acessar e percorrer dicionários.',
+          'Sei combinar listas e dicionários para representar registros.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte VI — Funções, onde aprenderemos a organizar código em blocos reutilizáveis, com parâmetros e retorno.'
     }}
   ]
 }
