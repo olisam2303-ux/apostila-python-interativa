@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a IX</title>
+<title>Apostila Python Interativa — Partes I a X</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a IX · Primeiros Passos até Erros</span>
+      <span>Partes I a X · Primeiros Passos até Orientação a Objetos</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -7145,6 +7145,992 @@ const MODULES = [
           'Sei usar else e finally apropriadamente.'
         ],
         finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte X — Orientação a Objetos, onde aprenderemos classes, objetos, atributos, métodos e herança.'
+    }}
+  ]
+},
+{
+  id: 'cap47',
+  title: 'Capítulo 47 — Introdução à orientação a objetos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é orientação a objetos, conceitualmente, antes de qualquer sintaxe.',
+          'A diferença entre uma classe (o "modelo") e um objeto (uma "instância" criada a partir dele).',
+          'Por que já usamos orientação a objetos, sem perceber, desde o início desta apostila.'
+        ],
+        antes: 'É necessário dominar funções (Parte VI) e estruturas de dados, especialmente dicionários (Capítulo 30).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, organizamos dados relacionados usando dicionários. A <b>orientação a objetos</b> é um paradigma (uma forma de organizar e pensar sobre um programa) que oferece uma alternativa mais estruturada para representar "coisas" do mundo real dentro do código, combinando <b>dados</b> e <b>comportamentos</b> relacionados em uma única unidade.',
+          'Na verdade, já usamos orientação a objetos, indiretamente, desde o início desta apostila: toda vez que criamos uma string, uma lista ou um dicionário, estávamos criando <b>objetos</b> — instâncias das classes str, list e dict, já prontas no próprio Python. E os métodos que já usamos (.upper(), .append(), .get()) são exatamente os comportamentos definidos por essas classes.'
+        ],
+        glossary: [
+          { term:'classe', def:'um modelo, uma "planta", que descreve quais informações (atributos) e quais ações (métodos) algo daquele tipo deve ter', example:'a classe Carro descreve o que qualquer carro tem em comum.' },
+          { term:'objeto (ou instância)', def:'uma coisa concreta, criada a partir de uma classe, com seus próprios valores específicos', example:'carro_1 e carro_2 são objetos concretos, ambos criados a partir da classe Carro, mas cada um com sua própria cor, placa, etc.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'Pense em uma classe como a planta de uma casa (o desenho, o modelo) e em cada objeto como uma casa construída a partir dessa planta.',
+        diagram:'CLASSE Carro (o modelo/planta)\n   atributos que todo carro tem: cor, placa, velocidade_atual\n   métodos (ações) que todo carro pode fazer: acelerar(), frear()\n\n              ↓ criar objetos a partir da classe\n\nOBJETO carro_1        OBJETO carro_2        OBJETO carro_3\n   cor: "vermelho"       cor: "azul"           cor: "branco"\n   placa: "ABC-1234"     placa: "XYZ-5678"     placa: "DEF-9012"',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Ainda não vamos escrever class de verdade — isso começa no próximo capítulo. Por enquanto, compare a representação de um "aluno" com dicionário (já conhecida) e com objeto (prévia da sintaxe).',
+        problem:'Com dicionário (já conhecido):\naluno = {"nome": "Ana", "nota": 8.5}\nprint(aluno["nome"])\n\nCom classe e objeto (prévia da sintaxe do Capítulo 48):\nclass Aluno:\n    def __init__(self, nome, nota):\n        self.nome = nome\n        self.nota = nota\n\naluno = Aluno("Ana", 8.5)\nprint(aluno.nome)',
+        algoritmo:null,
+        code:'# CLASSE: define o "modelo" de um aluno (detalhado no próximo capítulo)\nclass Aluno:\n    def __init__(self, nome, nota):\n        self.nome = nome\n        self.nota = nota\n\n# OBJETO: uma instância concreta, criada a partir da classe Aluno\naluno = Aluno("Ana", 8.5)\n\n# Acessa um atributo do objeto\nprint(aluno.nome)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'class Aluno: ...',
+          'Python guarda o "modelo" Aluno, sabendo que todo aluno terá nome e nota',
+          'aluno = Aluno("Ana", 8.5)',
+          'Python cria um OBJETO concreto, seguindo o modelo Aluno',
+          'Esse objeto tem: nome = "Ana", nota = 8.5',
+          'aluno.nome',
+          'Acessa o atributo "nome" DESTE objeto específico → "Ana"',
+          'print("Ana")'
+        ],
+        after:null
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Ana',
+        modIntro:'Vamos criar VÁRIOS objetos a partir da mesma classe, reforçando que cada um tem seus próprios valores, de forma independente:',
+        modCode:'class Aluno:\n    def __init__(self, nome, nota):\n        self.nome = nome\n        self.nota = nota\n\naluno1 = Aluno("Ana", 8.5)\naluno2 = Aluno("Bruno", 6.0)\n\nprint(aluno1.nome, aluno1.nota)\nprint(aluno2.nome, aluno2.nota)',
+        modResult:'Ana 8.5\nBruno 6.0',
+        modNote:'aluno1 e aluno2 foram criados a partir do MESMO modelo (a classe Aluno), mas cada um guarda seus PRÓPRIOS valores, independentes um do outro.',
+        runnable:true,
+        naoConfunda:'Classe versus objeto: a classe é definida UMA ÚNICA VEZ (o "modelo"); objetos são criados QUANTAS VEZES FOREM NECESSÁRIAS, cada um sendo uma instância independente daquele modelo. É parecido com a relação entre uma função (definida uma vez) e suas várias chamadas (Capítulo 33).'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Achar que orientação a objetos é um assunto completamente novo, sem relação com o que já foi aprendido', code:null, body:'Na prática, já usamos objetos (str, list, dict) e métodos (.upper(), .append()) desde o início da apostila. Orientação a objetos ensina como CRIAR NOSSAS PRÓPRIAS classes, seguindo o mesmo padrão.' },
+          { title:'🐞 Confundir "classe" com "objeto" na hora de explicar um problema', code:null, body:'Dizer "o objeto Carro" é tecnicamente incorreto — Carro é a CLASSE (o modelo); carro_1, carro_2 etc. são os OBJETOS (instâncias).' }
+        ],
+        howToRead:'Este capítulo não introduz sintaxe executável nova além da prévia apresentada, então não há mensagens de erro específicas para tratar aqui. O foco é puramente conceitual.'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Identificar, em um cenário do dia a dia, o que seria uma classe e o que seriam objetos. Cenário: uma escola tem vários alunos matriculados.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'Classe: Aluno\n   → o "modelo" que descreve o que todo aluno tem: nome, idade, turma, notas\n\nObjetos: cada aluno individual da escola\n   → aluno "Carlos, 15 anos, turma 9A"\n   → aluno "Beatriz, 14 anos, turma 8B"\n   → aluno "Diego, 16 anos, turma 9A"\n\nCada objeto segue o MESMO modelo (classe Aluno), mas com valores próprios.',
+        code:null
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é uma classe?', gabarito:'Um modelo que descreve atributos e métodos de algo.' },
+          { kind:'text', prompt:'O que é um objeto (ou instância)?', gabarito:'Uma instância concreta, criada a partir de uma classe.' },
+          { kind:'text', prompt:'Dê um exemplo, diferente dos apresentados, de uma classe e de possíveis objetos criados a partir dela.', gabarito:'Resposta aberta — ex.: classe Fruta, objetos maçã, banana.' },
+          { kind:'text', prompt:'Que exemplos de classes e objetos já usamos, sem perceber, desde o início desta apostila?', gabarito:'str, list, dict, e seus métodos (.upper(), .append() etc.).' },
+          { kind:'text', prompt:'Qual é a diferença entre Carro (a classe) e carro_1 (um objeto)?', gabarito:'Carro é a classe (modelo); carro_1 é um objeto (instância) criado a partir dela.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'text', prompt:'Para o cenário "uma loja tem vários produtos cadastrados", identifique qual seria a classe e dê três exemplos de possíveis objetos.', gabarito:'Classe Produto; objetos: "Caderno", "Caneta", "Mochila".' },
+          { kind:'text', prompt:'Para o cenário "um sistema de streaming tem vários filmes", identifique a classe e três exemplos de objetos.', gabarito:'Classe Filme; objetos: títulos de filmes específicos.' },
+          { kind:'text', prompt:'Explique por que "Ana".upper() já é um exemplo de uso de objeto e método.', gabarito:'"Ana".upper() usa o objeto "Ana" (instância de str) e o método .upper().' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Pense em um sistema de biblioteca. Identifique pelo menos duas classes diferentes (ex.: Livro e Usuario), e para cada uma, liste três informações (futuros atributos) que um objeto dessa classe provavelmente teria.', gabarito:'Resposta aberta — ex.: Livro (titulo, autor, isbn); Usuario (nome, matricula, livros_emprestados).' },
+          { kind:'text', prompt:'Desafio: reflita sobre um projeto anterior (como um cadastro de alunos usando listas de dicionários). Escreva como esse mesmo problema poderia ser pensado em termos de classes e objetos.', gabarito:'Resposta aberta.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'CLASSE\n   → o modelo/planta\n   → definida UMA VEZ\n\nOBJETO (INSTÂNCIA)\n   → criado A PARTIR de uma classe\n   → pode haver VÁRIOS objetos da mesma classe\n   → cada um com seus PRÓPRIOS valores\n\nstr, list, dict → classes PRONTAS do Python\n"Ana", [1, 2, 3], {"a": 1} → objetos dessas classes'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei explicar o que é uma classe.',
+          'Sei explicar o que é um objeto (instância).',
+          'Sei diferenciar classe de objeto em exemplos concretos.',
+          'Sei reconhecer que já usávamos objetos e métodos antes deste capítulo.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é uma classe?', options:['Um valor específico','Um modelo que descreve atributos e métodos de algo','Um tipo de erro','Uma função sem retorno'], correct:1, explanation:'Um modelo que descreve atributos e métodos.' },
+          { q:'O que é um objeto?', options:['O mesmo que uma classe','Uma instância concreta, criada a partir de uma classe','Um tipo de módulo','Uma variável global'], correct:1, explanation:'Uma instância concreta.' },
+          { q:'Quantos objetos podem ser criados a partir de uma única classe?', options:['Apenas um','No máximo dois','Quantos forem necessários','Nenhum'], correct:2, explanation:'Quantos forem necessários.' },
+          { q:'"Python" (uma string) é um exemplo de:', options:['Uma classe','Um objeto da classe str','Um erro','Um módulo'], correct:1, explanation:'Um objeto da classe str.' },
+          { q:'Qual é a relação entre Carro e carro_1, carro_2?', options:['São a mesma coisa','Carro é a classe (modelo); carro_1 e carro_2 são objetos criados a partir dela','carro_1 é a classe; Carro é o objeto','Não há relação entre eles'], correct:1, explanation:'Carro é a classe; carro_1/carro_2 são objetos.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Classes (introdução)', url:'https://docs.python.org/pt-br/3/tutorial/classes.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap48',
+  title: 'Capítulo 48 — Classes e objetos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como definir uma classe com class.',
+          'Como criar (instanciar) um objeto a partir de uma classe.',
+          'Que cada objeto criado é independente dos demais.'
+        ],
+        antes: 'É necessário compreender a diferença conceitual entre classe e objeto (Capítulo 47).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Uma classe é definida com a palavra-chave <span class="icode">class</span>, seguida do nome da classe (por convenção, começando com letra MAIÚSCULA) e dois-pontos. Para criar um objeto (uma instância) a partir de uma classe, chamamos a classe como se fosse uma função, com parênteses.'
+        ],
+        glossary: [
+          { term:'class', def:'palavra-chave usada para definir uma nova classe em Python', example:null },
+          { term:'pass', def:'uma instrução que não faz nada — usada para que um bloco tenha corpo válido, já que não pode ficar completamente vazio em Python', example:'será substituída por conteúdo real nos próximos capítulos.' },
+          { term:'instanciar', def:'criar um objeto a partir de uma classe, chamando o nome da classe seguido de parênteses', example:'carro_1 = Carro()' }
+        ],
+        callout:'NÃO CONFUNDA: class Carro: (definição da classe) versus Carro() (criação de um objeto): assim como vimos com funções (def define, nome() executa), aqui class DEFINE o modelo, e NomeDaClasse() CRIA um objeto seguindo esse modelo.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'class Carro:\n    pass\n              ↓\nPython guarda o modelo "Carro" (por enquanto, sem nenhum atributo ou método)\n\ncarro_1 = Carro()\n              ↓\nCria um OBJETO NOVO, seguindo o modelo Carro\n              ↓\ncarro_1 é uma instância independente de Carro\n\ncarro_2 = Carro()\n              ↓\nCria OUTRO objeto, também seguindo o modelo Carro\n              ↓\ncarro_2 é uma instância DIFERENTE de carro_1, mesmo sendo da mesma classe',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Definir uma classe vazia e criar um objeto a partir dela.',
+        algoritmo:null,
+        code:'# Define uma classe chamada Carro, ainda sem nenhum conteúdo\nclass Carro:\n    pass\n\n# Cria um objeto (instância) a partir da classe Carro\ncarro_1 = Carro()\n\n# Exibe o objeto criado\nprint(carro_1)',
+        codeNote:'O texto exibido (endereço em hexadecimal, depois de 0x) varia a cada execução — representa o local na memória onde aquele objeto foi armazenado. Não é muito útil visualmente ainda; os próximos capítulos ensinam a dar aos objetos uma forma de exibição mais legível.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'class Carro: pass',
+          'Python registra a classe "Carro"',
+          'carro_1 = Carro()',
+          'Python cria um NOVO objeto, seguindo o modelo Carro',
+          'Associa esse objeto ao nome "carro_1"',
+          'print(carro_1)',
+          'Exibe uma representação do objeto, incluindo seu endereço na memória'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'class Carro:\n    pass', explanation:'Define a classe Carro, ainda sem nenhum atributo ou método — pass é usado apenas para que o bloco tenha algum conteúdo válido.' },
+          { code:'carro_1 = Carro()', explanation:'Carro() cria um novo objeto, seguindo o modelo da classe Carro. O resultado dessa "chamada" é guardado na variável carro_1.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'(um texto como <__main__.Carro object at 0x...> — o endereço exato varia a cada execução)',
+        modIntro:'Vamos criar dois objetos da mesma classe, e confirmar que são INDEPENDENTES um do outro:',
+        modCode:'class Carro:\n    pass\n\ncarro_1 = Carro()\ncarro_2 = Carro()\n\nprint(carro_1 == carro_2)\nprint(carro_1 is carro_2)',
+        modResult:'False\nFalse',
+        modNote:'Isso confirma que carro_1 e carro_2, mesmo sendo ambos criados a partir da MESMA classe, são objetos DISTINTOS E INDEPENDENTES.',
+        runnable:true,
+        extraBlocks:[
+          { title:'Adicionando atributos diretamente a um objeto', intro:'Embora a forma correta e recomendada seja através de __init__ (Capítulo 51), é possível, tecnicamente, adicionar um atributo diretamente a um objeto já criado:', code:'class Carro:\n    pass\n\ncarro_1 = Carro()\ncarro_1.cor = "vermelho"\n\nprint(carro_1.cor)', result:'vermelho', note:'Essa forma de adicionar atributos "na mão" é FRÁGIL — é fácil esquecer de definir um atributo em algum objeto. O Capítulo 51 apresenta a forma correta.', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer os parênteses ao criar um objeto', code:'class Carro:\n    pass\n\ncarro_1 = Carro\nprint(type(carro_1))', body:'Sem os parênteses, carro_1 não se torna um OBJETO — ele passa a se referir à própria CLASSE Carro, o que quase nunca é a intenção.' },
+          { title:'🐞 Nomear a classe com letra minúscula', code:'class carro:\n    pass', body:'Isso NÃO gera erro (Python permite tecnicamente), mas viola a convenção amplamente adotada de nomear classes com a primeira letra maiúscula (Capítulo 54, PEP 8).' },
+          { title:'🐞 Esperar que dois objetos criados da mesma classe sejam "iguais" por padrão', code:'carro_1 = Carro()\ncarro_2 = Carro()\nprint(carro_1 == carro_2)   # False, mesmo sendo do mesmo "modelo"', body:'Por padrão, dois objetos só são considerados iguais (==) se forem EXATAMENTE O MESMO OBJETO na memória.' }
+        ],
+        howToRead:'Este capítulo, ao apresentar apenas classes simples com pass, não costuma gerar mensagens de erro específicas — os erros mais comuns aqui são de LÓGICA (como esquecer os parênteses ao instanciar), não mensagens formais do Python.',
+        tryIt:true,
+        tryItCode:'class Carro:\n    pass\n\ncarro_1 = Carro\nprint(type(carro_1))'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar uma classe Produto, instanciar dois objetos, e atribuir atributos diretamente a cada um (forma "manual", aprimorada no Capítulo 51).',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Define a classe Produto, ainda simples\nclass Produto:\n    pass\n\n# Cria dois objetos independentes\nproduto_1 = Produto()\nproduto_2 = Produto()\n\n# Atribui atributos diretamente a cada objeto\nproduto_1.nome = "Caderno"\nproduto_1.preco = 24.90\n\nproduto_2.nome = "Caneta"\nproduto_2.preco = 3.50\n\n# Exibe as informações de cada objeto\nprint(produto_1.nome, produto_1.preco)\nprint(produto_2.nome, produto_2.preco)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Qual palavra-chave define uma classe em Python?', gabarito:'class' },
+          { kind:'text', prompt:'Como se cria (instancia) um objeto a partir de uma classe?', gabarito:'NomeDaClasse()' },
+          { kind:'text', prompt:'Para que serve pass em uma classe ainda sem conteúdo?', gabarito:'Permitir que o bloco da classe seja válido, mesmo sem conteúdo.' },
+          { kind:'text', prompt:'Dois objetos criados a partir da mesma classe são automaticamente considerados "iguais"? Justifique.', gabarito:'Não, cada objeto é uma instância independente.' },
+          { kind:'text', prompt:'Qual é a convenção de nomenclatura para classes em Python?', gabarito:'Primeira letra maiúscula.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Defina uma classe Livro, sem nenhum conteúdo (pass), e crie dois objetos a partir dela.', starter:'', gabarito:'class Livro:\n    pass\n\nlivro_1 = Livro()\nlivro_2 = Livro()' },
+          { kind:'code', prompt:'Usando a classe do exercício anterior, atribua os atributos titulo e autor diretamente a cada objeto, e exiba as informações de ambos.', starter:'class Livro:\n    pass\n\nlivro_1 = Livro()\nlivro_2 = Livro()', gabarito:'livro_1.titulo = "Dom Casmurro"\nlivro_1.autor = "Machado de Assis"\nlivro_2.titulo = "O Cortiço"\nlivro_2.autor = "Aluísio Azevedo"\nprint(livro_1.titulo, livro_1.autor)\nprint(livro_2.titulo, livro_2.autor)' },
+          { kind:'text', prompt:'Explique por que carro_1 == carro_2 retorna False, mesmo que os dois objetos tenham exatamente os mesmos valores de atributos.', gabarito:'Por padrão, objetos só são iguais se forem exatamente o mesmo objeto na memória, não por terem atributos com os mesmos valores.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Defina uma classe Aluno (com pass), crie três objetos, atribuindo nome e nota diretamente a cada um. Escreva um código que percorra uma lista contendo os três objetos, exibindo nome e nota formatados.', starter:'', gabarito:'class Aluno:\n    pass\n\na1 = Aluno()\na1.nome = "Ana"\na1.nota = 8.5\n\na2 = Aluno()\na2.nome = "Bruno"\na2.nota = 6.0\n\na3 = Aluno()\na3.nome = "Carla"\na3.nota = 9.2\n\nalunos = [a1, a2, a3]\nfor aluno in alunos:\n    print(f"{aluno.nome}: {aluno.nota}")' },
+          { kind:'text', prompt:'Desafio: reescreva um cadastro de alunos anterior usando uma classe Aluno simples (pass + atributos manuais), em vez de dicionários. Compare a legibilidade das duas versões.', gabarito:'Resposta aberta.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'class NomeDaClasse:\n    pass\n\nobjeto = NomeDaClasse()     ← cria um novo objeto (instância)\n\nobjeto.atributo = valor      ← atribui um atributo diretamente (forma provisória)\n\nCada objeto é INDEPENDENTE, mesmo sendo da mesma classe.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei definir uma classe com class.',
+          'Sei instanciar objetos a partir de uma classe.',
+          'Sei que cada objeto é independente dos demais.',
+          'Sei atribuir atributos diretamente a um objeto (forma provisória).'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual palavra-chave define uma classe?', options:['object','class','def','new'], correct:1, explanation:'class.' },
+          { q:'Como criar um objeto a partir da classe Carro?', options:['Carro','Carro()','new Carro','create Carro()'], correct:1, explanation:'Carro()' },
+          { q:'Dois objetos criados a partir da mesma classe são iguais por padrão?', options:['Sim, sempre','Não, cada objeto é uma instância independente','Sim, mas apenas se tiverem os mesmos atributos','Depende da versão do Python'], correct:1, explanation:'Cada objeto é independente.' },
+          { q:'Qual é a convenção de nomenclatura para classes em Python?', options:['Tudo minúsculo','Primeira letra maiúscula (Carro, não carro)','Tudo maiúsculo','Não há convenção'], correct:1, explanation:'Primeira letra maiúscula.' },
+          { q:'Para que serve pass em uma classe?', options:['Interrompe o programa','Permite que o bloco da classe seja válido, mesmo sem conteúdo ainda','Cria um objeto automaticamente','Define um atributo padrão'], correct:1, explanation:'Permite bloco válido, mesmo sem conteúdo.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Um primeiro olhar sobre classes', url:'https://docs.python.org/pt-br/3/tutorial/classes.html#a-first-look-at-classes' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap49',
+  title: 'Capítulo 49 — Atributos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um atributo de uma classe/objeto.',
+          'Como definir atributos que todo objeto de uma classe já possui, ao ser criado.',
+          'A diferença entre atributo de instância e atributo de classe.'
+        ],
+        antes: 'É necessário saber definir classes e criar objetos (Capítulo 48).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Um <b>atributo</b> é uma informação (um dado) associada a um objeto. Existem dois tipos: <b>atributo de instância</b> (pertence a um objeto específico, com valor próprio para cada instância) e <b>atributo de classe</b> (pertence à classe como um todo, com o mesmo valor compartilhado por todos os objetos daquela classe, a menos que seja explicitamente sobrescrito).'
+        ],
+        glossary: [
+          { term:'atributo', def:'uma variável associada a um objeto (ou a uma classe), guardando uma informação sobre ele', example:'acessado com objeto.atributo.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'class Carro:\n    rodas = 4          ← ATRIBUTO DE CLASSE (compartilhado)\n\ncarro_1 = Carro()\ncarro_1.cor = "vermelho"   ← ATRIBUTO DE INSTÂNCIA (só deste objeto)\n\ncarro_2 = Carro()\ncarro_2.cor = "azul"       ← ATRIBUTO DE INSTÂNCIA (só deste outro objeto)\n\ncarro_1.rodas  →  4   (vem da classe)\ncarro_2.rodas  →  4   (vem da classe, mesmo valor)\ncarro_1.cor    →  "vermelho"   (só deste objeto)\ncarro_2.cor    →  "azul"       (só deste outro objeto)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Definir um atributo de classe compartilhado por todos os objetos.',
+        algoritmo:null,
+        code:'# Define a classe Carro com um atributo de classe: todo carro tem 4 rodas\nclass Carro:\n    rodas = 4\n\n# Cria um objeto Carro\ncarro_1 = Carro()\n\n# Acessa o atributo de classe através do objeto\nprint(carro_1.rodas)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'class Carro: rodas = 4',
+          'Python registra a classe Carro, com o atributo de classe "rodas" = 4',
+          'carro_1 = Carro()',
+          'Cria um objeto; ele não tem "rodas" próprio, mas HERDA o valor da classe',
+          'carro_1.rodas',
+          'Python procura "rodas" no próprio objeto — não encontra',
+          'Procura "rodas" na CLASSE do objeto — encontra: 4',
+          'print(4)'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'class Carro:\n    rodas = 4', explanation:'rodas = 4, escrito diretamente dentro da classe (fora de qualquer método), é um ATRIBUTO DE CLASSE: um único valor, compartilhado por todos os objetos dessa classe.' },
+          { code:'print(carro_1.rodas)', explanation:'Acessa rodas a partir do objeto carro_1 — como esse objeto não tem um atributo rodas próprio, o Python "sobe" até a classe e usa o valor definido lá.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'4',
+        modIntro:'Vamos combinar atributos de classe (compartilhados) com atributos de instância (próprios de cada objeto):',
+        modCode:'class Carro:\n    rodas = 4   # atributo de classe\n\ncarro_1 = Carro()\ncarro_2 = Carro()\n\ncarro_1.cor = "vermelho"   # atributo de instância, só de carro_1\ncarro_2.cor = "azul"        # atributo de instância, só de carro_2\n\nprint(carro_1.rodas, carro_1.cor)\nprint(carro_2.rodas, carro_2.cor)',
+        modResult:'4 vermelho\n4 azul',
+        modNote:'rodas é o MESMO para ambos os objetos (vem da classe), enquanto cor é DIFERENTE para cada um (atributo de instância).',
+        runnable:true,
+        naoConfunda:'Atributo de classe versus atributo de instância: um atributo de classe é definido UMA VEZ, dentro da classe, e compartilhado por TODOS os objetos (a menos que um objeto específico o sobrescreva). Um atributo de instância é definido OBJETO POR OBJETO, e cada objeto tem o seu PRÓPRIO valor.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Usar atributo de classe quando o correto seria atributo de instância', code:'class Aluno:\n    nome = "Sem nome"\n\naluno_1 = Aluno()\naluno_2 = Aluno()\nprint(aluno_1.nome)   # "Sem nome", igual para todos, até ser alterado', body:'Se nome deveria ser DIFERENTE para cada aluno, ele deveria ser um atributo de INSTÂNCIA, não de classe. O Capítulo 51 mostra a forma correta de garantir isso automaticamente.' },
+          { title:'🐞 Esperar que alterar um atributo de instância também altere o atributo de classe', code:'class Carro:\n    rodas = 4\n\ncarro_1 = Carro()\ncarro_1.rodas = 3   # cria um atributo de INSTÂNCIA em carro_1\n\ncarro_2 = Carro()\nprint(carro_2.rodas)   # ainda 4! O atributo de classe não foi alterado', body:'Ao fazer carro_1.rodas = 3, um novo atributo de INSTÂNCIA (só de carro_1) é criado, SEM ALTERAR o atributo de classe original.' }
+        ],
+        howToRead:"Ao tentar acessar um atributo que não existe nem no objeto, nem na classe, o Python mostra: <span class=\"icode\">AttributeError: 'Carro' object has no attribute 'velocidade'</span>",
+        tryIt:true,
+        tryItCode:'class Carro:\n    rodas = 4\n\ncarro_1 = Carro()\nprint(carro_1.velocidade)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Modelar uma classe Produto, com um atributo de classe (categoria_padrao) e atributos de instância (nome, preco) para dois produtos diferentes.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'class Produto:\n    categoria_padrao = "Geral"\n\nproduto_1 = Produto()\nproduto_1.nome = "Caderno"\nproduto_1.preco = 24.90\n\nproduto_2 = Produto()\nproduto_2.nome = "Notebook"\nproduto_2.preco = 3500.00\nproduto_2.categoria_padrao = "Eletrônicos"   # sobrescreve, só para este objeto\n\nprint(produto_1.nome, produto_1.categoria_padrao)\nprint(produto_2.nome, produto_2.categoria_padrao)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um atributo?', gabarito:'Uma variável associada a um objeto ou classe.' },
+          { kind:'text', prompt:'Qual é a diferença entre atributo de classe e atributo de instância?', gabarito:'Atributo de classe é compartilhado; atributo de instância é próprio de cada objeto.' },
+          { kind:'text', prompt:'Se dois objetos são criados da mesma classe, eles compartilham automaticamente os atributos de instância? Justifique.', gabarito:'Não, cada objeto tem seus próprios atributos de instância.' },
+          { kind:'text', prompt:'O que acontece ao alterar um atributo de instância de um objeto específico?', gabarito:'Afeta apenas aquele objeto específico.' },
+          { kind:'text', prompt:'O que gera o erro AttributeError?', gabarito:'Acessar um atributo que não existe nem no objeto, nem na classe.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma classe Animal com um atributo de classe reino = "Animalia", e dois objetos com atributos de instância nome e especie diferentes.', starter:'', gabarito:'class Animal:\n    reino = "Animalia"\n\na1 = Animal()\na1.nome = "Rex"\na1.especie = "Cachorro"\n\na2 = Animal()\na2.nome = "Miau"\na2.especie = "Gato"\n\nprint(a1.nome, a1.especie, a1.reino)\nprint(a2.nome, a2.especie, a2.reino)' },
+          { kind:'code', prompt:'Usando a classe do exercício anterior, sobrescreva o atributo reino em apenas um dos objetos, e confirme que o outro permanece inalterado.', starter:'class Animal:\n    reino = "Animalia"\n\na1 = Animal()\na2 = Animal()', gabarito:'a1.reino = "Fungi"\nprint(a1.reino)\nprint(a2.reino)' },
+          { kind:'text', prompt:'Explique por que produto_1.categoria_padrao = "Eletrônicos" não afeta produto_2.', gabarito:'Cria um atributo de instância específico em produto_1, sem alterar o atributo de classe original.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma classe ContaBancaria com um atributo de classe banco = "Banco Python", e três objetos representando contas diferentes, cada uma com atributos de instância titular e saldo. Exiba, para cada conta, uma frase formatada combinando os três.', starter:'', gabarito:'class ContaBancaria:\n    banco = "Banco Python"\n\ncontas = []\nfor titular, saldo in [("Ana", 100), ("Bruno", 500), ("Carla", 250)]:\n    c = ContaBancaria()\n    c.titular = titular\n    c.saldo = saldo\n    contas.append(c)\n\nfor c in contas:\n    print(f"{c.banco} - {c.titular}: R$ {c.saldo}")' },
+          { kind:'text', prompt:'Desafio: explique por que atributos de classe são úteis para valores que realmente são os mesmos para todos os objetos, mas arriscados para valores que deveriam variar entre objetos.', gabarito:'Atributos de classe compartilham o mesmo valor entre todos os objetos — ótimo para constantes (rodas=4), mas perigoso para dados que deveriam ser individuais (nome), pois um esquecimento pode deixar vários objetos com o mesmo valor por engano.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'class NomeDaClasse:\n    atributo_de_classe = valor   ← compartilhado por todos os objetos\n\nobjeto = NomeDaClasse()\nobjeto.atributo_de_instancia = valor   ← só deste objeto específico\n\nobjeto.atributo   → procura primeiro no objeto, depois na classe'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é um atributo.',
+          'Sei diferenciar atributo de classe de atributo de instância.',
+          'Sei que alterar um atributo de instância não afeta outros objetos.',
+          'Sei o que causa AttributeError.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um atributo de classe?', options:['Um valor exclusivo de cada objeto','Um valor compartilhado por todos os objetos da classe','Um tipo de erro','Um método especial'], correct:1, explanation:'Compartilhado por todos os objetos.' },
+          { q:'O que é um atributo de instância?', options:['Um valor compartilhado por todos os objetos','Um valor próprio de um objeto específico','O mesmo que atributo de classe','Um tipo de exceção'], correct:1, explanation:'Próprio de um objeto específico.' },
+          { q:'Ao alterar carro_1.rodas = 3 (sendo rodas originalmente um atributo de classe), o que acontece com carro_2.rodas?', options:['Também muda para 3','Permanece com o valor original da classe','Gera erro','Vira None'], correct:1, explanation:'Permanece com o valor original.' },
+          { q:'O que gera AttributeError?', options:['Dividir por zero','Acessar um atributo que não existe nem no objeto, nem na classe','Usar uma variável antes de criá-la','Um índice fora do intervalo'], correct:1, explanation:'Acessar atributo inexistente.' },
+          { q:'Onde um atributo de classe é definido?', options:['Dentro de um método, com self','Diretamente dentro do corpo da classe, fora de qualquer método','Fora da classe','Apenas no __init__'], correct:1, explanation:'Diretamente dentro do corpo da classe.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Objetos de Classe e de Instância', url:'https://docs.python.org/pt-br/3/tutorial/classes.html#class-and-instance-variables' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap50',
+  title: 'Capítulo 50 — Métodos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um método de uma classe, formalmente.',
+          'Como definir um método dentro de uma classe.',
+          'Por que todo método precisa receber self como primeiro parâmetro (o Capítulo 52 aprofunda esse conceito).'
+        ],
+        antes: 'É necessário saber definir funções (Capítulo 33) e criar classes com atributos (Capítulos 48 e 49).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Já usamos <b>métodos</b> desde o início desta apostila: .upper(), .append(), .get(). Agora vamos aprender a <b>definir nossos próprios métodos</b>, dentro de uma classe que criamos.',
+          'A sintaxe de um método é quase idêntica à de uma função comum (def), com uma diferença importante: o <b>primeiro parâmetro</b> de todo método precisa ser <span class="icode">self</span>, que representa o <b>próprio objeto</b> que está chamando o método.'
+        ],
+        glossary: [
+          { term:'método', def:'uma função definida dentro de uma classe, que representa uma ação que os objetos daquela classe podem realizar', example:null },
+          { term:'self', def:'o primeiro parâmetro de todo método de uma classe, representando o objeto específico que está chamando aquele método', example:'será estudado com mais profundidade no Capítulo 52.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'class Carro:\n    def buzinar(self):\n        print("Bii bii!")\n\ncarro_1 = Carro()\ncarro_1.buzinar()\n        ↓\nPython chama o método "buzinar", passando carro_1 automaticamente como "self"\n        ↓\nDentro do método, self é carro_1\n        ↓\nprint("Bii bii!")\n        ↓\nExibe: Bii bii!',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Definir um método simples dentro de uma classe.',
+        algoritmo:null,
+        code:'# Define a classe Carro com um método "buzinar"\nclass Carro:\n    def buzinar(self):\n        # "self" representa o objeto que chamou este método\n        print("Bii bii!")\n\n# Cria um objeto Carro\ncarro_1 = Carro()\n\n# Chama o método "buzinar" a partir desse objeto\ncarro_1.buzinar()',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'class Carro: def buzinar(self): print("Bii bii!")',
+          'Python registra o método "buzinar", pertencente à classe Carro',
+          'carro_1 = Carro()',
+          'Cria um objeto',
+          'carro_1.buzinar()',
+          'Python chama o método "buzinar", passando carro_1 automaticamente como "self"',
+          'print("Bii bii!")'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'def buzinar(self):', explanation:'self, o primeiro parâmetro, é OBRIGATÓRIO em todo método — mas NÃO é passado explicitamente ao chamar o método; o Python o preenche automaticamente com o objeto que fez a chamada.' },
+          { code:'carro_1.buzinar()', explanation:'Repare que não passamos nenhum argumento dentro dos parênteses, mesmo o método esperando self. Isso acontece porque carro_1.buzinar() já informa, implicitamente, qual objeto está chamando o método.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Bii bii!',
+        modIntro:'Vamos criar um método que USA os atributos do próprio objeto (usando self.atributo):',
+        modCode:'class Carro:\n    def buzinar(self):\n        print("Bii bii!")\n\n    def exibir_informacoes(self):\n        print(f"Cor: {self.cor}")\n\ncarro_1 = Carro()\ncarro_1.cor = "vermelho"\n\ncarro_1.buzinar()\ncarro_1.exibir_informacoes()',
+        modResult:'Bii bii!\nCor: vermelho',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'self versus um parâmetro comum: self é sempre o PRIMEIRO parâmetro de um método, e representa o objeto que está chamando o método — ele é preenchido AUTOMATICAMENTE pelo Python, e nunca é informado explicitamente na chamada (carro_1.acelerar(20), não carro_1.acelerar(carro_1, 20)).',
+        extraBlocks:[
+          { title:'Métodos com parâmetros além de self', intro:'Um método também pode receber outros parâmetros, exatamente como uma função comum:', code:'class Carro:\n    def acelerar(self, incremento):\n        print(f"Acelerando {incremento} km/h!")\n\ncarro_1 = Carro()\ncarro_1.acelerar(20)', result:'Acelerando 20 km/h!', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer o self na definição do método', code:'class Carro:\n    def buzinar():\n        print("Bii bii!")\n\ncarro_1 = Carro()\ncarro_1.buzinar()', body:'Isso gera erro: ao chamar carro_1.buzinar(), o Python automaticamente tenta passar carro_1 como o primeiro argumento — mas a função buzinar() foi definida sem nenhum parâmetro para recebê-lo.' },
+          { title:'🐞 Passar self explicitamente ao chamar o método', code:'carro_1.buzinar(carro_1)', body:'Isso é desnecessário e gera erro (argumentos demais) — o Python já passa self automaticamente, a partir do próprio carro_1. usado na chamada.' },
+          { title:'🐞 Esquecer o prefixo self. ao acessar um atributo dentro de um método', code:'class Carro:\n    def exibir_cor(self):\n        print(cor)   # ERRADO: falta "self."', body:'Sem self., o Python procura por uma variável chamada cor FORA da classe — não o atributo do objeto. O correto é print(self.cor).' }
+        ],
+        howToRead:'Ao esquecer self na definição de um método, o Python mostra: <span class="icode">TypeError: Carro.buzinar() takes 0 positional arguments but 1 was given</span><br><br>Isso confirma que o método foi definido para receber 0 argumentos, mas o Python tentou passar 1 (o próprio objeto, automaticamente) — evidenciando que self está faltando na definição.',
+        tryIt:true,
+        tryItCode:'class Carro:\n    def buzinar():\n        print("Bii bii!")\n\ncarro_1 = Carro()\ncarro_1.buzinar()'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar uma classe ContaBancaria com métodos para depositar e consultar o saldo.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'class ContaBancaria:\n    def depositar(self, valor):\n        self.saldo = self.saldo + valor\n\n    def exibir_saldo(self):\n        print(f"Saldo atual: R$ {self.saldo:.2f}")\n\nconta = ContaBancaria()\nconta.saldo = 100.0   # atributo inicial, definido manualmente por enquanto\n\nconta.depositar(50)\nconta.exibir_saldo()',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um método?', gabarito:'Uma função definida dentro de uma classe, representando uma ação de seus objetos.' },
+          { kind:'text', prompt:'Qual deve ser sempre o primeiro parâmetro de um método?', gabarito:'self' },
+          { kind:'text', prompt:'É necessário passar self explicitamente ao chamar um método?', gabarito:'Não, é passado automaticamente.' },
+          { kind:'text', prompt:'Como acessar um atributo do próprio objeto, de dentro de um método?', gabarito:'self.atributo' },
+          { kind:'text', prompt:'O que acontece se self for esquecido na definição de um método?', gabarito:'Gera TypeError ao chamar o método.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma classe Cachorro com um método latir(self), que exibe "Au au!".', starter:'', gabarito:'class Cachorro:\n    def latir(self):\n        print("Au au!")\n\ncachorro_1 = Cachorro()\ncachorro_1.latir()' },
+          { kind:'code', prompt:'Adicione, à classe Cachorro, um método apresentar(self) que exiba uma frase usando um atributo nome (definido manualmente após criar o objeto).', starter:'class Cachorro:\n    def latir(self):\n        print("Au au!")', gabarito:'class Cachorro:\n    def latir(self):\n        print("Au au!")\n    def apresentar(self):\n        print(f"Eu sou {self.nome}")\n\ncachorro_1 = Cachorro()\ncachorro_1.nome = "Rex"\ncachorro_1.apresentar()' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nclass Gato:\n    def miar():\n        print("Miau!")\n\ngato_1 = Gato()\ngato_1.miar()', starter:'class Gato:\n    def miar():\n        print("Miau!")\n\ngato_1 = Gato()\ngato_1.miar()', gabarito:'Bug: falta self na definição de miar.\nCorreção: def miar(self):' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma classe Retangulo com um método calcular_area(self), que utiliza os atributos largura e altura (definidos manualmente após criar o objeto) para calcular e devolver a área (usando return). Crie dois objetos com dimensões diferentes, e exiba a área de cada um.', starter:'', gabarito:'class Retangulo:\n    def calcular_area(self):\n        return self.largura * self.altura\n\nr1 = Retangulo()\nr1.largura = 5\nr1.altura = 3\nprint(r1.calcular_area())\n\nr2 = Retangulo()\nr2.largura = 10\nr2.altura = 2\nprint(r2.calcular_area())' },
+          { kind:'code', prompt:'Desafio: crie uma classe ContaBancaria mais completa, adicionando um método sacar(self, valor), que subtrai do saldo apenas se houver saldo suficiente, exibindo uma mensagem de erro caso contrário.', starter:'', gabarito:'class ContaBancaria:\n    def depositar(self, valor):\n        self.saldo = self.saldo + valor\n    def sacar(self, valor):\n        if valor <= self.saldo:\n            self.saldo = self.saldo - valor\n        else:\n            print("Saldo insuficiente")\n\nconta = ContaBancaria()\nconta.saldo = 100\nconta.sacar(150)\nconta.sacar(50)\nprint(conta.saldo)' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'class NomeDaClasse:\n    def nome_do_metodo(self, outros_parametros):\n        ...\n        self.atributo   ← acessa um atributo DESTE objeto\n\nobjeto = NomeDaClasse()\nobjeto.nome_do_metodo(argumentos)   ← self é passado automaticamente'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei definir um método dentro de uma classe.',
+          'Sei que self é sempre o primeiro parâmetro de um método.',
+          'Sei que self é passado automaticamente, sem informá-lo na chamada.',
+          'Sei acessar atributos do próprio objeto com self.atributo.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual deve ser sempre o primeiro parâmetro de um método?', options:['this','self','obj','Não há parâmetro obrigatório'], correct:1, explanation:'self.' },
+          { q:'É necessário passar self explicitamente ao chamar um método?', options:['Sim, sempre','Não, o Python o passa automaticamente','Só em alguns casos','Só se o método tiver outros parâmetros'], correct:1, explanation:'É passado automaticamente.' },
+          { q:'Como acessar o atributo cor de dentro de um método?', options:['cor','self.cor','this.cor','objeto.cor, sempre com esse nome exato'], correct:1, explanation:'self.cor' },
+          { q:'O que acontece se self for esquecido na definição de um método?', options:['Funciona normalmente','Gera TypeError ao chamar o método','Gera SyntaxError imediatamente','O método vira um atributo de classe'], correct:1, explanation:'Gera TypeError ao chamar.' },
+          { q:'Um método pode receber parâmetros além de self?', options:['Não, nunca','Sim, normalmente','Só em métodos especiais','Só se self for omitido'], correct:1, explanation:'Sim, normalmente.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Objetos de Classe e de Instância (métodos)', url:'https://docs.python.org/pt-br/3/tutorial/classes.html#method-objects' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap51',
+  title: 'Capítulo 51 — __init__()',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Para que serve o método especial __init__.',
+          'Como garantir que todo objeto criado já nasça com seus atributos definidos, sem atribuí-los manualmente depois.',
+          'Como __init__ resolve o problema visto nos Capítulos 48-50 de precisar definir atributos "na mão".'
+        ],
+        antes: 'É necessário saber definir classes, atributos e métodos (Capítulos 48 a 50).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Nos capítulos anteriores, sempre criávamos um objeto e DEPOIS atribuíamos seus atributos manualmente. Isso é frágil: é fácil esquecer de definir um atributo em algum objeto, gerando AttributeError mais tarde. Python resolve isso com um método especial chamado <span class="icode">__init__</span> (de "initialize", inicializar), que é executado <b>automaticamente</b> toda vez que um novo objeto é criado.',
+          'Os valores passados na criação do objeto (Carro("vermelho")) são recebidos pelo __init__ como parâmetros comuns, exatamente como em qualquer função — a única diferença é que esses parâmetros vêm logo depois de self.'
+        ],
+        glossary: [
+          { term:'__init__', def:'método especial, executado automaticamente sempre que um objeto é criado (Classe(...))', example:'usado para definir os atributos iniciais daquele objeto, garantindo que nenhum seja esquecido.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'class Carro:\n    def __init__(self, cor):\n        self.cor = cor\n\ncarro_1 = Carro("vermelho")\n        ↓\nPython cria um novo objeto\n        ↓\nChama AUTOMATICAMENTE __init__, passando:\n   self = o novo objeto\n   cor  = "vermelho"\n        ↓\nDentro de __init__: self.cor = cor\n        ↓\nO objeto já nasce com o atributo cor = "vermelho"\n        ↓\ncarro_1.cor  →  "vermelho"',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Criar um objeto que já nasce com um atributo definido.',
+        algoritmo:null,
+        code:'# Define a classe Carro, com um __init__ que recebe a cor inicial\nclass Carro:\n    def __init__(self, cor):\n        # Guarda o valor recebido como atributo do objeto\n        self.cor = cor\n\n# Cria um objeto Carro, já passando o valor de "cor"\ncarro_1 = Carro("vermelho")\n\n# O objeto já nasce com o atributo "cor" definido\nprint(carro_1.cor)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'class Carro: def __init__(self, cor): self.cor = cor',
+          'Python registra a classe Carro, com seu método especial __init__',
+          'carro_1 = Carro("vermelho")',
+          'Python cria um novo objeto (vazio, por enquanto)',
+          'Chama AUTOMATICAMENTE __init__(self, cor), com self = o objeto recém-criado, cor = "vermelho"',
+          'Executa: self.cor = cor',
+          'O objeto passa a ter o atributo cor = "vermelho"',
+          'print(carro_1.cor) → Exibe: vermelho'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'def __init__(self, cor):\n    self.cor = cor', explanation:'__init__ é um nome ESPECIAL, reconhecido pelo Python — ele é chamado automaticamente sempre que um objeto dessa classe é criado. self é o próprio objeto sendo criado. cor é um parâmetro comum, cujo valor vem da criação do objeto. self.cor = cor guarda o valor recebido como um ATRIBUTO DO OBJETO.' },
+          { code:'carro_1 = Carro("vermelho")', explanation:'Cria um novo objeto, passando "vermelho" — esse valor é recebido pelo parâmetro cor do __init__, automaticamente chamado neste momento.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'vermelho',
+        modIntro:'Vamos criar uma classe com MÚLTIPLOS atributos, todos definidos via __init__, evitando por completo a atribuição manual dos capítulos anteriores:',
+        modCode:'class Aluno:\n    def __init__(self, nome, nota):\n        self.nome = nome\n        self.nota = nota\n\naluno_1 = Aluno("Ana", 8.5)\naluno_2 = Aluno("Bruno", 6.0)\n\nprint(aluno_1.nome, aluno_1.nota)\nprint(aluno_2.nome, aluno_2.nota)',
+        modResult:'Ana 8.5\nBruno 6.0',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'__init__ versus um método comum: __init__ é chamado AUTOMATICAMENTE, uma única vez, no exato momento em que o objeto é criado (Classe(...)) — nunca é chamado diretamente, como objeto.__init__(...). Métodos comuns são chamados explicitamente, sempre que necessário, e podem ser chamados várias vezes.',
+        extraBlocks:[
+          { title:'__init__ com valores padrão', intro:'__init__ também pode combinar parâmetros obrigatórios com valores padrão (Capítulo 37):', code:'class Aluno:\n    def __init__(self, nome, nota=0):\n        self.nome = nome\n        self.nota = nota\n\naluno_1 = Aluno("Carla")           # nota usa o valor padrão, 0\naluno_2 = Aluno("Diego", 9.0)\n\nprint(aluno_1.nome, aluno_1.nota)\nprint(aluno_2.nome, aluno_2.nota)', result:'Carla 0\nDiego 9.0', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer de passar os argumentos exigidos pelo __init__', code:'class Carro:\n    def __init__(self, cor):\n        self.cor = cor\n\ncarro_1 = Carro()', body:'Como __init__ foi definido esperando um parâmetro cor (além de self), criar o objeto sem passar esse argumento gera erro.' },
+          { title:'🐞 Esquecer o self. ao guardar um valor recebido', code:'class Carro:\n    def __init__(self, cor):\n        cor = cor   # ERRADO: não cria um atributo, apenas reatribui o parâmetro', body:'Sem self., cor = cor apenas atualiza a variável LOCAL cor, sem criar nenhum atributo permanente no objeto. O correto é self.cor = cor.' },
+          { title:'🐞 Escrever __init__ incorretamente (erro de digitação)', code:'class Carro:\n    def _init_(self, cor):   # faltam underscores duplos!\n        self.cor = cor', body:'__init__ tem DOIS underscores antes e DOIS depois — um erro de digitação (como _init_) faz com que o Python não reconheça esse método como especial, e ele NÃO será chamado automaticamente.' }
+        ],
+        howToRead:"Ao esquecer argumentos exigidos pelo __init__, o Python mostra: <span class=\"icode\">TypeError: Carro.__init__() missing 1 required positional argument: 'cor'</span>",
+        tryIt:true,
+        tryItCode:'class Carro:\n    def __init__(self, cor):\n        self.cor = cor\n\ncarro_1 = Carro()'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar uma classe Produto completa, com atributos definidos via __init__, e um método que utiliza esses atributos.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'class Produto:\n    def __init__(self, nome, preco):\n        self.nome = nome\n        self.preco = preco\n\n    def exibir_informacoes(self):\n        print(f"{self.nome}: R$ {self.preco:.2f}")\n\nproduto_1 = Produto("Caderno", 24.90)\nproduto_2 = Produto("Mochila", 89.90)\n\nproduto_1.exibir_informacoes()\nproduto_2.exibir_informacoes()',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Para que serve o método __init__?', gabarito:'Inicializar os atributos de um objeto automaticamente.' },
+          { kind:'text', prompt:'Quando __init__ é executado?', gabarito:'Automaticamente, ao criar um novo objeto.' },
+          { kind:'text', prompt:'É necessário chamar __init__ explicitamente?', gabarito:'Não.' },
+          { kind:'text', prompt:'O que acontece se self. for esquecido ao guardar um valor recebido dentro de __init__?', gabarito:'O atributo não é criado; apenas a variável local do parâmetro é reatribuída.' },
+          { kind:'text', prompt:'Quantos underscores existem antes e depois de "init", em __init__?', gabarito:'Dois antes, dois depois.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma classe Livro, com __init__ recebendo titulo e autor, e crie dois objetos diferentes.', starter:'', gabarito:'class Livro:\n    def __init__(self, titulo, autor):\n        self.titulo = titulo\n        self.autor = autor\n\nlivro_1 = Livro("Dom Casmurro", "Machado de Assis")\nlivro_2 = Livro("O Cortiço", "Aluísio Azevedo")' },
+          { kind:'code', prompt:'Adicione, à classe Livro, um método exibir_ficha(self) que exiba as informações formatadas.', starter:'class Livro:\n    def __init__(self, titulo, autor):\n        self.titulo = titulo\n        self.autor = autor', gabarito:'class Livro:\n    def __init__(self, titulo, autor):\n        self.titulo = titulo\n        self.autor = autor\n    def exibir_ficha(self):\n        print(f"{self.titulo} - {self.autor}")\n\nlivro_1 = Livro("Dom Casmurro", "Machado de Assis")\nlivro_1.exibir_ficha()' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nclass Cliente:\n    def __init__(self, nome):\n        nome = nome\n\ncliente_1 = Cliente("Ana")\nprint(cliente_1.nome)', starter:'class Cliente:\n    def __init__(self, nome):\n        nome = nome\n\ncliente_1 = Cliente("Ana")\nprint(cliente_1.nome)', gabarito:'Bug: falta self. em nome = nome.\nCorreção: self.nome = nome' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma classe ContaBancaria, com __init__ recebendo titular e um saldo_inicial com valor padrão 0. Adicione métodos depositar(self, valor) e exibir_saldo(self). Crie duas contas diferentes e teste os métodos em cada uma.', starter:'', gabarito:'class ContaBancaria:\n    def __init__(self, titular, saldo_inicial=0):\n        self.titular = titular\n        self.saldo = saldo_inicial\n    def depositar(self, valor):\n        self.saldo = self.saldo + valor\n    def exibir_saldo(self):\n        print(f"{self.titular}: R$ {self.saldo:.2f}")\n\nc1 = ContaBancaria("Ana")\nc2 = ContaBancaria("Bruno", 500)\nc1.depositar(100)\nc1.exibir_saldo()\nc2.exibir_saldo()' },
+          { kind:'text', prompt:'Desafio: reescreva a classe ContaBancaria do desafio do Capítulo 50 (que exigia definir saldo manualmente), agora usando __init__ para garantir que toda conta já nasça com o saldo definido.', gabarito:'A classe deve receber titular e saldo_inicial=0 no __init__, definindo self.saldo lá, em vez de exigir conta.saldo = valor depois de criar o objeto.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'class NomeDaClasse:\n    def __init__(self, parametros):\n        self.atributo = parametro\n        ...\n\nobjeto = NomeDaClasse(argumentos)\n   → __init__ é chamado AUTOMATICAMENTE\n   → o objeto já nasce com todos os atributos definidos'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é e para que serve __init__.',
+          'Sei que __init__ é chamado automaticamente ao criar um objeto.',
+          'Sei definir atributos dentro de __init__, usando self..',
+          'Sei combinar __init__ com valores padrão para parâmetros.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Quando __init__ é executado?', options:['Nunca automaticamente','Automaticamente, ao criar um novo objeto','Apenas quando chamado manualmente','Apenas uma vez por programa, para todos os objetos'], correct:1, explanation:'Automaticamente, ao criar um objeto.' },
+          { q:'O que self.cor = cor, dentro de __init__, faz?', options:['Cria uma variável local temporária','Cria (ou atualiza) o atributo cor do objeto','Gera um erro','Exibe o valor de cor na tela'], correct:1, explanation:'Cria/atualiza o atributo do objeto.' },
+          { q:'É necessário chamar __init__ explicitamente após criar um objeto?', options:['Sim, sempre','Não, ele já é chamado automaticamente na criação','Só se a classe tiver métodos','Só em algumas versões do Python'], correct:1, explanation:'Não, é chamado automaticamente.' },
+          { q:'O que acontece ao criar um objeto sem passar um argumento exigido pelo __init__?', options:['O Python usa None automaticamente','Gera TypeError','Funciona normalmente','Gera SyntaxError'], correct:1, explanation:'Gera TypeError.' },
+          { q:'Quantos underscores existem antes e depois de "init", corretamente?', options:['Um antes, um depois','Dois antes, dois depois','Nenhum','Três antes, três depois'], correct:1, explanation:'Dois antes, dois depois.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Objetos de Instância (__init__)', url:'https://docs.python.org/pt-br/3/tutorial/classes.html#instance-objects' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap52',
+  title: 'Capítulo 52 — self',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que self realmente representa, com mais profundidade do que nos capítulos anteriores.',
+          'Como o Python "sabe" qual objeto é self a cada chamada de método.',
+          'Por que self não é uma palavra reservada, e sim uma convenção.'
+        ],
+        antes: 'É necessário ter usado self em métodos e em __init__ (Capítulos 50 e 51).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'self representa <b>o objeto específico</b> que está chamando o método atual — é a forma que um método tem de saber "em qual objeto eu devo atuar". Sem self, um método não teria como acessar os atributos <b>daquele objeto em particular</b>.',
+          'Quando escrevemos carro_1.exibir_cor(), o Python internamente entende isso como algo equivalente a Carro.exibir_cor(carro_1) — ou seja, o objeto antes do ponto (.) é automaticamente passado como o primeiro argumento (self) da chamada.',
+          'Um detalhe importante: <b>self não é uma palavra reservada</b> do Python (como if, for, def) — é apenas o <b>nome convencional</b>, usado por praticamente toda a comunidade Python, para o primeiro parâmetro de um método.'
+        ],
+        glossary: []
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'carro_1.exibir_cor()\n        ↓\nPython interpreta como:\nCarro.exibir_cor(carro_1)\n        ↓\nDentro do método, self = carro_1\n        ↓\nself.cor  →  carro_1.cor  →  "vermelho"\n\n\ncarro_2.exibir_cor()\n        ↓\nCarro.exibir_cor(carro_2)\n        ↓\nDentro do método, self = carro_2  (um objeto DIFERENTE!)\n        ↓\nself.cor  →  carro_2.cor  →  "azul"',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Usar self para acessar o atributo do objeto que chamou o método.',
+        algoritmo:null,
+        code:'# Define a classe Carro\nclass Carro:\n    def __init__(self, cor):\n        # self, aqui, é o objeto sendo criado neste exato momento\n        self.cor = cor\n\n    def exibir_cor(self):\n        # self, aqui, é o objeto que CHAMOU este método\n        print(self.cor)\n\n# Cria um objeto, guardando "vermelho" em seu atributo cor\ncarro_1 = Carro("vermelho")\n\n# Chama o método; self, dentro dele, será carro_1\ncarro_1.exibir_cor()',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'carro_1 = Carro("vermelho")',
+          '__init__(self=carro_1, cor="vermelho")',
+          'self.cor = cor → carro_1.cor = "vermelho"',
+          'carro_1.exibir_cor()',
+          'exibir_cor(self=carro_1)',
+          'print(self.cor) → print(carro_1.cor) → print("vermelho")',
+          'Exibe: vermelho'
+        ],
+        after:null
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'vermelho',
+        modIntro:'Vamos confirmar, com dois objetos diferentes, que self realmente representa um objeto diferente a cada chamada:',
+        modCode:'class Carro:\n    def __init__(self, cor):\n        self.cor = cor\n\n    def exibir_cor(self):\n        print(f"Este carro é {self.cor}")\n\ncarro_1 = Carro("vermelho")\ncarro_2 = Carro("azul")\n\ncarro_1.exibir_cor()\ncarro_2.exibir_cor()',
+        modResult:'Este carro é vermelho\nEste carro é azul',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'self versus os demais parâmetros de um método: self é sempre PREENCHIDO AUTOMATICAMENTE pelo Python, a partir do objeto usado antes do ponto na chamada. Os demais parâmetros precisam ser passados EXPLICITAMENTE, como em qualquer função comum.',
+        extraBlocks:[
+          { title:'Um método que altera um atributo através de self', intro:'Vamos observar um método que altera um atributo do próprio objeto:', code:'class ContaBancaria:\n    def __init__(self, saldo):\n        self.saldo = saldo\n\n    def depositar(self, valor):\n        self.saldo = self.saldo + valor\n\nconta_1 = ContaBancaria(100)\nconta_2 = ContaBancaria(500)\n\nconta_1.depositar(50)\n\nprint(conta_1.saldo)   # 150 — alterado\nprint(conta_2.saldo)   # 500 — inalterado', result:'150\n500', note:'conta_1.depositar(50) alterou apenas conta_1.saldo, porque self, dentro daquela chamada específica, era conta_1 — o método nunca teve acesso a conta_2.', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar acessar um atributo sem passar por self', code:'class Carro:\n    def __init__(self, cor):\n        self.cor = cor\n\n    def exibir_cor(self):\n        print(cor)   # ERRADO: falta "self."', body:'Sem self., o Python procura por uma variável SOLTA chamada cor (fora da classe), não o atributo do objeto — gerando NameError.' },
+          { title:'🐞 Achar que self precisa ter exatamente esse nome', code:null, body:'Embora self seja apenas uma convenção (não uma palavra reservada), mudar esse nome (para este ou s) é fortemente desaconselhado — todo o ecossistema Python espera self.' },
+          { title:'🐞 Confundir self (dentro da classe) com o nome da variável usada fora dela', code:'carro_1 = Carro("vermelho")', body:'carro_1 é o nome escolhido FORA da classe. Dentro dos métodos, esse mesmo objeto é sempre referenciado como self — os dois nomes apontam para o MESMO objeto, mas em contextos diferentes.' }
+        ],
+        howToRead:"Ao esquecer self. ao acessar um atributo dentro de um método, o Python mostra: <span class=\"icode\">NameError: name 'cor' is not defined</span>",
+        tryIt:true,
+        tryItCode:'class Carro:\n    def __init__(self, cor):\n        self.cor = cor\n\n    def exibir_cor(self):\n        print(cor)\n\ncarro_1 = Carro("vermelho")\ncarro_1.exibir_cor()'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar uma classe Termômetro, com um método que altera a temperatura do próprio objeto, e outro que a exibe.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'class Termometro:\n    def __init__(self, temperatura_inicial):\n        self.temperatura = temperatura_inicial\n\n    def aumentar(self, graus):\n        self.temperatura = self.temperatura + graus\n\n    def exibir_temperatura(self):\n        print(f"Temperatura atual: {self.temperatura}°C")\n\ntermometro_1 = Termometro(20)\ntermometro_1.exibir_temperatura()\n\ntermometro_1.aumentar(5)\ntermometro_1.exibir_temperatura()',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que self representa dentro de um método?', gabarito:'O objeto específico que chamou o método.' },
+          { kind:'text', prompt:'self é uma palavra reservada do Python? Justifique.', gabarito:'Não, é uma convenção.' },
+          { kind:'text', prompt:'Como o Python decide qual objeto será self em uma chamada de método?', gabarito:'Pelo objeto usado antes do ponto na chamada.' },
+          { kind:'text', prompt:'O que acontece se self. for esquecido ao acessar um atributo dentro de um método?', gabarito:'Gera NameError.' },
+          { kind:'text', prompt:'self precisa ser passado explicitamente ao chamar objeto.metodo()?', gabarito:'Não, é passado automaticamente.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma classe Jogador, com __init__ recebendo nome e pontuacao_inicial, e um método pontuar(self, pontos) que aumenta a pontuação do jogador. Crie dois jogadores e teste o método em cada um, confirmando que são independentes.', starter:'', gabarito:'class Jogador:\n    def __init__(self, nome, pontuacao_inicial):\n        self.nome = nome\n        self.pontuacao = pontuacao_inicial\n    def pontuar(self, pontos):\n        self.pontuacao = self.pontuacao + pontos\n\nj1 = Jogador("Ana", 0)\nj2 = Jogador("Bruno", 0)\nj1.pontuar(10)\nprint(j1.pontuacao, j2.pontuacao)' },
+          { kind:'text', prompt:'Explique por que conta_1.depositar(50) não afeta conta_2.saldo, mesmo os dois objetos sendo da mesma classe.', gabarito:'Porque self, dentro de conta_1.depositar(50), é conta_1; o método nunca acessa conta_2.' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nclass Produto:\n    def __init__(self, preco):\n        self.preco = preco\n\n    def aplicar_desconto(self, percentual):\n        preco = preco - (preco * percentual / 100)', starter:'class Produto:\n    def __init__(self, preco):\n        self.preco = preco\n\n    def aplicar_desconto(self, percentual):\n        preco = preco - (preco * percentual / 100)', gabarito:'Bug: falta self. em preco = preco - ...\nCorreção: self.preco = self.preco - (self.preco * percentual / 100)' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Crie uma classe Estoque, com __init__ recebendo quantidade, e métodos adicionar(self, quantidade) e remover(self, quantidade), cada um alterando o atributo quantidade do próprio objeto através de self. Crie dois objetos de estoque diferentes, e demonstre que operações em um não afetam o outro.', starter:'', gabarito:'class Estoque:\n    def __init__(self, quantidade):\n        self.quantidade = quantidade\n    def adicionar(self, quantidade):\n        self.quantidade = self.quantidade + quantidade\n    def remover(self, quantidade):\n        self.quantidade = self.quantidade - quantidade\n\ne1 = Estoque(10)\ne2 = Estoque(20)\ne1.adicionar(5)\nprint(e1.quantidade, e2.quantidade)' },
+          { kind:'text', prompt:'Desafio: explique self para uma pessoa vendo orientação a objetos pela primeira vez, usando uma analogia diferente (ex.: relacionando self a um pronome como "eu mesmo").', gabarito:'self é como o pronome "eu" — cada objeto, ao executar seu próprio método, se refere a si mesmo como self.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'objeto.metodo(argumentos)\n        ↓\nPython chama: Classe.metodo(objeto, argumentos)\n        ↓\nDentro do método: self = objeto\n\nself MUDA a cada chamada, representando sempre\no objeto usado antes do ponto (.) na chamada.\n\nself NÃO é palavra reservada — é uma CONVENÇÃO universal.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que self representa dentro de um método.',
+          'Sei que self é passado automaticamente pelo Python.',
+          'Sei que self não é uma palavra reservada, mas uma convenção.',
+          'Sei explicar por que alterar um atributo via self afeta apenas aquele objeto específico.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que self representa dentro de um método?', options:['A classe inteira','O objeto específico que chamou o método','Um valor fixo, sempre o mesmo','Um erro de sintaxe'], correct:1, explanation:'O objeto específico que chamou o método.' },
+          { q:'self é uma palavra reservada do Python?', options:['Sim, obrigatória com esse nome exato','Não, é uma convenção amplamente seguida','Sim, mas apenas em versões antigas','Não existe tal conceito em Python'], correct:1, explanation:'É uma convenção.' },
+          { q:'Como o Python decide o valor de self em carro_1.exibir_cor()?', options:['Sempre usa o primeiro objeto criado','Usa o objeto antes do ponto (.) na chamada — aqui, carro_1','Pergunta ao usuário','self sempre vale None'], correct:1, explanation:'Usa o objeto antes do ponto.' },
+          { q:'Alterar self.saldo dentro de um método de conta_1 afeta conta_2?', options:['Sim, sempre','Não, cada objeto tem seus próprios atributos','Sim, mas só números','Depende do nome do método'], correct:1, explanation:'Não, cada objeto é independente.' },
+          { q:'O que causa NameError ao acessar um atributo dentro de um método?', options:['Usar self. corretamente','Esquecer o prefixo self. antes do nome do atributo','Usar __init__','Criar muitos objetos'], correct:1, explanation:'Esquecer o prefixo self.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Objetos de Classe e de Instância (uso de self)', url:'https://docs.python.org/pt-br/3/tutorial/classes.html#method-objects' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap53',
+  title: 'Capítulo 53 — Herança',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é herança entre classes, e por que ela evita repetição de código.',
+          'Como criar uma classe que herda de outra.',
+          'Como usar super() para reaproveitar o __init__ da classe "mãe".',
+          'Como sobrescrever um método herdado.'
+        ],
+        antes: 'É necessário dominar classes, atributos, métodos, __init__ e self (Capítulos 48 a 52).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Imagine que precisamos representar, em um sistema, tanto Carro quanto Moto — ambos são <b>veículos</b>, compartilhando características comuns, mas também têm particularidades próprias. Reescrever tudo que é comum, em cada classe separadamente, seria repetitivo (lembra do Capítulo 32?). A <b>herança</b> resolve esse problema.',
+          'Para indicar que uma classe herda de outra, colocamos o nome da classe "mãe" entre parênteses, na definição da classe "filha": class Carro(Veiculo):'
+        ],
+        glossary: [
+          { term:'herança', def:'mecanismo que permite que uma classe (a "filha", ou subclasse) reaproveite atributos e métodos de outra classe já existente (a "mãe", ou superclasse)', example:'podendo também adicionar ou sobrescrever comportamentos próprios.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'Veiculo (classe mãe / superclasse)\n   __init__(self, marca)\n   buzinar(self)\n\n        ↑ herda\n        │\nCarro (classe filha / subclasse)\n   (por enquanto, sem nada próprio: usa tudo o que veio de Veiculo)\n\ncarro_1 = Carro("Toyota")\ncarro_1.marca      → "Toyota"   (veio de Veiculo)\ncarro_1.buzinar()   → "Bii bii!" (veio de Veiculo)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Uma classe Carro que herda de Veiculo, sem adicionar nada próprio ainda.',
+        algoritmo:null,
+        code:'# Classe "mãe": características comuns a qualquer veículo\nclass Veiculo:\n    def __init__(self, marca):\n        self.marca = marca\n\n    def buzinar(self):\n        print("Bii bii!")\n\n# Classe "filha": herda tudo de Veiculo, sem adicionar nada próprio ainda\nclass Carro(Veiculo):\n    pass\n\n# Cria um objeto Carro, usando o __init__ HERDADO de Veiculo\ncarro_1 = Carro("Toyota")\n\n# Acessa o atributo "marca", também herdado\nprint(carro_1.marca)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'class Veiculo: ...',
+          'Python registra a classe Veiculo',
+          'class Carro(Veiculo): pass',
+          'Python registra Carro, marcando que ela HERDA de Veiculo',
+          'carro_1 = Carro("Toyota")',
+          'Carro não tem seu próprio __init__, então Python usa o de Veiculo (herdado)',
+          'self.marca = "Toyota"',
+          'carro_1.marca → Exibe: Toyota'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'class Carro(Veiculo):\n    pass', explanation:'(Veiculo), logo depois do nome Carro, indica que Carro HERDA de Veiculo — recebendo automaticamente seu __init__ e o método buzinar, sem precisar reescrevê-los.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Toyota',
+        modIntro:'Vamos adicionar, à classe Carro, um atributo e um método PRÓPRIOS, além dos herdados. super() acessa métodos da classe "mãe", a partir de dentro da classe "filha":',
+        modCode:'class Veiculo:\n    def __init__(self, marca):\n        self.marca = marca\n\n    def buzinar(self):\n        print("Bii bii!")\n\nclass Carro(Veiculo):\n    def __init__(self, marca, quantidade_portas):\n        super().__init__(marca)   # reaproveita o __init__ de Veiculo\n        self.quantidade_portas = quantidade_portas\n\n    def abrir_porta_malas(self):\n        print("Porta-malas aberto!")\n\ncarro_1 = Carro("Toyota", 4)\n\nprint(carro_1.marca)              # herdado de Veiculo\nprint(carro_1.quantidade_portas)  # próprio de Carro\ncarro_1.buzinar()                  # herdado de Veiculo\ncarro_1.abrir_porta_malas()        # próprio de Carro',
+        modResult:'Toyota\n4\nBii bii!\nPorta-malas aberto!',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'Herdar um método versus sobrescrever um método: herdar significa REAPROVEITAR o comportamento da classe mãe, sem alterá-lo. Sobrescrever significa DEFINIR UM NOVO COMPORTAMENTO, com o mesmo nome, que passa a ser usado no lugar do da classe mãe.',
+        extraBlocks:[
+          { title:'Sobrescrevendo um método herdado', intro:'Uma classe filha também pode redefinir um método já existente na classe mãe — isso é chamado de sobrescrita (override):', code:'class Veiculo:\n    def __init__(self, marca):\n        self.marca = marca\n    def buzinar(self):\n        print("Bii bii!")\n\nclass Moto(Veiculo):\n    def buzinar(self):\n        print("Bip bip!")   # comportamento DIFERENTE do de Veiculo\n\nmoto_1 = Moto("Honda")\nmoto_1.buzinar()', result:'Bip bip!', note:'Moto não precisou reescrever __init__ (continua usando o de Veiculo, herdado normalmente), mas SUBSTITUIU completamente o comportamento de buzinar.', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer os parênteses com o nome da classe mãe', code:'class Carro:   # deveria ser: class Carro(Veiculo):\n    pass', body:'Sem (Veiculo), Carro NÃO HERDA NADA — vira uma classe completamente independente, sem __init__ nem buzinar.' },
+          { title:'🐞 Esquecer super().__init__(...) ao redefinir __init__ em uma classe filha', code:'class Carro(Veiculo):\n    def __init__(self, marca, quantidade_portas):\n        self.quantidade_portas = quantidade_portas\n        # faltou: super().__init__(marca)\n\ncarro_1 = Carro("Toyota", 4)\nprint(carro_1.marca)   # AttributeError! "marca" nunca foi definido', body:'Ao SOBRESCREVER __init__ em Carro, o __init__ original de Veiculo NÃO é chamado automaticamente — é necessário chamá-lo explicitamente com super().__init__(...).' },
+          { title:'🐞 Confundir herança com composição', code:null, body:'Herança representa uma relação de "é um tipo de" (Carro é um tipo de Veiculo). Quando a relação é outra — "um carro tem um motor" — a modelagem correta normalmente não é herança.' }
+        ],
+        howToRead:"Ao esquecer super().__init__(...) e tentar acessar um atributo que deveria ter vindo da classe mãe, o Python mostra: <span class=\"icode\">AttributeError: 'Carro' object has no attribute 'marca'</span>",
+        tryIt:true,
+        tryItCode:'class Veiculo:\n    def __init__(self, marca):\n        self.marca = marca\n\nclass Carro(Veiculo):\n    def __init__(self, marca, quantidade_portas):\n        self.quantidade_portas = quantidade_portas\n\ncarro_1 = Carro("Toyota", 4)\nprint(carro_1.marca)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Modelar Funcionario e Gerente, onde Gerente herda de Funcionario, mas adiciona um atributo próprio (equipe) e sobrescreve um método.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'class Funcionario:\n    def __init__(self, nome, salario):\n        self.nome = nome\n        self.salario = salario\n\n    def exibir_cargo(self):\n        print(f"{self.nome} é funcionário(a).")\n\nclass Gerente(Funcionario):\n    def __init__(self, nome, salario, equipe):\n        super().__init__(nome, salario)\n        self.equipe = equipe\n\n    def exibir_cargo(self):\n        print(f"{self.nome} é gerente de uma equipe de {self.equipe} pessoas.")\n\nfuncionario_1 = Funcionario("Ana", 3000)\ngerente_1 = Gerente("Bruno", 6000, 5)\n\nfuncionario_1.exibir_cargo()\ngerente_1.exibir_cargo()',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é herança?', gabarito:'Mecanismo que permite reaproveitar atributos/métodos de outra classe.' },
+          { kind:'text', prompt:'Como se indica, na definição de uma classe, que ela herda de outra?', gabarito:'class Filha(Mae):' },
+          { kind:'text', prompt:'Para que serve super().__init__(...)?', gabarito:'Reaproveitar o __init__ da classe mãe.' },
+          { kind:'text', prompt:'O que é sobrescrever um método?', gabarito:'Redefinir, na classe filha, um método já existente na mãe, com novo comportamento.' },
+          { kind:'text', prompt:'O que acontece se super().__init__(...) for esquecido, ao sobrescrever __init__ em uma classe filha?', gabarito:'Os atributos definidos no __init__ da mãe não são criados.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie uma classe Animal, com __init__ recebendo nome, e um método emitir_som(self), que exibe "Som genérico". Crie uma classe Cachorro, que herda de Animal e sobrescreve emitir_som para exibir "Au au!".', starter:'', gabarito:'class Animal:\n    def __init__(self, nome):\n        self.nome = nome\n    def emitir_som(self):\n        print("Som genérico")\n\nclass Cachorro(Animal):\n    def emitir_som(self):\n        print("Au au!")\n\nc = Cachorro("Rex")\nc.emitir_som()' },
+          { kind:'code', prompt:'Adicione, à classe Cachorro do exercício anterior, um __init__ próprio, que recebe nome e raca, usando super().__init__(nome) para reaproveitar o __init__ de Animal.', starter:'class Animal:\n    def __init__(self, nome):\n        self.nome = nome\n    def emitir_som(self):\n        print("Som genérico")', gabarito:'class Cachorro(Animal):\n    def __init__(self, nome, raca):\n        super().__init__(nome)\n        self.raca = raca\n    def emitir_som(self):\n        print("Au au!")\n\nc = Cachorro("Rex", "Labrador")\nprint(c.nome, c.raca)' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nclass Pessoa:\n    def __init__(self, nome):\n        self.nome = nome\n\nclass Aluno(Pessoa):\n    def __init__(self, nome, escola):\n        self.escola = escola\n\naluno_1 = Aluno("Carla", "Escola Municipal")\nprint(aluno_1.nome)', starter:'class Pessoa:\n    def __init__(self, nome):\n        self.nome = nome\n\nclass Aluno(Pessoa):\n    def __init__(self, nome, escola):\n        self.escola = escola\n\naluno_1 = Aluno("Carla", "Escola Municipal")\nprint(aluno_1.nome)', gabarito:'Bug: Aluno.__init__ sobrescreve __init__ sem chamar super().__init__(nome), então nome nunca é criado.\nCorreção:\nclass Aluno(Pessoa):\n    def __init__(self, nome, escola):\n        super().__init__(nome)\n        self.escola = escola' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Modele uma hierarquia de formas geométricas: uma classe FormaGeometrica, com um método calcular_area(self) que, por padrão, exibe "Área não implementada"; e duas filhas, Retangulo e Circulo, sobrescrevendo calcular_area com a fórmula apropriada (math.pi para o círculo).', starter:'', gabarito:'import math\n\nclass FormaGeometrica:\n    def calcular_area(self):\n        print("Área não implementada")\n\nclass Retangulo(FormaGeometrica):\n    def __init__(self, largura, altura):\n        self.largura = largura\n        self.altura = altura\n    def calcular_area(self):\n        return self.largura * self.altura\n\nclass Circulo(FormaGeometrica):\n    def __init__(self, raio):\n        self.raio = raio\n    def calcular_area(self):\n        return math.pi * self.raio ** 2\n\nr = Retangulo(4, 5)\nc = Circulo(3)\nprint(r.calcular_area())\nprint(c.calcular_area())' },
+          { kind:'text', prompt:'Desafio: adicione uma terceira classe, Diretor, que herda de Gerente (não diretamente de Funcionario), demonstrando que a herança pode ter mais de um "nível".', gabarito:'class Diretor(Gerente): def __init__(self, nome, salario, equipe, area): super().__init__(nome, salario, equipe); self.area = area — encadeando super() até Funcionario.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'class ClasseMae:\n    def __init__(self, ...):\n        ...\n    def metodo(self):\n        ...\n\nclass ClasseFilha(ClasseMae):\n    def __init__(self, ..., novo_parametro):\n        super().__init__(...)          ← reaproveita o __init__ da mãe\n        self.novo_atributo = novo_parametro\n\n    def metodo(self):                   ← SOBRESCREVE o método da mãe\n        ...\n\nClasseFilha HERDA tudo de ClasseMae,\npodendo ADICIONAR ou SOBRESCREVER comportamentos.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei criar uma classe que herda de outra.',
+          'Sei usar super().__init__(...) para reaproveitar o __init__ da classe mãe.',
+          'Sei sobrescrever um método herdado.',
+          'Sei explicar por que esquecer super().__init__() pode causar AttributeError.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Como uma classe Carro indica que herda de Veiculo?', options:['class Carro: Veiculo','class Carro(Veiculo):','class Carro extends Veiculo:','class Carro -> Veiculo:'], correct:1, explanation:'class Carro(Veiculo):' },
+          { q:'Para que serve super().__init__(...)?', options:['Cria uma nova classe','Reaproveita o __init__ da classe mãe','Apaga os atributos herdados','Sobrescreve todos os métodos automaticamente'], correct:1, explanation:'Reaproveita o __init__ da classe mãe.' },
+          { q:'O que é sobrescrever um método?', options:['Apagar um método da classe mãe','Definir, na classe filha, um método com o mesmo nome, com novo comportamento','Renomear um método','Impedir que a classe filha use aquele método'], correct:1, explanation:'Definir um método com o mesmo nome e novo comportamento.' },
+          { q:'O que acontece se super().__init__(...) for esquecido em um __init__ sobrescrito?', options:['Nada, os atributos da classe mãe são criados automaticamente','Os atributos definidos no __init__ da classe mãe não são criados','Gera erro de sintaxe imediatamente','A classe filha deixa de herdar da mãe'], correct:1, explanation:'Os atributos da mãe não são criados.' },
+          { q:'Uma classe filha pode adicionar atributos e métodos próprios, além dos herdados?', options:['Não, apenas usar o que já existe na classe mãe','Sim','Só métodos, nunca atributos','Só atributos, nunca métodos'], correct:1, explanation:'Sim, pode adicionar ambos.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Herança', url:'https://docs.python.org/pt-br/3/tutorial/classes.html#inheritance' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'revisao8',
+  title: 'Parada para Revisão 8 — Fim da Parte X',
+  screens: [
+    { id:'mapa', title:'Mapa mental', type:'diagram', data:{
+        intro:'Um resumo visual de tudo que vimos nos Capítulos 47 a 53.',
+        diagram:'ORIENTAÇÃO A OBJETOS\n   │\n   ├── Classe = modelo/planta\n   │   Objeto = instância criada a partir da classe\n   │\n   ├── class NomeDaClasse:\n   │       pass\n   │   objeto = NomeDaClasse()\n   │\n   ├── Atributos\n   │      de classe → compartilhado por todos os objetos\n   │      de instância → próprio de cada objeto\n   │\n   ├── Métodos\n   │      def nome_do_metodo(self, ...):\n   │      self = objeto que chamou o método\n   │\n   ├── __init__(self, ...)\n   │      chamado automaticamente ao criar um objeto\n   │      garante que todo objeto já nasça com seus atributos\n   │\n   ├── self\n   │      passado automaticamente pelo Python\n   │      representa o objeto específico da chamada atual\n   │\n   └── Herança\n          class Filha(Mae):\n          super().__init__(...) → reaproveita o __init__ da mãe\n          sobrescrita → redefinir um método herdado',
+        note:null
+    }},
+    { id:'tabela', title:'Comandos vistos até aqui', type:'table', data:{
+        headers:['Comando/conceito','Para que serve','Exemplo'],
+        rows:[
+          ['<code>class Nome:</code>','definir uma classe','<code>class Carro:</code>'],
+          ['<code>Nome()</code>','criar um objeto','<code>carro_1 = Carro()</code>'],
+          ['<code>def __init__(self, ...)</code>','inicializar atributos automaticamente','<code>self.cor = cor</code>'],
+          ['<code>self.atributo</code>','acessar/definir atributo do objeto','<code>self.saldo</code>'],
+          ['<code>class Filha(Mae):</code>','herdar de outra classe','<code>class Carro(Veiculo):</code>'],
+          ['<code>super().__init__(...)</code>','reaproveitar __init__ da mãe','<code>super().__init__(marca)</code>']
+        ]
+    }},
+    { id:'errosfreq', title:'Erros frequentes', type:'list', data:{
+        intro:'Os erros mais comuns desta etapa:',
+        items:[
+          'Esquecer os parênteses ao criar um objeto (Carro, em vez de Carro()).',
+          'Esquecer self na definição de um método.',
+          'Esquecer self. ao acessar um atributo dentro de um método.',
+          'Esquecer super().__init__(...) ao sobrescrever __init__ em uma classe filha.',
+          'Confundir atributo de classe (compartilhado) com atributo de instância (próprio de cada objeto).'
+        ]
+    }},
+    { id:'perguntas', title:'Perguntas rápidas', type:'qa', data:{
+        intro:'Tente responder mentalmente antes de clicar para revelar.',
+        items:[
+          { q:'Qual é a diferença entre classe e objeto?', a:'Classe é o modelo/planta; objeto é a instância concreta criada a partir dela.' },
+          { q:'O que self representa dentro de um método?', a:'O objeto específico que chamou o método.' },
+          { q:'Para que serve __init__?', a:'Inicializar automaticamente os atributos de um objeto, ao criá-lo.' },
+          { q:'O que acontece se super().__init__(...) for esquecido em uma classe filha?', a:'Os atributos definidos no __init__ da classe mãe não são criados.' },
+          { q:'O que é sobrescrever um método?', a:'Redefinir, na classe filha, um método já existente na mãe, com novo comportamento.' }
+        ]
+    }},
+    { id:'exrevisao', title:'Exercícios de revisão', type:'exercises', data:{
+        level:'Exercícios de revisão',
+        items:[
+          { kind:'code', prompt:'Crie uma classe Livro, com __init__ recebendo titulo e autor, e um método exibir_ficha(self) que exibe as duas informações formatadas.', starter:'', gabarito:'class Livro:\n    def __init__(self, titulo, autor):\n        self.titulo = titulo\n        self.autor = autor\n    def exibir_ficha(self):\n        print(f"{self.titulo} - {self.autor}")\n\nl = Livro("Dom Casmurro", "Machado de Assis")\nl.exibir_ficha()' },
+          { kind:'code', prompt:'Crie uma classe Funcionario e uma classe Estagiario, que herda de Funcionario, sobrescrevendo um método exibir_cargo(self).', starter:'', gabarito:'class Funcionario:\n    def __init__(self, nome):\n        self.nome = nome\n    def exibir_cargo(self):\n        print(f"{self.nome} é funcionário(a).")\n\nclass Estagiario(Funcionario):\n    def exibir_cargo(self):\n        print(f"{self.nome} é estagiário(a).")\n\ne = Estagiario("Ana")\ne.exibir_cargo()' },
+          { kind:'code', prompt:'Crie uma classe ContaBancaria, com __init__ recebendo titular e saldo_inicial=0, e métodos depositar(self, valor) e sacar(self, valor) (o saque só deve ocorrer se houver saldo suficiente).', starter:'', gabarito:'class ContaBancaria:\n    def __init__(self, titular, saldo_inicial=0):\n        self.titular = titular\n        self.saldo = saldo_inicial\n    def depositar(self, valor):\n        self.saldo = self.saldo + valor\n    def sacar(self, valor):\n        if valor <= self.saldo:\n            self.saldo = self.saldo - valor\n        else:\n            print("Saldo insuficiente")\n\nc = ContaBancaria("Ana", 100)\nc.sacar(50)\nprint(c.saldo)' }
+        ]
+    }},
+    { id:'desafio', title:'Pequeno desafio', type:'exercises', data:{
+        level:'Pequeno desafio',
+        items:[
+          { kind:'code', prompt:'Modele, com classes, uma pequena "loja virtual": uma classe Produto (nome e preco) e uma classe Carrinho (com uma lista de produtos como atributo, e métodos adicionar_produto(self, produto) e calcular_total(self), que soma o preço de todos os produtos adicionados).', starter:'', gabarito:'class Produto:\n    def __init__(self, nome, preco):\n        self.nome = nome\n        self.preco = preco\n\nclass Carrinho:\n    def __init__(self):\n        self.produtos = []\n    def adicionar_produto(self, produto):\n        self.produtos.append(produto)\n    def calcular_total(self):\n        total = 0\n        for produto in self.produtos:\n            total = total + produto.preco\n        return total\n\ncarrinho = Carrinho()\ncarrinho.adicionar_produto(Produto("Caderno", 20))\ncarrinho.adicionar_produto(Produto("Caneta", 3))\nprint(carrinho.calcular_total())' }
+        ]
+    }},
+    { id:'checklist', title:'Checklist de domínio da Parte X', type:'checklist', data:{
+        items:[
+          'Sei explicar a diferença entre classe e objeto.',
+          'Sei definir classes, atributos e métodos.',
+          'Sei usar __init__ para inicializar atributos.',
+          'Sei explicar o papel de self.',
+          'Sei criar classes que herdam de outras, usando super().__init__().',
+          'Sei sobrescrever métodos herdados.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte XI — Boas Práticas, onde aprenderemos sobre código legível (PEP 8) e técnicas de depuração.'
     }}
   ]
 }
