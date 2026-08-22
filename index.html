@@ -9505,16 +9505,65 @@ const MODULES = [
    ESTADO E PERSISTÊNCIA
    ========================================================= */
 const STORAGE_KEY = 'apostilaPythonParte1_v1';
+const DEFAULT_STATE = { moduleIndex:0, screenIndex:0, visited:{}, checklist:{}, quizAnswers:{}, notes:{}, sentNotifications:{} };
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) return Object.assign({}, DEFAULT_STATE, JSON.parse(raw));
   } catch (e) {}
-  return { moduleIndex:0, screenIndex:0, visited:{}, checklist:{}, quizAnswers:{}, notes:{} };
+  return Object.assign({}, DEFAULT_STATE);
 }
 let state = loadState();
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+/* =========================================================
+   PROGRESSO TRAVADO (desbloqueio sequencial por capítulo)
+   ========================================================= */
+function isModuleCompleted(mi) {
+  const mod = MODULES[mi];
+  for (let si=0; si<mod.screens.length; si++) {
+    if (!state.visited[mi+'-'+si]) return false;
+  }
+  return true;
+}
+function furthestUnlockedModuleIndex() {
+  for (let i=0; i<MODULES.length; i++) {
+    if (!isModuleCompleted(i)) return i;
+  }
+  return MODULES.length-1;
+}
+function isModuleUnlocked(mi) {
+  if (mi <= furthestUnlockedModuleIndex()) return true;
+  // Módulos já visitados antes deste recurso existir continuam acessíveis
+  // (evita travar quem já estava usando a apostila com progresso fora de ordem).
+  const mod = MODULES[mi];
+  for (let si=0; si<mod.screens.length; si++) {
+    if (state.visited[mi+'-'+si]) return true;
+  }
+  return false;
+}
+
+/* =========================================================
+   AVISO DE CONCLUSÃO PARA O PROFESSOR (WhatsApp)
+   ========================================================= */
+const PROFESSOR_WHATSAPP = '5511945897154';
+function getAlunoNome() {
+  let nome = localStorage.getItem('apostilaAlunoNome');
+  if (!nome) {
+    nome = window.prompt('Antes de enviar, qual é o seu nome? (fica salvo só neste navegador, para preencher a mensagem automaticamente)');
+    if (nome && nome.trim()) localStorage.setItem('apostilaAlunoNome', nome.trim());
+  }
+  return nome ? nome.trim() : '';
+}
+function enviarConclusaoWhatsApp(mod) {
+  const nome = getAlunoNome();
+  if (!nome) return;
+  const texto = 'Olá, professor! Sou ' + nome + ' e concluí o(a) *' + mod.title + '* da apostila de Python. ✅';
+  window.open('https://wa.me/' + PROFESSOR_WHATSAPP + '?text=' + encodeURIComponent(texto), '_blank');
+  state.sentNotifications[mod.id] = true;
+  saveState();
 }
 
 /* =========================================================
@@ -9952,6 +10001,15 @@ function renderChecklist(body, mod, screen) {
     const note = el('div','callout', '🎓 ' + esc(d.finalNote));
     body.appendChild(note);
   }
+  const sendCard = el('div','card');
+  const jaEnviado = !!state.sentNotifications[mod.id];
+  const sendBtn = el('button','btn', jaEnviado ? '✓ Enviado — clique para enviar de novo' : '📲 Enviar conclusão para o professor (WhatsApp)');
+  sendBtn.addEventListener('click', () => {
+    enviarConclusaoWhatsApp(mod);
+    sendBtn.textContent = '✓ Enviado — clique para enviar de novo';
+  });
+  sendCard.appendChild(sendBtn);
+  body.appendChild(sendCard);
 }
 
 function renderQuiz(body, mod, screen) {
@@ -10062,17 +10120,25 @@ function buildSidebar() {
   const nav = document.getElementById('sidebar');
   nav.innerHTML = '';
   MODULES.forEach((mod, mi) => {
-    const wrap = el('div','mod');
-    const h = el('div','mod-title', esc(mod.title)+'<span>▾</span>');
+    const unlocked = isModuleUnlocked(mi);
+    const wrap = el('div','mod'+(unlocked ? '' : ' locked'));
+    const h = el('div','mod-title', (unlocked ? '' : '🔒 ')+esc(mod.title)+'<span>▾</span>');
     const ul = el('ul','mod-screens');
-    mod.screens.forEach((scr, si) => {
-      const key = mi+'-'+si;
-      const li = el('li','', '<span class="chk">'+(state.visited[key] ? '✓' : '')+'</span><span>'+esc(scr.title)+'</span>');
-      li.dataset.mi = mi; li.dataset.si = si;
-      li.addEventListener('click', () => goTo(mi, si));
-      ul.appendChild(li);
-    });
-    h.addEventListener('click', () => { ul.style.display = ul.style.display==='none' ? '' : 'none'; });
+    if (unlocked) {
+      mod.screens.forEach((scr, si) => {
+        const key = mi+'-'+si;
+        const li = el('li','', '<span class="chk">'+(state.visited[key] ? '✓' : '')+'</span><span>'+esc(scr.title)+'</span>');
+        li.dataset.mi = mi; li.dataset.si = si;
+        li.addEventListener('click', () => goTo(mi, si));
+        ul.appendChild(li);
+      });
+      h.addEventListener('click', () => { ul.style.display = ul.style.display==='none' ? '' : 'none'; });
+    } else {
+      ul.style.display = 'none';
+      h.style.opacity = '0.55';
+      h.style.cursor = 'not-allowed';
+      h.title = 'Termine o capítulo atual para desbloquear este.';
+    }
     wrap.appendChild(h); wrap.appendChild(ul);
     nav.appendChild(wrap);
   });
@@ -10106,6 +10172,10 @@ function updateFooter() {
 }
 
 function goTo(mi, si) {
+  if (!isModuleUnlocked(mi)) {
+    alert('🔒 Este capítulo ainda está bloqueado. Termine todas as telas do capítulo atual para desbloqueá-lo.');
+    return;
+  }
   state.moduleIndex = mi;
   state.screenIndex = si;
   state.visited[mi+'-'+si] = true;
@@ -10116,10 +10186,13 @@ function goTo(mi, si) {
   document.getElementById('overlay').classList.remove('show');
 }
 
+let lastUnlockedIndex = -1;
 function render() {
   const mod = MODULES[state.moduleIndex];
   const screen = mod.screens[state.screenIndex];
   renderScreen(mod, screen);
+  const furthest = furthestUnlockedModuleIndex();
+  if (furthest !== lastUnlockedIndex) { lastUnlockedIndex = furthest; buildSidebar(); }
   updateSidebarActive();
   updateProgressBar();
   updateFooter();
@@ -10154,7 +10227,6 @@ document.getElementById('overlay').addEventListener('click', () => {
 });
 
 /* boot */
-buildSidebar();
 state.visited[state.moduleIndex+'-'+state.screenIndex] = true;
 render();
 </script>
