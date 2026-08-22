@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a XII</title>
+<title>Apostila Python Interativa — Completa (Partes I a XIII)</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a XII · Primeiros Passos até Ambiente Profissional</span>
+      <span>Partes I a XIII · Curso completo, dos Primeiros Passos aos Projetos</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -8812,6 +8812,689 @@ const MODULES = [
           { label:'Documentação Python — Tutorial, capítulo 6: Módulos', url:'https://docs.python.org/pt-br/3/tutorial/modules.html' },
           { label:'Documentação Python — Tutorial, seção 12: Ambientes Virtuais e Pacotes', url:'https://docs.python.org/pt-br/3/tutorial/venv.html' },
           { label:'PyPI — Python Package Index', url:'https://pypi.org/' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'projeto1',
+  title: 'Projeto 1 — Calculadora',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Perguntar dois números ao usuário.',
+          'Perguntar qual operação realizar: soma, subtração, multiplicação ou divisão.',
+          'Calcular e exibir o resultado, formatado de forma legível.'
+        ],
+        antes: 'Este projeto aplica: variáveis (Capítulo 5), operadores matemáticos (Capítulo 7), input() (Capítulo 9), conversão de tipos (Capítulo 10), print() e f-strings (Capítulo 11).'
+    }},
+    { id:'problema', title:'O problema', type:'guided', data:{
+        problem:'Construir um programa que peça dois números ao usuário e uma operação desejada, calculando e exibindo o resultado.',
+        entrada:'Primeiro número (decimal). Segundo número (decimal). Operação desejada (texto: +, -, * ou /).',
+        processamento:'Realizar o cálculo correspondente à operação escolhida, entre os dois números informados.',
+        saida:'O resultado do cálculo, exibido de forma clara.',
+        algoritmo:['Perguntar o primeiro número.','Perguntar o segundo número.','Perguntar a operação desejada.','Calcular o resultado, de acordo com a operação escolhida.','Exibir o resultado.'],
+        simulation:null, code:null, runnable:false
+    }},
+    { id:'v1', title:'Primeira versão', type:'example', data:{
+        intro:'Vamos construir a calculadora em etapas pequenas, testando cada versão — começando por uma primeira versão simples, que ainda tem um bug proposital a ser encontrado no teste a seguir:',
+        problem:'Pedir os dois números e a operação, e calcular o resultado.',
+        algoritmo:null,
+        code:'# Pede os dois números, já convertidos para float\nprimeiro_numero = float(input("Digite o primeiro número: "))\nsegundo_numero = float(input("Digite o segundo número: "))\n\n# Pede a operação desejada\noperacao = input("Digite a operação (+, -, *, /): ")\n\n# Calcula o resultado, de acordo com a operação\nresultado = primeiro_numero + segundo_numero\n\n# Exibe o resultado\nprint(f"Resultado: {resultado}")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste1', title:'Teste', type:'table', data:{
+        headers:['Teste','Entrada','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','10, 5, <code>+</code>','15','15.0'],
+          ['2','10, 5, <code>-</code>','5','15.0 (errado!)'],
+          ['3','10, 5, <code>*</code>','50','15.0 (errado!)']
+        ]
+    }},
+    { id:'diagnostico', title:'Erro e depuração', type:'concept', data:{
+        paragraphs: [
+          'A primeira versão <b>sempre soma</b> os dois números, ignorando a operação escolhida pelo usuário — a variável operacao foi lida, mas nunca usada no cálculo. É necessário usar uma estrutura de decisão (if/elif/else) para escolher a operação correta.'
+        ],
+        glossary: null,
+        callout: null
+    }},
+    { id:'v2', title:'Melhoria', type:'example', data:{
+        intro:null,
+        problem:'Corrigir o bug, usando if/elif/else para escolher a operação correta.',
+        algoritmo:null,
+        code:'# Pede os dois números, já convertidos para float\nprimeiro_numero = float(input("Digite o primeiro número: "))\nsegundo_numero = float(input("Digite o segundo número: "))\n\n# Pede a operação desejada\noperacao = input("Digite a operação (+, -, *, /): ")\n\n# Calcula o resultado, de acordo com a operação escolhida\nif operacao == "+":\n    resultado = primeiro_numero + segundo_numero\nelif operacao == "-":\n    resultado = primeiro_numero - segundo_numero\nelif operacao == "*":\n    resultado = primeiro_numero * segundo_numero\nelif operacao == "/":\n    resultado = primeiro_numero / segundo_numero\nelse:\n    resultado = None\n\n# Exibe o resultado, tratando operação inválida\nif resultado is None:\n    print("Operação inválida.")\nelse:\n    print(f"Resultado: {resultado}")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste2', title:'Novo teste', type:'table', data:{
+        headers:['Teste','Entrada','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','10, 5, <code>+</code>','15.0','15.0'],
+          ['2','10, 5, <code>-</code>','5.0','5.0'],
+          ['3','10, 5, <code>*</code>','50.0','50.0'],
+          ['4','10, 5, <code>/</code>','2.0','2.0'],
+          ['5','10, 0, <code>/</code>','erro tratado','<code>ZeroDivisionError</code> (ainda não tratado!)']
+        ]
+    }},
+    { id:'vfinal', title:'Versão final', type:'resultmod', data:{
+        resultado:'A versão anterior ainda falha ao dividir por zero. A versão final trata esse caso, usando try/except (Capítulo 46).',
+        modIntro:null,
+        modCode:'# Pede os dois números, já convertidos para float\nprimeiro_numero = float(input("Digite o primeiro número: "))\nsegundo_numero = float(input("Digite o segundo número: "))\n\n# Pede a operação desejada\noperacao = input("Digite a operação (+, -, *, /): ")\n\n# Calcula o resultado, de acordo com a operação escolhida\ntry:\n    if operacao == "+":\n        resultado = primeiro_numero + segundo_numero\n    elif operacao == "-":\n        resultado = primeiro_numero - segundo_numero\n    elif operacao == "*":\n        resultado = primeiro_numero * segundo_numero\n    elif operacao == "/":\n        resultado = primeiro_numero / segundo_numero\n    else:\n        print("Operação inválida.")\n        resultado = None\n\n    if resultado is not None:\n        print(f"Resultado: {resultado:.2f}")\nexcept ZeroDivisionError:\n    print("Não é possível dividir por zero.")',
+        modResult:'Digite o primeiro número: 10\nDigite o segundo número: 5\nDigite a operação (+, -, *, /): *\nResultado: 50.00',
+        modNote:null,
+        runnable:true,
+        naoConfunda:null
+    }},
+    { id:'testesfinais', title:'Testes finais', type:'table', data:{
+        headers:['Teste','Entrada','Resultado esperado'],
+        rows:[
+          ['1','10, 5, <code>+</code>','Resultado: 15.00'],
+          ['2','10, 5, <code>-</code>','Resultado: 5.00'],
+          ['3','10, 5, <code>*</code>','Resultado: 50.00'],
+          ['4','10, 5, <code>/</code>','Resultado: 2.00'],
+          ['5','10, 0, <code>/</code>','Não é possível dividir por zero.'],
+          ['6','10, 5, <code>%</code>','Operação inválida.']
+        ]
+    }},
+    { id:'desafios', title:'Desafios de extensão', type:'exercises', data:{
+        level:'Desafios de extensão',
+        items:[
+          { kind:'text', prompt:'Adicione suporte às operações // (divisão inteira) e % (resto da divisão), vistas no Capítulo 7.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Transforme o programa em um laço while, permitindo várias operações seguidas, até que o usuário digite "sair".', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Reescreva a calculadora usando match/case (Capítulo 18), em vez de if/elif/else, comparando a legibilidade das duas versões.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Reorganize o código em uma função calcular(a, b, operacao), que devolve o resultado com return (Capítulo 35), separando o cálculo da interação com o usuário.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, seção 3.1.1: Números', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#numbers' },
+          { label:'Documentação Python — Tutorial, seção 8.3: Tratando Exceções', url:'https://docs.python.org/pt-br/3/tutorial/errors.html#handling-exceptions' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'projeto2',
+  title: 'Projeto 2 — Calculadora de média escolar',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Perguntar três notas do aluno.',
+          'Calcular a média aritmética das três notas.',
+          'Classificar o resultado como "Aprovado" (média ≥ 7), "Recuperação" (média entre 5 e 6,99) ou "Reprovado" (média < 5).'
+        ],
+        antes: 'Este projeto aplica: input() e conversão de tipos (Capítulos 9-10), operadores matemáticos (Capítulo 7), if/elif/else (Capítulos 14-16).'
+    }},
+    { id:'problema', title:'O problema', type:'guided', data:{
+        problem:'Construir um programa que calcule a média de um aluno a partir de suas notas, e classifique o resultado.',
+        entrada:'Três notas (números decimais, de 0 a 10).',
+        processamento:'Somar as três notas e dividir por três; comparar o resultado com as faixas de classificação.',
+        saida:'A média calculada e a classificação correspondente.',
+        algoritmo:['Perguntar a primeira nota.','Perguntar a segunda nota.','Perguntar a terceira nota.','Somar as três notas e dividir por três.','Se a média for maior ou igual a 7, classificar como "Aprovado".','Senão, se a média for maior ou igual a 5, classificar como "Recuperação".','Senão, classificar como "Reprovado".','Exibir a média e a classificação.'],
+        simulation:null, code:null, runnable:false
+    }},
+    { id:'v1', title:'Primeira versão', type:'example', data:{
+        intro:'Uma primeira versão simples, com um bug proposital de precedência de operadores — o mesmo tipo já visto no Capítulo 55:',
+        problem:'Pedir as três notas e calcular a média.',
+        algoritmo:null,
+        code:'# Pede as três notas, já convertidas para float\nnota1 = float(input("Digite a primeira nota: "))\nnota2 = float(input("Digite a segunda nota: "))\nnota3 = float(input("Digite a terceira nota: "))\n\n# Calcula a média\nmedia = nota1 + nota2 + nota3 / 3\n\nprint(f"Média: {media}")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste1', title:'Teste', type:'table', data:{
+        headers:['Teste','Entrada','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','8, 7, 9','8.0','20.0 (errado!)']
+        ]
+    }},
+    { id:'diagnostico', title:'Erro e depuração', type:'concept', data:{
+        paragraphs: [
+          'O erro é o mesmo já visto no Capítulo 55: a fórmula nota1 + nota2 + nota3 / 3 divide apenas nota3 por 3, por causa da precedência de operadores (Capítulo 7) — faltam parênteses ao redor da soma inteira.'
+        ],
+        glossary: null,
+        callout: null
+    }},
+    { id:'v2', title:'Melhoria', type:'example', data:{
+        intro:null,
+        problem:'Corrigir a fórmula da média, com parênteses.',
+        algoritmo:null,
+        code:'nota1 = float(input("Digite a primeira nota: "))\nnota2 = float(input("Digite a segunda nota: "))\nnota3 = float(input("Digite a terceira nota: "))\n\n# Corrige a fórmula da média, com parênteses\nmedia = (nota1 + nota2 + nota3) / 3\n\nprint(f"Média: {media:.2f}")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste2', title:'Novo teste', type:'table', data:{
+        headers:['Teste','Entrada','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','8, 7, 9','8.00','8.00']
+        ]
+    }},
+    { id:'vfinal', title:'Versão final', type:'resultmod', data:{
+        resultado:'A média agora está correta, mas o programa ainda não classifica o resultado. A versão final adiciona a classificação em "Aprovado", "Recuperação" ou "Reprovado".',
+        modIntro:null,
+        modCode:'# Pede as três notas, já convertidas para float\nnota1 = float(input("Digite a primeira nota: "))\nnota2 = float(input("Digite a segunda nota: "))\nnota3 = float(input("Digite a terceira nota: "))\n\n# Calcula a média, com parênteses garantindo a ordem correta\nmedia = (nota1 + nota2 + nota3) / 3\n\n# Classifica o resultado\nif media >= 7:\n    classificacao = "Aprovado"\nelif media >= 5:\n    classificacao = "Recuperação"\nelse:\n    classificacao = "Reprovado"\n\n# Exibe o resultado final\nprint(f"Média: {media:.2f}")\nprint(f"Situação: {classificacao}")',
+        modResult:'Digite a primeira nota: 8\nDigite a segunda nota: 7\nDigite a terceira nota: 9\nMédia: 8.00\nSituação: Aprovado',
+        modNote:null,
+        runnable:true,
+        naoConfunda:null
+    }},
+    { id:'testesfinais', title:'Testes finais', type:'table', data:{
+        headers:['Teste','Notas','Média esperada','Situação esperada'],
+        rows:[
+          ['1','8, 7, 9','8.00','Aprovado'],
+          ['2','5, 6, 5','5.33','Recuperação'],
+          ['3','3, 4, 2','3.00','Reprovado'],
+          ['4','7, 7, 7','7.00','Aprovado (limite exato)'],
+          ['5','5, 5, 5','5.00','Recuperação (limite exato)']
+        ]
+    }},
+    { id:'desafios', title:'Desafios de extensão', type:'exercises', data:{
+        level:'Desafios de extensão',
+        items:[
+          { kind:'text', prompt:'Adicione validação para impedir notas fora do intervalo de 0 a 10, usando if e repetindo a pergunta até um valor válido (combine com while, Capítulo 20).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Transforme o cálculo em uma função calcular_media(n1, n2, n3), que devolve o valor com return (Capítulo 35).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Modifique o programa para aceitar uma quantidade variável de notas, usando uma lista (Capítulo 25) e um laço for para somá-las.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Adicione tratamento com try/except (Capítulo 46) para o caso de o usuário digitar um valor não numérico.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, seção 3.1.1: Números (precedência de operadores)', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#numbers' },
+          { label:'Documentação Python — Tutorial, seção 4.1: Instrução if', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#if-statements' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'projeto3',
+  title: 'Projeto 3 — Tabuada',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Perguntar ao usuário qual número ele quer a tabuada.',
+          'Exibir a tabuada desse número, de 1 até 10.',
+          'Cada linha deve mostrar a multiplicação completa (ex.: 7 x 3 = 21).'
+        ],
+        antes: 'Este projeto aplica: input() e conversão de tipos (Capítulos 9-10), for e range() (Capítulos 21-22), f-strings (Capítulo 11).'
+    }},
+    { id:'problema', title:'O problema', type:'guided', data:{
+        problem:'Construir um programa que exiba a tabuada completa (de 1 a 10) de um número escolhido pelo usuário.',
+        entrada:'O número desejado (inteiro).',
+        processamento:'Multiplicar o número escolhido por cada valor de 1 a 10, um por vez.',
+        saida:'Dez linhas, cada uma com uma multiplicação e seu resultado.',
+        algoritmo:['Perguntar o número desejado.','Para cada multiplicador de 1 a 10:','    Calcular o número multiplicado pelo multiplicador atual.','    Exibir a linha formatada.'],
+        simulation:null, code:null, runnable:false
+    }},
+    { id:'v1', title:'Primeira versão', type:'example', data:{
+        intro:'Uma primeira versão com um erro clássico de "off-by-one" (Capítulo 22):',
+        problem:'Pedir o número e exibir sua tabuada, de 1 a 10.',
+        algoritmo:null,
+        code:'# Pede o número desejado\nnumero = int(input("Digite um número para ver a tabuada: "))\n\n# Percorre os multiplicadores de 1 a 10\nfor multiplicador in range(1, 10):\n    resultado = numero * multiplicador\n    print(f"{numero} x {multiplicador} = {resultado}")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste1', title:'Teste', type:'table', data:{
+        headers:['Teste','Entrada','Última linha esperada','Última linha obtida'],
+        rows:[
+          ['1','5','<code>5 x 10 = 50</code>','<code>5 x 9 = 45</code> (errado!)']
+        ]
+    }},
+    { id:'diagnostico', title:'Erro e depuração', type:'concept', data:{
+        paragraphs: [
+          'A tabuada exibida vai apenas até o multiplicador 9, não 10 — um erro de "off-by-one" clássico (Capítulo 22): range(1, 10) gera os números de 1 a 9, excluindo o 10, que é o valor final desejado.'
+        ],
+        glossary: null,
+        callout: null
+    }},
+    { id:'v2', title:'Melhoria', type:'example', data:{
+        intro:null,
+        problem:'Corrigir o range para incluir o multiplicador 10.',
+        algoritmo:null,
+        code:'numero = int(input("Digite um número para ver a tabuada: "))\n\n# Corrige o range para incluir o multiplicador 10\nfor multiplicador in range(1, 11):\n    resultado = numero * multiplicador\n    print(f"{numero} x {multiplicador} = {resultado}")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste2', title:'Novo teste', type:'table', data:{
+        headers:['Teste','Entrada','Última linha esperada','Última linha obtida'],
+        rows:[
+          ['1','5','<code>5 x 10 = 50</code>','<code>5 x 10 = 50</code>']
+        ]
+    }},
+    { id:'vfinal', title:'Versão final', type:'resultmod', data:{
+        resultado:'A tabuada agora está correta. A versão final adiciona um cabeçalho e uma validação simples de entrada, usando try/except (Capítulo 46).',
+        modIntro:null,
+        modCode:'try:\n    numero = int(input("Digite um número para ver a tabuada: "))\n\n    print(f"Tabuada do {numero}:")\n    for multiplicador in range(1, 11):\n        resultado = numero * multiplicador\n        print(f"{numero} x {multiplicador} = {resultado}")\nexcept ValueError:\n    print("Por favor, digite um número inteiro válido.")',
+        modResult:'Digite um número para ver a tabuada: 7\nTabuada do 7:\n7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70',
+        modNote:null,
+        runnable:true,
+        naoConfunda:null
+    }},
+    { id:'testesfinais', title:'Testes finais', type:'table', data:{
+        headers:['Teste','Entrada','Resultado esperado'],
+        rows:[
+          ['1','5','tabuada do 5, de <code>5 x 1 = 5</code> até <code>5 x 10 = 50</code>'],
+          ['2','0','tabuada do 0, todos os resultados 0'],
+          ['3','<code>abc</code>','"Por favor, digite um número inteiro válido."']
+        ]
+    }},
+    { id:'desafios', title:'Desafios de extensão', type:'exercises', data:{
+        level:'Desafios de extensão',
+        items:[
+          { kind:'text', prompt:'Modifique o programa para exibir as tabuadas de 1 a 10 (todas de uma vez), usando laços aninhados (Capítulo 24).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Reorganize o cálculo em uma função exibir_tabuada(numero), chamada pelo programa principal (Capítulo 33).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Adicione uma opção para o usuário escolher até qual multiplicador deseja ver a tabuada (em vez de sempre até 10).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Salve a tabuada gerada em um arquivo de texto, usando with open() (Capítulo 41), além de exibi-la na tela.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, seção 4.3: A função range()', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#the-range-function' },
+          { label:'Documentação Python — Tutorial, seção 4.2: A instrução for', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#for-statements' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'projeto4',
+  title: 'Projeto 4 — Jogo de adivinhação',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Sortear um número aleatório entre 1 e 100.',
+          'Permitir tentativas ilimitadas, uma por vez.',
+          'Após cada tentativa, informar se o palpite foi muito alto, muito baixo, ou correto.',
+          'Encerrar o jogo assim que o número for acertado, informando quantas tentativas foram usadas.'
+        ],
+        antes: 'Este projeto aplica: módulo random (Capítulo 38), while (Capítulo 20), if/elif/else (Capítulos 14-16), break (Capítulo 23), conversão de tipos e tratamento de exceções (Capítulos 10 e 46).'
+    }},
+    { id:'problema', title:'O problema', type:'guided', data:{
+        problem:'Construir um jogo em que o computador sorteia um número secreto, e o jogador tenta adivinhá-lo, recebendo dicas de "muito alto" ou "muito baixo" a cada tentativa, até acertar.',
+        entrada:'Os palpites do jogador, um por vez (números inteiros).',
+        processamento:'Comparar cada palpite com o número secreto sorteado, e decidir a dica apropriada.',
+        saida:'Mensagens de dica a cada tentativa, e uma mensagem final de vitória com a contagem de tentativas.',
+        algoritmo:['Sortear um número secreto entre 1 e 100.','Iniciar um contador de tentativas em 0.','Repetir:','    Perguntar o palpite do jogador.','    Aumentar o contador de tentativas.','    Se o palpite for igual ao número secreto, informar que acertou e encerrar o jogo.','    Se o palpite for maior, informar "muito alto".','    Se o palpite for menor, informar "muito baixo".'],
+        simulation:null, code:null, runnable:false
+    }},
+    { id:'v1', title:'Primeira versão', type:'example', data:{
+        intro:'Uma primeira versão que só permite UMA tentativa — o requisito pede tentativas ilimitadas:',
+        problem:'Sortear o número e comparar com um único palpite do jogador.',
+        algoritmo:null,
+        code:'import random\n\nnumero_secreto = random.randint(1, 100)\n\npalpite = int(input("Digite um palpite entre 1 e 100: "))\n\nif palpite == numero_secreto:\n    print("Você acertou!")\nelif palpite > numero_secreto:\n    print("Muito alto!")\nelse:\n    print("Muito baixo!")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste1', title:'Teste', type:'table', data:{
+        headers:['Teste','Ação','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','Jogador erra o palpite','jogo deveria permitir nova tentativa','jogo termina após 1 tentativa (errado!)']
+        ]
+    }},
+    { id:'diagnostico', title:'Erro e depuração', type:'concept', data:{
+        paragraphs: [
+          'A primeira versão só permite UMA tentativa — o requisito pede tentativas ilimitadas, até o jogador acertar. É necessário envolver a lógica de tentativa em um laço de repetição, que só termina quando o número é acertado.'
+        ],
+        glossary: null,
+        callout: null
+    }},
+    { id:'v2', title:'Melhoria', type:'example', data:{
+        intro:null,
+        problem:'Envolver a lógica em um laço while, que repete até o jogador acertar.',
+        algoritmo:null,
+        code:'import random\n\nnumero_secreto = random.randint(1, 100)\n\nacertou = False\nwhile not acertou:\n    palpite = int(input("Digite um palpite entre 1 e 100: "))\n\n    if palpite == numero_secreto:\n        print("Você acertou!")\n        acertou = True\n    elif palpite > numero_secreto:\n        print("Muito alto!")\n    else:\n        print("Muito baixo!")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste2', title:'Novo teste', type:'table', data:{
+        headers:['Teste','Ação','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','Jogador erra, depois acerta','jogo repete até acertar','funciona corretamente']
+        ]
+    }},
+    { id:'vfinal', title:'Versão final', type:'resultmod', data:{
+        resultado:'O jogo agora repete corretamente, mas ainda falta contar e exibir a quantidade de tentativas usadas, e tratar entradas inválidas.',
+        modIntro:null,
+        modCode:'import random\n\n# Sorteia o número secreto entre 1 e 100\nnumero_secreto = random.randint(1, 100)\n\n# Contador de tentativas\ntentativas = 0\nacertou = False\n\nprint("Adivinhe o número secreto entre 1 e 100!")\n\nwhile not acertou:\n    try:\n        palpite = int(input("Digite seu palpite: "))\n    except ValueError:\n        print("Por favor, digite um número inteiro válido.")\n        continue\n\n    tentativas = tentativas + 1\n\n    if palpite == numero_secreto:\n        print(f"Parabéns! Você acertou em {tentativas} tentativa(s)!")\n        acertou = True\n    elif palpite > numero_secreto:\n        print("Muito alto! Tente novamente.")\n    else:\n        print("Muito baixo! Tente novamente.")',
+        modResult:'Adivinhe o número secreto entre 1 e 100!\nDigite seu palpite: 50\nMuito alto! Tente novamente.\nDigite seu palpite: 25\nMuito baixo! Tente novamente.\nDigite seu palpite: 42\nParabéns! Você acertou em 3 tentativa(s)!',
+        modNote:'(Exemplo com número secreto = 42.)',
+        runnable:true,
+        naoConfunda:null
+    }},
+    { id:'testesfinais', title:'Testes finais', type:'table', data:{
+        headers:['Teste','Situação','Resultado esperado'],
+        rows:[
+          ['1','Acerta na primeira tentativa','"Parabéns! Você acertou em 1 tentativa(s)!"'],
+          ['2','Erra várias vezes antes de acertar','dicas corretas a cada tentativa, contador correto'],
+          ['3','Digita um texto não numérico','"Por favor, digite um número inteiro válido.", sem interromper o jogo']
+        ]
+    }},
+    { id:'desafios', title:'Desafios de extensão', type:'exercises', data:{
+        level:'Desafios de extensão',
+        items:[
+          { kind:'text', prompt:'Adicione um limite máximo de tentativas (por exemplo, 10), exibindo o número secreto e encerrando o jogo caso o limite seja atingido sem acerto (use break, Capítulo 23).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Reorganize o jogo em uma função jogar(), chamada pelo programa principal, e permita jogar novamente ao final, perguntando ao usuário.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Adicione diferentes níveis de dificuldade, mudando o intervalo do número secreto (por exemplo, 1 a 50 para "fácil", 1 a 500 para "difícil").', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Salve, em um arquivo pontuacoes.json (Capítulo 42), o histórico de quantas tentativas cada partida levou.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Referência da biblioteca padrão — módulo random', url:'https://docs.python.org/pt-br/3/library/random.html' },
+          { label:'Documentação Python — Tutorial, seção 8.3: Tratando Exceções', url:'https://docs.python.org/pt-br/3/tutorial/errors.html#handling-exceptions' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'projeto5',
+  title: 'Projeto 5 — Cadastro de alunos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Permitir cadastrar múltiplos alunos, cada um com nome e nota.',
+          'Listar todos os alunos cadastrados, numerados.',
+          'Calcular e exibir a média geral da turma.'
+        ],
+        antes: 'Este projeto aplica: listas e dicionários (Capítulos 25 e 30), estruturas de dados combinadas (Capítulo 31), funções (Parte VI), for e enumerate() (Capítulos 21 e 27).'
+    }},
+    { id:'problema', title:'O problema', type:'guided', data:{
+        problem:'Construir um sistema simples de cadastro de alunos, permitindo adicionar alunos (nome e nota), listar todos os cadastrados, e calcular a média da turma.',
+        entrada:'Nome e nota de cada aluno, informados pelo usuário.',
+        processamento:'Armazenar cada aluno como um dicionário, dentro de uma lista; percorrer essa lista para listar os alunos e calcular a média.',
+        saida:'A lista de alunos cadastrados, e a média da turma.',
+        algoritmo:['Criar uma lista vazia para os alunos.','Perguntar quantos alunos serão cadastrados.','Para cada aluno:','    Perguntar o nome.','    Perguntar a nota.','    Guardar nome e nota em um dicionário, adicionado à lista.','Exibir a lista de alunos cadastrados, numerada.','Calcular a média de todas as notas.','Exibir a média da turma.'],
+        simulation:null, code:null, runnable:false
+    }},
+    { id:'v1', title:'Primeira versão', type:'example', data:{
+        intro:'Uma primeira versão que cadastra e lista os alunos, mas ainda não atende a todos os requisitos:',
+        problem:'Cadastrar alunos em uma lista de dicionários, e listá-los.',
+        algoritmo:null,
+        code:'alunos = []\n\nquantidade = int(input("Quantos alunos deseja cadastrar? "))\n\nfor _ in range(quantidade):\n    nome = input("Nome do aluno: ")\n    nota = float(input("Nota do aluno: "))\n    alunos.append({"nome": nome, "nota": nota})\n\nfor aluno in alunos:\n    print(aluno["nome"], aluno["nota"])',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste1', title:'Teste', type:'table', data:{
+        headers:['Teste','Ação','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','Cadastrar 2 alunos','listar numerados + exibir média da turma','lista sem numeração, sem média (faltando requisitos)']
+        ]
+    }},
+    { id:'diagnostico', title:'Erro e depuração', type:'concept', data:{
+        paragraphs: [
+          'A primeira versão cadastra e lista os alunos, mas NÃO NUMERA a lista (um dos requisitos) e NÃO CALCULA a média da turma (outro requisito explícito do projeto).'
+        ],
+        glossary: null,
+        callout: null
+    }},
+    { id:'v2', title:'Melhoria', type:'example', data:{
+        intro:null,
+        problem:'Numerar a listagem com enumerate(), e calcular a média da turma.',
+        algoritmo:null,
+        code:'alunos = []\n\nquantidade = int(input("Quantos alunos deseja cadastrar? "))\n\nfor _ in range(quantidade):\n    nome = input("Nome do aluno: ")\n    nota = float(input("Nota do aluno: "))\n    alunos.append({"nome": nome, "nota": nota})\n\n# Lista os alunos numerados\nfor indice, aluno in enumerate(alunos):\n    print(f"{indice + 1}. {aluno[\'nome\']} - {aluno[\'nota\']}")\n\n# Calcula a média da turma\nsoma_notas = 0\nfor aluno in alunos:\n    soma_notas = soma_notas + aluno["nota"]\nmedia_turma = soma_notas / len(alunos)\n\nprint(f"Média da turma: {media_turma:.2f}")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste2', title:'Novo teste', type:'table', data:{
+        headers:['Teste','Ação','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','Cadastrar 2 alunos (notas 8 e 6)','lista numerada + média 7.00','lista numerada + média 7.00']
+        ]
+    }},
+    { id:'vfinal', title:'Versão final', type:'resultmod', data:{
+        resultado:'O programa agora atende a todos os requisitos, mas mistura toda a lógica em um único bloco de código. A versão final organiza o programa em funções.',
+        modIntro:null,
+        modCode:'def cadastrar_alunos(quantidade):\n    """Cadastra a quantidade informada de alunos e devolve a lista."""\n    alunos = []\n    for _ in range(quantidade):\n        nome = input("Nome do aluno: ")\n        nota = float(input("Nota do aluno: "))\n        alunos.append({"nome": nome, "nota": nota})\n    return alunos\n\ndef listar_alunos(alunos):\n    """Exibe a lista de alunos cadastrados, numerada."""\n    for indice, aluno in enumerate(alunos):\n        print(f"{indice + 1}. {aluno[\'nome\']} - {aluno[\'nota\']}")\n\ndef calcular_media_turma(alunos):\n    """Calcula e devolve a média das notas de todos os alunos."""\n    soma_notas = 0\n    for aluno in alunos:\n        soma_notas = soma_notas + aluno["nota"]\n    return soma_notas / len(alunos)\n\n# Programa principal\nquantidade = int(input("Quantos alunos deseja cadastrar? "))\nalunos = cadastrar_alunos(quantidade)\n\nprint("\\nAlunos cadastrados:")\nlistar_alunos(alunos)\n\nmedia_turma = calcular_media_turma(alunos)\nprint(f"\\nMédia da turma: {media_turma:.2f}")',
+        modResult:'Quantos alunos deseja cadastrar? 2\nNome do aluno: Ana\nNota do aluno: 8.5\nNome do aluno: Bruno\nNota do aluno: 6.0\n\nAlunos cadastrados:\n1. Ana - 8.5\n2. Bruno - 6.0\n\nMédia da turma: 7.25',
+        modNote:'(Exemplo com 2 alunos: Ana/8.5, Bruno/6.0.)',
+        runnable:true,
+        naoConfunda:null
+    }},
+    { id:'testesfinais', title:'Testes finais', type:'table', data:{
+        headers:['Teste','Situação','Resultado esperado'],
+        rows:[
+          ['1','Cadastrar 1 aluno','lista com 1 item, média igual à nota do aluno'],
+          ['2','Cadastrar 3 alunos com notas diferentes','lista numerada correta, média calculada corretamente'],
+          ['3','Cadastrar 0 alunos','<code>ZeroDivisionError</code> ao calcular a média (ponto de melhoria futura)']
+        ]
+    }},
+    { id:'desafios', title:'Desafios de extensão', type:'exercises', data:{
+        level:'Desafios de extensão',
+        items:[
+          { kind:'text', prompt:'Trate o caso de quantidade = 0 no cálculo da média, evitando o ZeroDivisionError identificado no teste 3 (Capítulo 46).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Adicione uma função listar_aprovados(alunos), que exiba apenas os alunos com nota maior ou igual a 7.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Salve a lista de alunos cadastrados em um arquivo alunos.json (Capítulo 42), e permita recarregá-la em execuções futuras do programa.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Reescreva o projeto usando uma classe Aluno (Capítulo 48), em vez de dicionários, comparando as duas abordagens.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, seção 5.1: Mais sobre Listas', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#more-on-lists' },
+          { label:'Documentação Python — Tutorial, seção 5.5: Dicionários', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#dictionaries' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'projeto6',
+  title: 'Projeto 6 — Lista de tarefas',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Exibir um menu com as opções: adicionar tarefa, listar tarefas, concluir tarefa, sair.',
+          'Persistir as tarefas em um arquivo (tarefas.json), carregando-as ao iniciar o programa.',
+          'Marcar tarefas como concluídas, sem removê-las da lista.'
+        ],
+        antes: 'Este projeto aplica: funções (Parte VI), listas (Capítulo 25), arquivos (Capítulo 41), JSON (Capítulo 42), while (Capítulo 20), match (Capítulo 18). Como usa arquivos, cada bloco "Executar" cria seu próprio tarefas.json dentro do ambiente isolado deste navegador.'
+    }},
+    { id:'problema', title:'O problema', type:'guided', data:{
+        problem:'Construir um sistema de lista de tarefas com menu, que permita adicionar, listar, concluir e salvar tarefas em um arquivo, para que não se percam ao fechar o programa.',
+        entrada:'Opções do menu, e descrições de novas tarefas, digitadas pelo usuário.',
+        processamento:'Manter uma lista de dicionários (cada um com "descricao" e "concluida"), atualizando-a conforme as ações do usuário, e salvando-a em disco.',
+        saida:'O menu interativo, a lista de tarefas exibida formatada, e o arquivo tarefas.json atualizado.',
+        algoritmo:['Carregar as tarefas salvas anteriormente (se existirem).','Repetir até o usuário escolher sair:','    Exibir o menu de opções.','    Ler a opção escolhida.','    Executar a ação correspondente (adicionar, listar, concluir).','    Salvar as tarefas atualizadas no arquivo.','Encerrar o programa.'],
+        simulation:null, code:null, runnable:false
+    }},
+    { id:'v1', title:'Primeira versão', type:'example', data:{
+        intro:'Uma primeira versão que guarda as tarefas apenas na memória — perdendo tudo ao encerrar o programa:',
+        problem:'Criar o menu básico, com adicionar e listar tarefas em memória.',
+        algoritmo:null,
+        code:'tarefas = []\n\nwhile True:\n    print("1. Adicionar tarefa")\n    print("2. Listar tarefas")\n    print("3. Sair")\n    opcao = input("Escolha uma opção: ")\n\n    if opcao == "1":\n        descricao = input("Descrição da tarefa: ")\n        tarefas.append({"descricao": descricao, "concluida": False})\n    elif opcao == "2":\n        for tarefa in tarefas:\n            print(tarefa["descricao"])\n    elif opcao == "3":\n        break',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste1', title:'Teste', type:'table', data:{
+        headers:['Teste','Ação','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','Adicionar, sair, reabrir o programa','tarefas deveriam continuar salvas','lista vazia ao reabrir (errado!)']
+        ]
+    }},
+    { id:'diagnostico', title:'Erro e depuração', type:'concept', data:{
+        paragraphs: [
+          'A primeira versão guarda as tarefas apenas na MEMÓRIA (a lista tarefas), que é perdida assim que o programa termina. Falta persistir os dados em um arquivo, como especificado nos requisitos — e falta também a opção de CONCLUIR uma tarefa.'
+        ],
+        glossary: null,
+        callout: null
+    }},
+    { id:'v2', title:'Melhoria', type:'example', data:{
+        intro:null,
+        problem:'Persistir as tarefas em tarefas.json, e adicionar a opção de concluir uma tarefa.',
+        algoritmo:null,
+        code:'import json\n\ndef carregar_tarefas():\n    try:\n        with open("tarefas.json", "r") as arquivo:\n            return json.load(arquivo)\n    except FileNotFoundError:\n        return []\n\ndef salvar_tarefas(tarefas):\n    with open("tarefas.json", "w") as arquivo:\n        json.dump(tarefas, arquivo, indent=4)\n\ntarefas = carregar_tarefas()\n\nwhile True:\n    print("1. Adicionar tarefa")\n    print("2. Listar tarefas")\n    print("3. Concluir tarefa")\n    print("4. Sair")\n    opcao = input("Escolha uma opção: ")\n\n    if opcao == "1":\n        descricao = input("Descrição da tarefa: ")\n        tarefas.append({"descricao": descricao, "concluida": False})\n        salvar_tarefas(tarefas)\n    elif opcao == "2":\n        for indice, tarefa in enumerate(tarefas):\n            status = "Concluída" if tarefa["concluida"] else "Pendente"\n            print(f"{indice + 1}. [{status}] {tarefa[\'descricao\']}")\n    elif opcao == "3":\n        numero = int(input("Número da tarefa a concluir: "))\n        tarefas[numero - 1]["concluida"] = True\n        salvar_tarefas(tarefas)\n    elif opcao == "4":\n        break',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste2', title:'Novo teste', type:'table', data:{
+        headers:['Teste','Ação','Resultado esperado','Resultado obtido'],
+        rows:[
+          ['1','Adicionar, sair, reabrir o programa','tarefas continuam salvas','funciona corretamente'],
+          ['2','Concluir a tarefa 1','status muda para "Concluída"','funciona corretamente']
+        ]
+    }},
+    { id:'vfinal', title:'Versão final', type:'resultmod', data:{
+        resultado:'O programa atende a todos os requisitos, mas usa if/elif sem organização em funções separadas, e sem tratamento de erros de entrada. A versão final organiza tudo em funções e usa match/case.',
+        modIntro:null,
+        modCode:'import json\n\ndef carregar_tarefas():\n    """Carrega as tarefas salvas, ou devolve uma lista vazia se o arquivo não existir."""\n    try:\n        with open("tarefas.json", "r") as arquivo:\n            return json.load(arquivo)\n    except FileNotFoundError:\n        return []\n\ndef salvar_tarefas(tarefas):\n    """Salva a lista de tarefas no arquivo tarefas.json."""\n    with open("tarefas.json", "w") as arquivo:\n        json.dump(tarefas, arquivo, indent=4)\n\ndef adicionar_tarefa(tarefas):\n    descricao = input("Descrição da tarefa: ")\n    tarefas.append({"descricao": descricao, "concluida": False})\n    salvar_tarefas(tarefas)\n    print("Tarefa adicionada!")\n\ndef listar_tarefas(tarefas):\n    if not tarefas:\n        print("Nenhuma tarefa cadastrada.")\n        return\n    for indice, tarefa in enumerate(tarefas):\n        status = "Concluída" if tarefa["concluida"] else "Pendente"\n        print(f"{indice + 1}. [{status}] {tarefa[\'descricao\']}")\n\ndef concluir_tarefa(tarefas):\n    listar_tarefas(tarefas)\n    try:\n        numero = int(input("Número da tarefa a concluir: "))\n        tarefas[numero - 1]["concluida"] = True\n        salvar_tarefas(tarefas)\n        print("Tarefa concluída!")\n    except (ValueError, IndexError):\n        print("Número de tarefa inválido.")\n\n# Programa principal\ntarefas = carregar_tarefas()\n\nwhile True:\n    print("\\n1. Adicionar tarefa")\n    print("2. Listar tarefas")\n    print("3. Concluir tarefa")\n    print("4. Sair")\n\n    match input("Escolha uma opção: "):\n        case "1":\n            adicionar_tarefa(tarefas)\n        case "2":\n            listar_tarefas(tarefas)\n        case "3":\n            concluir_tarefa(tarefas)\n        case "4":\n            print("Até logo!")\n            break\n        case _:\n            print("Opção inválida.")',
+        modResult:'1. Adicionar tarefa\n2. Listar tarefas\n3. Concluir tarefa\n4. Sair\nEscolha uma opção: 1\nDescrição da tarefa: Estudar Python\nTarefa adicionada!\n\n1. Adicionar tarefa\n2. Listar tarefas\n3. Concluir tarefa\n4. Sair\nEscolha uma opção: 2\n1. [Pendente] Estudar Python',
+        modNote:null,
+        runnable:true,
+        naoConfunda:null
+    }},
+    { id:'testesfinais', title:'Testes finais', type:'table', data:{
+        headers:['Teste','Situação','Resultado esperado'],
+        rows:[
+          ['1','Adicionar tarefa e listar','tarefa aparece como "Pendente"'],
+          ['2','Concluir a tarefa e listar novamente','tarefa aparece como "Concluída"'],
+          ['3','Tentar concluir um número de tarefa inexistente','"Número de tarefa inválido."'],
+          ['4','Fechar e reabrir o programa','tarefas continuam salvas']
+        ]
+    }},
+    { id:'desafios', title:'Desafios de extensão', type:'exercises', data:{
+        level:'Desafios de extensão',
+        items:[
+          { kind:'text', prompt:'Adicione uma opção para remover tarefas permanentemente, usando .pop() (Capítulo 26).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Adicione uma opção para listar apenas as tarefas pendentes, ou apenas as concluídas.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Reescreva o projeto usando uma classe Tarefa e uma classe ListaDeTarefas (Parte X), em vez de listas de dicionários.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Adicione data de criação a cada tarefa, usando o módulo datetime (Capítulo 38).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, seção 7.2: Leitura e Escrita de Arquivos', url:'https://docs.python.org/pt-br/3/tutorial/inputoutput.html#reading-and-writing-files' },
+          { label:'Documentação Python — Tutorial, seção 7.3: Salvando Dados Estruturados com json', url:'https://docs.python.org/pt-br/3/tutorial/inputoutput.html#saving-structured-data-with-json' },
+          { label:'Documentação Python — Tutorial, seção 4.2: A instrução match', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#match-statements' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'projeto7',
+  title: 'Projeto 7 — Sistema de vendas básico',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Menu principal com as opções: clientes, produtos, vendas, relatório, sair.',
+          'Cadastrar e listar clientes (nome, telefone) e produtos (nome, preço, estoque).',
+          'Registrar uma venda, escolhendo cliente e produto, reduzindo o estoque e calculando o total.',
+          'Exibir um relatório com o total vendido.'
+        ],
+        antes: 'Este projeto aplica praticamente tudo o que foi visto na apostila: funções, listas, dicionários, laços, condições, arquivos, JSON e tratamento de erros (Partes III a IX). Por ser um projeto maior, ele é construído em ETAPAS PEQUENAS, seguindo o fluxo MENU → CLIENTES → PRODUTOS → VENDAS → RELATÓRIO, cada uma testada antes de avançar para a próxima.'
+    }},
+    { id:'problema', title:'O problema', type:'guided', data:{
+        problem:'Construir um sistema simples de vendas para uma pequena loja, com menu, cadastro de clientes, cadastro de produtos, registro de vendas, cálculo de totais e um relatório final.',
+        entrada:'Dados de clientes, produtos e vendas, digitados pelo usuário através do menu.',
+        processamento:'Manter listas de dicionários para clientes, produtos e vendas; associar vendas a clientes e produtos já cadastrados; atualizar o estoque a cada venda.',
+        saida:'Menus interativos, confirmações de cadastro, e um relatório final com o total vendido.',
+        algoritmo:['Exibir o menu principal.','De acordo com a opção escolhida: ir para o submenu de clientes, de produtos, registrar uma venda, ou exibir o relatório.','Repetir até a opção "sair" ser escolhida.'],
+        simulation:null, code:null, runnable:false
+    }},
+    { id:'etapa1', title:'Etapa 1 — Menu principal', type:'example', data:{
+        intro:'Objetivo desta etapa: criar apenas a estrutura do menu, sem nenhuma funcionalidade ainda, para confirmar que a navegação básica funciona.',
+        problem:'Criar o menu principal com match/case, exibindo placeholders para cada opção.',
+        algoritmo:null,
+        code:'def exibir_menu():\n    print("\\n=== Sistema de Vendas ===")\n    print("1. Clientes")\n    print("2. Produtos")\n    print("3. Registrar venda")\n    print("4. Relatório")\n    print("5. Sair")\n\nwhile True:\n    exibir_menu()\n    opcao = input("Escolha uma opção: ")\n\n    match opcao:\n        case "1":\n            print("(clientes ainda não implementado)")\n        case "2":\n            print("(produtos ainda não implementado)")\n        case "3":\n            print("(vendas ainda não implementado)")\n        case "4":\n            print("(relatório ainda não implementado)")\n        case "5":\n            print("Até logo!")\n            break\n        case _:\n            print("Opção inválida.")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'teste-etapa1', title:'Teste da Etapa 1', type:'table', data:{
+        headers:['Teste','Entrada','Resultado esperado'],
+        rows:[
+          ['1','<code>5</code>','Exibe "Até logo!" e encerra'],
+          ['2','<code>9</code>','Exibe "Opção inválida." e volta ao menu']
+        ]
+    }},
+    { id:'etapa2', title:'Etapa 2 — Clientes', type:'example', data:{
+        intro:'O menu funciona corretamente — vamos avançar. Objetivo desta etapa: implementar o cadastro e a listagem de clientes, substituindo o placeholder da opção 1. (Este bloco define apenas as funções desta etapa, isoladas — por isso não é executável aqui; a integração completa aparece na Versão final.)',
+        problem:'Definir cadastrar_cliente(), listar_clientes() e menu_clientes().',
+        algoritmo:null,
+        code:'clientes = []\n\ndef cadastrar_cliente():\n    nome = input("Nome do cliente: ")\n    telefone = input("Telefone do cliente: ")\n    clientes.append({"nome": nome, "telefone": telefone})\n    print("Cliente cadastrado!")\n\ndef listar_clientes():\n    if not clientes:\n        print("Nenhum cliente cadastrado.")\n        return\n    for indice, cliente in enumerate(clientes):\n        print(f"{indice + 1}. {cliente[\'nome\']} - {cliente[\'telefone\']}")\n\ndef menu_clientes():\n    print("1. Cadastrar cliente")\n    print("2. Listar clientes")\n    opcao = input("Escolha uma opção: ")\n    if opcao == "1":\n        cadastrar_cliente()\n    elif opcao == "2":\n        listar_clientes()',
+        codeNote:null,
+        runnable:false
+    }},
+    { id:'teste-etapa2', title:'Teste da Etapa 2', type:'table', data:{
+        headers:['Teste','Ação','Resultado esperado'],
+        rows:[
+          ['1','Cadastrar "Ana", "11999990000" e listar','exibe "1. Ana - 11999990000"'],
+          ['2','Listar sem cadastrar nenhum cliente','exibe "Nenhum cliente cadastrado."']
+        ]
+    }},
+    { id:'etapa3', title:'Etapa 3 — Produtos', type:'example', data:{
+        intro:'Funcionando corretamente — vamos avançar para a etapa de produtos. Objetivo: implementar o cadastro e a listagem de produtos, com nome, preço e estoque.',
+        problem:'Definir cadastrar_produto(), listar_produtos() e menu_produtos().',
+        algoritmo:null,
+        code:'produtos = []\n\ndef cadastrar_produto():\n    nome = input("Nome do produto: ")\n    preco = float(input("Preço do produto: "))\n    estoque = int(input("Quantidade em estoque: "))\n    produtos.append({"nome": nome, "preco": preco, "estoque": estoque})\n    print("Produto cadastrado!")\n\ndef listar_produtos():\n    if not produtos:\n        print("Nenhum produto cadastrado.")\n        return\n    for indice, produto in enumerate(produtos):\n        print(f"{indice + 1}. {produto[\'nome\']} - R$ {produto[\'preco\']:.2f} "\n              f"- Estoque: {produto[\'estoque\']}")\n\ndef menu_produtos():\n    print("1. Cadastrar produto")\n    print("2. Listar produtos")\n    opcao = input("Escolha uma opção: ")\n    if opcao == "1":\n        cadastrar_produto()\n    elif opcao == "2":\n        listar_produtos()',
+        codeNote:null,
+        runnable:false
+    }},
+    { id:'teste-etapa3', title:'Teste da Etapa 3', type:'table', data:{
+        headers:['Teste','Ação','Resultado esperado'],
+        rows:[
+          ['1','Cadastrar "Caderno", 20.0, 10 e listar','exibe "1. Caderno - R$ 20.00 - Estoque: 10"']
+        ]
+    }},
+    { id:'etapa4', title:'Etapa 4 — Registrar venda', type:'example', data:{
+        intro:'Funcionando corretamente — vamos à etapa mais importante do sistema. Objetivo: permitir escolher um cliente e um produto já cadastrados, informar a quantidade, e reduzir o estoque do produto.',
+        problem:'Definir registrar_venda(), associando um cliente e um produto já cadastrados.',
+        algoritmo:null,
+        code:'vendas = []\n\ndef registrar_venda():\n    if not clientes or not produtos:\n        print("É necessário ter ao menos um cliente e um produto cadastrados.")\n        return\n\n    listar_clientes()\n    indice_cliente = int(input("Número do cliente: ")) - 1\n\n    listar_produtos()\n    indice_produto = int(input("Número do produto: ")) - 1\n\n    quantidade = int(input("Quantidade: "))\n\n    produto = produtos[indice_produto]\n\n    if quantidade > produto["estoque"]:\n        print("Estoque insuficiente para essa venda.")\n        return\n\n    produto["estoque"] = produto["estoque"] - quantidade\n    total_venda = produto["preco"] * quantidade\n\n    vendas.append({\n        "cliente": clientes[indice_cliente]["nome"],\n        "produto": produto["nome"],\n        "quantidade": quantidade,\n        "total": total_venda\n    })\n\n    print(f"Venda registrada! Total: R$ {total_venda:.2f}")',
+        codeNote:null,
+        runnable:false
+    }},
+    { id:'teste-etapa4', title:'Teste da Etapa 4', type:'table', data:{
+        headers:['Teste','Cenário','Resultado esperado'],
+        rows:[
+          ['1','Cliente e produto cadastrados, quantidade válida','venda registrada, estoque reduzido'],
+          ['2','Quantidade maior que o estoque disponível','"Estoque insuficiente para essa venda."'],
+          ['3','Nenhum cliente ou produto cadastrado ainda','"É necessário ter ao menos um cliente e um produto cadastrados."']
+        ]
+    }},
+    { id:'etapa5', title:'Etapa 5 — Relatório', type:'example', data:{
+        intro:'Funcionando corretamente — vamos à etapa final: o relatório. Objetivo: somar o valor total de todas as vendas registradas, e exibir um pequeno relatório.',
+        problem:'Definir exibir_relatorio(), somando o total de todas as vendas.',
+        algoritmo:null,
+        code:'def exibir_relatorio():\n    if not vendas:\n        print("Nenhuma venda registrada ainda.")\n        return\n\n    total_geral = 0\n    print("\\n=== Relatório de Vendas ===")\n    for venda in vendas:\n        print(f"{venda[\'cliente\']} comprou {venda[\'quantidade\']}x "\n              f"{venda[\'produto\']} - R$ {venda[\'total\']:.2f}")\n        total_geral = total_geral + venda["total"]\n\n    print(f"\\nTotal geral vendido: R$ {total_geral:.2f}")',
+        codeNote:null,
+        runnable:false
+    }},
+    { id:'teste-etapa5', title:'Teste da Etapa 5', type:'table', data:{
+        headers:['Teste','Cenário','Resultado esperado'],
+        rows:[
+          ['1','Duas vendas registradas (R$ 40 e R$ 25)','relatório lista as duas, total geral R$ 65.00'],
+          ['2','Nenhuma venda registrada','"Nenhuma venda registrada ainda."']
+        ]
+    }},
+    { id:'vfinal', title:'Versão final', type:'example', data:{
+        intro:'Todas as cinco etapas, integradas em um único sistema completo e executável:',
+        problem:'Integrar menu, clientes, produtos, vendas e relatório em um único programa.',
+        algoritmo:null,
+        code:'clientes = []\nprodutos = []\nvendas = []\n\ndef cadastrar_cliente():\n    nome = input("Nome do cliente: ")\n    telefone = input("Telefone do cliente: ")\n    clientes.append({"nome": nome, "telefone": telefone})\n    print("Cliente cadastrado!")\n\ndef listar_clientes():\n    if not clientes:\n        print("Nenhum cliente cadastrado.")\n        return\n    for indice, cliente in enumerate(clientes):\n        print(f"{indice + 1}. {cliente[\'nome\']} - {cliente[\'telefone\']}")\n\ndef menu_clientes():\n    print("1. Cadastrar cliente")\n    print("2. Listar clientes")\n    opcao = input("Escolha uma opção: ")\n    if opcao == "1":\n        cadastrar_cliente()\n    elif opcao == "2":\n        listar_clientes()\n\ndef cadastrar_produto():\n    nome = input("Nome do produto: ")\n    try:\n        preco = float(input("Preço do produto: "))\n        estoque = int(input("Quantidade em estoque: "))\n    except ValueError:\n        print("Preço e estoque precisam ser números válidos.")\n        return\n    produtos.append({"nome": nome, "preco": preco, "estoque": estoque})\n    print("Produto cadastrado!")\n\ndef listar_produtos():\n    if not produtos:\n        print("Nenhum produto cadastrado.")\n        return\n    for indice, produto in enumerate(produtos):\n        print(f"{indice + 1}. {produto[\'nome\']} - R$ {produto[\'preco\']:.2f} "\n              f"- Estoque: {produto[\'estoque\']}")\n\ndef menu_produtos():\n    print("1. Cadastrar produto")\n    print("2. Listar produtos")\n    opcao = input("Escolha uma opção: ")\n    if opcao == "1":\n        cadastrar_produto()\n    elif opcao == "2":\n        listar_produtos()\n\ndef registrar_venda():\n    if not clientes or not produtos:\n        print("É necessário ter ao menos um cliente e um produto cadastrados.")\n        return\n\n    try:\n        listar_clientes()\n        indice_cliente = int(input("Número do cliente: ")) - 1\n\n        listar_produtos()\n        indice_produto = int(input("Número do produto: ")) - 1\n\n        quantidade = int(input("Quantidade: "))\n\n        produto = produtos[indice_produto]\n\n        if quantidade > produto["estoque"]:\n            print("Estoque insuficiente para essa venda.")\n            return\n\n        produto["estoque"] = produto["estoque"] - quantidade\n        total_venda = produto["preco"] * quantidade\n\n        vendas.append({\n            "cliente": clientes[indice_cliente]["nome"],\n            "produto": produto["nome"],\n            "quantidade": quantidade,\n            "total": total_venda\n        })\n\n        print(f"Venda registrada! Total: R$ {total_venda:.2f}")\n    except (ValueError, IndexError):\n        print("Cliente, produto ou quantidade inválidos.")\n\ndef exibir_relatorio():\n    if not vendas:\n        print("Nenhuma venda registrada ainda.")\n        return\n\n    total_geral = 0\n    print("\\n=== Relatório de Vendas ===")\n    for venda in vendas:\n        print(f"{venda[\'cliente\']} comprou {venda[\'quantidade\']}x "\n              f"{venda[\'produto\']} - R$ {venda[\'total\']:.2f}")\n        total_geral = total_geral + venda["total"]\n\n    print(f"\\nTotal geral vendido: R$ {total_geral:.2f}")\n\ndef exibir_menu():\n    print("\\n=== Sistema de Vendas ===")\n    print("1. Clientes")\n    print("2. Produtos")\n    print("3. Registrar venda")\n    print("4. Relatório")\n    print("5. Sair")\n\n# Programa principal\nwhile True:\n    exibir_menu()\n    opcao = input("Escolha uma opção: ")\n\n    match opcao:\n        case "1":\n            menu_clientes()\n        case "2":\n            menu_produtos()\n        case "3":\n            registrar_venda()\n        case "4":\n            exibir_relatorio()\n        case "5":\n            print("Até logo!")\n            break\n        case _:\n            print("Opção inválida.")',
+        codeNote:'Um desafio de extensão sugere adicionar persistência com JSON (como no Projeto 6), para que clientes, produtos e vendas não se percam ao fechar o programa.',
+        runnable:true
+    }},
+    { id:'testesfinais', title:'Testes finais', type:'table', data:{
+        headers:['Passo','Ação','Resultado esperado'],
+        rows:[
+          ['1','Cadastrar cliente "Ana"','"Cliente cadastrado!"'],
+          ['2','Cadastrar produto "Caderno", R$ 20,00, estoque 10','"Produto cadastrado!"'],
+          ['3','Registrar venda: cliente 1, produto 1, quantidade 2','"Venda registrada! Total: R$ 40.00"'],
+          ['4','Listar produtos novamente','estoque do Caderno agora é 8'],
+          ['5','Exibir relatório','lista a venda e exibe "Total geral vendido: R$ 40.00"'],
+          ['6','Tentar vender quantidade maior que o estoque','"Estoque insuficiente para essa venda."']
+        ]
+    }},
+    { id:'desafios', title:'Desafios de extensão', type:'exercises', data:{
+        level:'Desafios de extensão',
+        items:[
+          { kind:'text', prompt:'Adicione persistência com JSON (Capítulo 42), salvando clientes, produtos e vendas em arquivos, e carregando-os ao iniciar o sistema.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Permita registrar vários produtos em uma única venda (usando um laço interno, até o usuário indicar que terminou).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Reescreva o sistema usando classes (Cliente, Produto, Venda, Parte X), em vez de dicionários.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Organize o projeto em módulos separados (Capítulo 39): um arquivo para clientes, outro para produtos, outro para vendas, e o main.py apenas orquestrando o menu.', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' },
+          { kind:'text', prompt:'Adicione um relatório de produtos com estoque baixo (por exemplo, menor que 5 unidades).', gabarito:'Desafio aberto de extensão — pratique implementando esta melhoria por conta própria.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, capítulo 4: Mais ferramentas de controle de fluxo', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html' },
+          { label:'Documentação Python — Tutorial, capítulo 5: Estruturas de Dados', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html' },
+          { label:'Documentação Python — Tutorial, seção 7.3: Salvando Dados Estruturados com json', url:'https://docs.python.org/pt-br/3/tutorial/inputoutput.html#saving-structured-data-with-json' }
         ]
     }}
   ]
