@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a X</title>
+<title>Apostila Python Interativa — Partes I a XI</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a X · Primeiros Passos até Orientação a Objetos</span>
+      <span>Partes I a XI · Primeiros Passos até Boas Práticas</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -8131,6 +8131,282 @@ const MODULES = [
           'Sei sobrescrever métodos herdados.'
         ],
         finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte XI — Boas Práticas, onde aprenderemos sobre código legível (PEP 8) e técnicas de depuração.'
+    }}
+  ]
+},
+{
+  id: 'cap54',
+  title: 'Capítulo 54 — Código legível',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é a PEP 8, o guia de estilo oficial do Python.',
+          'Boas práticas de indentação, espaçamento e nomes de variáveis.',
+          'Como escrever funções pequenas e comentários úteis.',
+          'Por que legibilidade é uma prioridade, não um "extra".'
+        ],
+        antes: 'Este capítulo revisita e organiza boas práticas já aplicadas implicitamente em todos os exemplos de código desta apostila, desde o Capítulo 1.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Um programa não é escrito apenas para o computador executar — é lido, com muito mais frequência, por <b>pessoas</b>: você mesmo, no futuro, revisando seu próprio código, ou outras pessoas da equipe. Código legível é mais fácil de entender, corrigir e expandir.',
+          'A comunidade Python mantém um guia de estilo oficial chamado <b>PEP 8</b> (<i>Python Enhancement Proposal</i> número 8), que recomenda convenções para tornar o código Python mais consistente e legível entre diferentes programadores.'
+        ],
+        glossary: [
+          { term:'PEP 8', def:'o guia de estilo oficial para código Python, publicado como parte das PEPs (propostas de melhoria da linguagem)', example:'disponível em peps.python.org/pep-0008/' }
+        ],
+        callout: 'Principais recomendações, todas já seguidas ao longo desta apostila: 4 espaços de indentação; snake_case para variáveis/funções; PascalCase para classes; espaço ao redor de operadores; nomes descritivos; funções pequenas, com propósito único.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'CÓDIGO POUCO LEGÍVEL:\ndef calc(a,b,c):\n x=a+b\n y=x*c\n return y\n\nCÓDIGO LEGÍVEL (seguindo PEP 8):\ndef calcular_total(preco, quantidade, taxa):\n    subtotal = preco + quantidade\n    total = subtotal * taxa\n    return total\n\nAmbas fazem EXATAMENTE a mesma coisa — a diferença é a facilidade de leitura.',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Duas funções que fazem exatamente a mesma conta, escritas de formas diferentes:',
+        problem:'Comparar uma versão pouco legível com uma versão que segue a PEP 8.',
+        algoritmo:null,
+        code:'# Versão pouco legível\ndef calc(p,d):\n return p-(p*d/100)\n\n# Versão legível\ndef calcular_preco_com_desconto(preco, percentual_desconto):\n    return preco - (preco * percentual_desconto / 100)\n\nprint(calc(100, 10))\nprint(calcular_preco_com_desconto(100, 10))',
+        codeNote:'Repare: as duas funções produzem o MESMO resultado — a diferença está inteiramente na facilidade de leitura.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'calc(100, 10) chama a função com p=100, d=10',
+          'Calcula: p - (p*d/100) → 100 - (100*10/100) = 90.0',
+          'calcular_preco_com_desconto(100, 10) chama a função equivalente, com preco=100, percentual_desconto=10',
+          'Calcula: preco - (preco*percentual_desconto/100) → exatamente a mesma fórmula, mesmo resultado: 90.0',
+          'O Python NÃO se importa com os nomes escolhidos — para o interpretador, ambas as versões são idênticas',
+          'A diferença entre as duas versões existe apenas para quem LÊ o código, não para quem o executa'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'def calcular_preco_com_desconto(preco, percentual_desconto):', explanation:'O nome da função já explica seu propósito, sem precisar abrir o código para entender — diferente de calc, que não diz nada sobre o que a função faz.' },
+          { code:'    return preco - (preco * percentual_desconto / 100)', explanation:'Os nomes dos parâmetros (preco, percentual_desconto) deixam claro o que cada um representa — diferente de p, d, que exigiriam olhar o corpo da função para descobrir.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'90.0\n90.0',
+        modIntro:'Vamos comparar uma versão "antes" e "depois" de um pequeno programa, aplicando várias recomendações da PEP 8 de uma vez:',
+        modCode:'def verificar_maioridade(nome, idade):\n    if idade >= 18:\n        print(f"{nome} é maior de idade")\n    else:\n        print(f"{nome} é menor de idade")\n\nverificar_maioridade("Ana", 20)\nverificar_maioridade("Bruno", 15)',
+        modResult:'Ana é maior de idade\nBruno é menor de idade',
+        modNote:'Mudanças aplicadas: nome de função descritivo, nomes de parâmetros descritivos, indentação de 4 espaços consistente, espaços ao redor de operadores, e f-string em vez de concatenação com +.',
+        runnable:true,
+        naoConfunda:'Seguir a PEP 8 não é obrigatório para o Python executar o código — é uma convenção de estilo, adotada pela comunidade para manter consistência entre diferentes projetos e programadores. Um código que ignora a PEP 8 pode funcionar perfeitamente, mas será mais difícil de ler e manter, especialmente em equipe.',
+        extraBlocks:[
+          { title:'A versão "antes" (sem seguir a PEP 8)', intro:'Repare que esta versão, apesar de pouco legível, FUNCIONA exatamente igual — o Python não se importa com nomes ou espaçamento:', code:'def f(n,i):\n if i>=18:\n  print(n+" é maior de idade")\n else:\n  print(n+" é menor de idade")\n\nf("Ana", 20)\nf("Bruno", 15)', result:'Ana é maior de idade\nBruno é menor de idade', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Usar nomes de uma única letra fora de contextos matemáticos muito específicos', code:'def c(a, b):\n    return a * b', body:'Sem contexto, não fica claro o que c, a e b representam. Nomes descritivos evitam essa ambiguidade: def calcular_area(largura, altura): return largura * altura' },
+          { title:'🐞 Misturar convenções de nomenclatura no mesmo programa', code:'nome_do_aluno = "Ana"\nIdadeDoAluno = 16', body:'Misturar snake_case com PascalCase (ou camelCase) para o mesmo tipo de elemento (variáveis, neste caso) deixa o código inconsistente. Mantenha snake_case para variáveis e funções em todo o programa.' },
+          { title:'🐞 Escrever comentários redundantes, em vez de código autoexplicativo', code:'# soma a e b\ntotal = a + b', body:'Comentários devem explicar a intenção, não repetir o óbvio — e nomes de variáveis bem escolhidos frequentemente tornam certos comentários desnecessários.' }
+        ],
+        howToRead:'Este capítulo não trata de mensagens de erro do Python — código que ignora a PEP 8 <b>executa normalmente</b>. O "custo" de ignorar essas convenções aparece depois: na dificuldade de ler, revisar ou expandir o código, tanto por você quanto por outras pessoas.',
+        tryIt:true,
+        tryItCode:'def c(a, b):\n    return a * b\n\nprint(c(5, 3))'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Reescrever um trecho de código pouco legível, aplicando as recomendações deste capítulo.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'def calcular_area_retangulo(largura, altura):\n    return largura * altura\n\narea = calcular_area_retangulo(5, 3)\nprint(area)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é a PEP 8?', gabarito:'O guia de estilo oficial para código Python.' },
+          { kind:'text', prompt:'Quantos espaços são recomendados por nível de indentação?', gabarito:'4 espaços.' },
+          { kind:'text', prompt:'Qual convenção de nomes é recomendada para variáveis e funções? E para classes?', gabarito:'snake_case para variáveis/funções; PascalCase para classes.' },
+          { kind:'text', prompt:'Por que nomes descritivos são preferíveis a nomes como x, y, a?', gabarito:'Porque explicam o propósito da variável, facilitando a leitura sem precisar analisar o contexto todo.' },
+          { kind:'text', prompt:'Seguir a PEP 8 é obrigatório para o Python executar o código?', gabarito:'Não, é uma convenção de estilo.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Reescreva o código abaixo, aplicando as recomendações da PEP 8:\ndef f(x,y):\n return x+y', starter:'def f(x,y):\n return x+y', gabarito:'def somar(x, y):\n    return x + y' },
+          { kind:'code', prompt:'Reescreva o código abaixo, melhorando os nomes de variáveis e funções:\ndef calc(p, q):\n    t = p * q\n    return t', starter:'def calc(p, q):\n    t = p * q\n    return t', gabarito:'def calcular_total(preco, quantidade):\n    total = preco * quantidade\n    return total' },
+          { kind:'text', prompt:'Explique, com suas palavras, por que um comentário como "# soma dois números" acima de total = a + b costuma ser desnecessário.', gabarito:'Porque o nome das variáveis (total, a, b) já deixa claro o que está acontecendo, tornando o comentário redundante.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Escolha um dos programas que você escreveu em capítulos anteriores desta apostila (idealmente um dos primeiros) e reescreva-o, aplicando indentação consistente, nomes descritivos e comentários que expliquem apenas o que não é óbvio.', gabarito:'Resposta prática — reescrever um programa antigo aplicando indentação consistente, nomes descritivos e comentários que expliquem intenção, não mecânica óbvia.' },
+          { kind:'text', prompt:'Pesquise (lendo a página oficial da PEP 8, peps.python.org/pep-0008/) mais duas recomendações de estilo não mencionadas neste capítulo, e explique, em suas palavras, por que cada uma contribui para a legibilidade do código.', gabarito:'Recomendações adicionais da PEP 8 incluem, por exemplo, limitar linhas a cerca de 79 caracteres, e usar linhas em branco para separar blocos lógicos de código.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'PEP 8 = guia de estilo oficial do Python\n\nIndentação          → 4 espaços, consistentes\nVariáveis/funções   → snake_case (minúsculo_com_underscore)\nClasses             → PascalCase (PrimeiraLetraMaiuscula)\nEspaçamento         → espaços ao redor de operadores e após vírgulas\nNomes               → descritivos, evitando x, y, a, b sem contexto\nFunções             → pequenas, com um propósito claro\nComentários         → explicam a intenção, não o óbvio'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é a PEP 8.',
+          'Sei aplicar indentação de 4 espaços consistentemente.',
+          'Sei usar snake_case para variáveis/funções e PascalCase para classes.',
+          'Sei escolher nomes descritivos.',
+          'Sei escrever funções pequenas, com propósito único.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é a PEP 8?', options:['Um módulo do Python','O guia de estilo oficial para código Python','Um tipo de erro','Uma versão do Python'], correct:1, explanation:'O guia de estilo oficial para código Python.' },
+          { q:'Quantos espaços são recomendados por nível de indentação?', options:['2','4','8','Tabulações, nunca espaços'], correct:1, explanation:'4 espaços.' },
+          { q:'Qual convenção é recomendada para nomes de variáveis?', options:['PascalCase','snake_case','camelCase','Tudo em maiúsculas'], correct:1, explanation:'snake_case.' },
+          { q:'Qual convenção é recomendada para nomes de classes?', options:['snake_case','PascalCase','Tudo minúsculo, sem separação','Não há convenção'], correct:1, explanation:'PascalCase.' },
+          { q:'Seguir a PEP 8 é obrigatório para o código executar?', options:['Sim, o Python recusa código fora do padrão','Não, é uma convenção de estilo, não uma exigência técnica','Sim, mas apenas para classes','Sim, mas apenas para funções'], correct:1, explanation:'Não, é uma convenção de estilo.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'PEP 8 — Style Guide for Python Code', url:'https://peps.python.org/pep-0008/' },
+          { label:'Documentação Python — Tutorial, seção 4.8: Estilo de codificação', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#intermezzo-coding-style' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap55',
+  title: 'Capítulo 55 — Depuração',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é depuração (debugging), e por que é uma habilidade central da programação.',
+          'Um roteiro de sete passos para investigar e corrigir bugs.',
+          'Como usar print() temporariamente para investigar o valor de variáveis durante a execução.',
+          'Exemplos de bugs reais, comuns entre iniciantes.'
+        ],
+        antes: 'É necessário ter concluído a Parte IX (Erros) e conhecer bem os conceitos de rastreamento de valores usados em toda a apostila.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Depurar (debug, em inglês — literalmente "tirar os insetos"; o termo vem de um inseto real encontrado dentro de um computador antigo, em 1947) é o processo de encontrar e corrigir problemas ("bugs") em um programa.',
+          'Um roteiro eficaz de depuração segue, em geral, sete passos: reproduzir o erro, ler a mensagem de erro (se houver), identificar a linha exata, verificar os valores das variáveis, usar print() para investigar, corrigir o código, e testar novamente.'
+        ],
+        glossary: [
+          { term:'bug', def:'um defeito no programa, que faz com que ele se comporte de forma diferente do esperado', example:'pode gerar uma exceção (Capítulo 45) ou apenas produzir um resultado incorreto, sem nenhuma mensagem de erro (erro de lógica, Capítulo 16).' },
+          { term:'depuração (debugging)', def:'o processo sistemático de investigar, localizar e corrigir um bug', example:null }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'O roteiro de sete passos:',
+        diagram:'1. REPRODUZIR\n        ↓\n2. LER A MENSAGEM (se houver)\n        ↓\n3. IDENTIFICAR A LINHA\n        ↓\n4. VERIFICAR OS VALORES\n        ↓\n5. USAR print() PARA INVESTIGAR\n        ↓\n6. CORRIGIR\n        ↓\n7. TESTAR NOVAMENTE\n        ↓\n   Resolvido? ── Não ──► volta ao passo 1\n        │\n       Sim\n        ↓\n   Fim da depuração',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Um programa com um erro de lógica (sem mensagem de erro) — a média deveria ser próxima de 7:',
+        problem:'Calcular a média de três notas.',
+        algoritmo:null,
+        code:'def calcular_media(nota1, nota2, nota3):\n    media = nota1 + nota2 + nota3 / 3\n    return media\n\nresultado = calcular_media(6, 7, 8)\nprint(resultado)',
+        codeNote:'Repare: o programa NÃO gera erro nenhum, mas o resultado está incorreto — é um erro de lógica.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Aplicando o roteiro de sete passos a este bug. Clique em "Próximo passo".',
+        steps:[
+          'Passo 1 — Reproduzir: executamos o código e obtemos resultado = 15.666666666666666, quando esperávamos algo próximo de 7',
+          'Passo 2 — Ler a mensagem de erro: não há mensagem — o programa executa normalmente. Isso já indica um erro de LÓGICA, não uma exceção',
+          'Passo 3 — Identificar a linha: a linha suspeita é media = nota1 + nota2 + nota3 / 3',
+          'Passo 4 — Verificar os valores: nota1=6, nota2=7, nota3=8 — a divisão por 3 está afetando só nota3, não a soma inteira',
+          'Passo 5 — Usar print() para confirmar: print(f"nota1={nota1}, nota2={nota2}, nota3={nota3}") confirma os valores recebidos',
+          'Passo 6 — Corrigir: a fórmula deveria ser (nota1 + nota2 + nota3) / 3, com parênteses, para a divisão afetar a SOMA INTEIRA',
+          'Passo 7 — Testar novamente: agora o resultado é 7.0 — correto!'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'media = nota1 + nota2 + nota3 / 3', explanation:'Por causa da precedência de operadores (Capítulo 7), a divisão / é calculada ANTES da soma — então apenas nota3 é dividida por 3, não a soma inteira. Este é o bug.' },
+          { code:'media = (nota1 + nota2 + nota3) / 3', explanation:'Com parênteses, a soma é calculada PRIMEIRO, e só depois o resultado inteiro é dividido por 3 — a correção do bug.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'15.666666666666666',
+        modIntro:'Vamos aplicar o Passo 6 (Corrigir) e o Passo 7 (Testar novamente) do roteiro:',
+        modCode:'def calcular_media(nota1, nota2, nota3):\n    media = (nota1 + nota2 + nota3) / 3\n    return media\n\nresultado = calcular_media(6, 7, 8)\nprint(resultado)',
+        modResult:'7.0',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'print() usado para depuração TEMPORÁRIA versus print() usado como parte da saída DEFINITIVA do programa: linhas de print() adicionadas apenas para investigar um bug devem ser removidas (ou comentadas, e depois removidas) antes de considerar o programa pronto — elas não fazem parte do comportamento final esperado.',
+        extraBlocks:[
+          { title:'Depurando uma exceção (não apenas um erro de lógica)', intro:'O mesmo roteiro também se aplica quando HÁ uma mensagem de erro. Aqui, o bug era range(4) em uma lista com apenas 3 itens — corrigido para range(len(precos)):', code:'precos = [10.0, 25.5, 8.0]\n\nfor i in range(len(precos)):\n    print(precos[i])', result:'10.0\n25.5\n8.0', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar corrigir um bug sem antes reproduzi-lo de forma confiável', code:'# Bug "reproduzido" apenas às vezes, de forma inconsistente\n# (torna quase impossível confirmar a causa raiz)', body:'Corrigir "no escuro", sem conseguir reproduzir o problema de forma consistente, torna quase impossível confirmar se a correção realmente funcionou.' },
+          { title:'🐞 Fazer várias alterações ao mesmo tempo, sem testar cada uma', code:'# Alterar 3 partes do código ao mesmo tempo\n# → difícil saber qual mudança resolveu o problema', body:'Alterar várias partes do código simultaneamente dificulta saber QUAL mudança resolveu (ou piorou) o problema. É mais eficaz corrigir uma hipótese de cada vez, testando após cada alteração.' },
+          { title:'🐞 Esquecer de remover os print() de depuração do código final', code:'def calcular_media(nota1, nota2, nota3):\n    print("DEBUG:", nota1, nota2, nota3)   # esquecido no código final\n    media = (nota1 + nota2 + nota3) / 3\n    return media', body:'Linhas de depuração esquecidas poluem a saída real do programa, e devem ser removidas antes de considerar o código concluído.' }
+        ],
+        howToRead:'A mensagem de erro (quando existe) é apenas <b>um</b> dos sete passos do roteiro de depuração — nem todo bug gera uma mensagem (erros de lógica não geram), e por isso os demais passos (reproduzir, verificar valores, testar hipóteses) são igualmente importantes.',
+        tryIt:true,
+        tryItCode:'def calcular_media(nota1, nota2, nota3):\n    print("DEBUG:", nota1, nota2, nota3)   # esquecido no código final\n    media = (nota1 + nota2 + nota3) / 3\n    return media\n\nresultado = calcular_media(6, 7, 8)\nprint(resultado)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Depurar o código abaixo, que deveria contar quantos números pares existem em uma lista, mas está retornando um valor incorreto (a condição usa % 2 == 1, que captura os ÍMPARES, não os pares).',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'def contar_pares(lista):\n    contador = 0\n    for numero in lista:\n        if numero % 2 == 0:\n            contador = contador + 1\n    return contador\n\nnumeros = [1, 2, 3, 4, 5, 6]\nprint(contar_pares(numeros))',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é depuração?', gabarito:'O processo de encontrar e corrigir bugs em um programa.' },
+          { kind:'text', prompt:'Quais são os sete passos do roteiro apresentado neste capítulo?', gabarito:'Reproduzir, ler a mensagem, identificar a linha, verificar valores, usar print(), corrigir, testar novamente.' },
+          { kind:'text', prompt:'Por que erros de lógica são mais difíceis de detectar do que exceções?', gabarito:'Porque não geram nenhuma mensagem de erro — o programa executa normalmente, mas produz um resultado incorreto.' },
+          { kind:'text', prompt:'Para que serve usar print() temporariamente durante a depuração?', gabarito:'Para observar, durante a execução, os valores reais das variáveis naquele ponto do programa.' },
+          { kind:'text', prompt:'O que deve ser feito com as linhas de print() de depuração antes de considerar o programa concluído?', gabarito:'Devem ser removidas.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Aplique o roteiro de depuração ao código abaixo, que deveria exibir se um número é positivo, mas sempre exibe "Negativo":\ndef verificar_positivo(numero):\n    if numero > 0:\n        print("Negativo")\n    else:\n        print("Positivo")', starter:'def verificar_positivo(numero):\n    if numero > 0:\n        print("Negativo")\n    else:\n        print("Positivo")\n\nverificar_positivo(5)', gabarito:'Bug: a condição if numero > 0: está associada à mensagem errada.\nCorreção:\ndef verificar_positivo(numero):\n    if numero > 0:\n        print("Positivo")\n    else:\n        print("Negativo")' },
+          { kind:'code', prompt:'Aplique o roteiro ao código abaixo, que gera uma exceção:\nidades = [15, 22, 17]\nmedia = sum(idades) / len(idade)', starter:'idades = [15, 22, 17]\nmedia = sum(idades) / len(idade)\nprint(media)', gabarito:'Bug: len(idade) deveria ser len(idades) (erro de digitação no nome da variável), causando NameError.\nCorreção: media = sum(idades) / len(idades)' },
+          { kind:'text', prompt:'Escreva, em suas palavras, por que testar uma alteração de cada vez é mais eficiente do que alterar várias partes do código simultaneamente.', gabarito:'Porque permite identificar exatamente qual alteração resolveu (ou causou) o problema, evitando confusão entre múltiplas mudanças simultâneas.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Escreva um pequeno programa (proposital e comentado) contendo dois bugs diferentes — um erro de lógica e uma exceção — e documente, para cada um, o processo completo de depuração, seguindo o roteiro de sete passos.', gabarito:'Resposta prática — o essencial é aplicar, para cada bug proposital, os sete passos do roteiro de forma explícita e documentada.' },
+          { kind:'text', prompt:'Volte a um programa que você escreveu em qualquer capítulo anterior desta apostila, que já tenha apresentado algum comportamento inesperado. Reescreva, agora, o processo de depuração daquele problema, formalmente, seguindo os sete passos deste capítulo.', gabarito:'Resposta prática — o essencial é aplicar, para cada bug proposital, os sete passos do roteiro de forma explícita e documentada.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'1. Reproduzir\n2. Ler a mensagem de erro (se houver)\n3. Identificar a linha\n4. Verificar os valores\n5. Usar print() para investigar\n6. Corrigir\n7. Testar novamente\n\nBug = comportamento inesperado (com ou sem mensagem de erro)\nDepurar = processo sistemático de investigação e correção'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é depuração e por que é uma habilidade essencial.',
+          'Sei aplicar o roteiro de sete passos a um bug.',
+          'Sei usar print() temporariamente para investigar valores.',
+          'Sei diferenciar depurar um erro de lógica de depurar uma exceção.',
+          'Sei remover código de depuração antes de finalizar um programa.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você concluiu a Parte XI — Boas Práticas, e está pronto(a) para avançar para a Parte XII — Ambiente Profissional, onde aprenderemos sobre ambientes virtuais, pip e bibliotecas.'
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um bug?', options:['Um comentário no código','Um defeito que faz o programa se comportar de forma diferente do esperado','Um tipo de variável','Um módulo do Python'], correct:1, explanation:'Um defeito que faz o programa se comportar de forma diferente do esperado.' },
+          { q:'Qual é o primeiro passo do roteiro de depuração apresentado?', options:['Corrigir o código','Reproduzir o erro','Apagar o programa','Testar novamente'], correct:1, explanation:'Reproduzir o erro.' },
+          { q:'Erros de lógica geram mensagens de erro do Python?', options:['Sim, sempre','Não, o programa executa normalmente, mas produz resultado incorreto','Só em alguns casos','Apenas em modo interativo'], correct:1, explanation:'Não, o programa executa normalmente, mas produz resultado incorreto.' },
+          { q:'Para que serve usar print() temporariamente durante a depuração?', options:['Para deixar o programa mais rápido','Para investigar os valores das variáveis durante a execução','Para corrigir o erro automaticamente','Para gerar um relatório final'], correct:1, explanation:'Para investigar os valores das variáveis durante a execução.' },
+          { q:'O que deve ser feito com os print() de depuração ao final do processo?', options:['Deixá-los no código, sempre','Removê-los, já que não fazem parte da saída definitiva do programa','Transformá-los em comentários permanentes','Nada, eles desaparecem automaticamente'], correct:1, explanation:'Removê-los.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tutorial, seção 8: Erros e Exceções', url:'https://docs.python.org/pt-br/3/tutorial/errors.html' },
+          { label:'Documentação Python — módulo pdb (depurador interativo)', url:'https://docs.python.org/pt-br/3/library/pdb.html' }
+        ]
     }}
   ]
 }
