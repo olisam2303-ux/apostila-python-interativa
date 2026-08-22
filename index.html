@@ -6331,7 +6331,7 @@ const MODULES = [
     { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
         resultado:'(nada é exibido na tela — o resultado é a criação do arquivo dados.txt, contendo o texto "Olá, arquivo!")',
         modIntro:'Vamos ler o conteúdo desse arquivo, usando o modo "r":',
-        modCode:'with open("dados.txt", "r") as arquivo:\n    conteudo = arquivo.read()\n\nprint(conteudo)',
+        modCode:'# (recriando o arquivo aqui para este exemplo ser independente)\nwith open("dados.txt", "w") as arquivo:\n    arquivo.write("Olá, arquivo!")\n\nwith open("dados.txt", "r") as arquivo:\n    conteudo = arquivo.read()\n\nprint(conteudo)',
         modResult:'Olá, arquivo!',
         modNote:null,
         runnable:true,
