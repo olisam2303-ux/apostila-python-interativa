@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Parte I</title>
+<title>Apostila Python Interativa — Partes I e II</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Parte I · Primeiros Passos</span>
+      <span>Partes I e II · Primeiros Passos e Fundamentos</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -925,6 +925,1184 @@ const MODULES = [
         finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte II — Fundamentos, onde aprenderemos comentários, variáveis, tipos de dados e as primeiras operações matemáticas em Python.'
     }}
   ]
+},
+{
+  id: 'cap4',
+  title: 'Capítulo 4 — Comentários',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um comentário em Python e para que ele serve.',
+          'Como escrever comentários de uma linha com #.',
+          'A diferença entre um bom comentário e um comentário inútil.',
+          'Por que o interpretador ignora os comentários.'
+        ],
+        antes: 'É necessário ter concluído a Parte I (Capítulos 1 a 3): saber criar, salvar e executar um arquivo .py, e conhecer print().'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Enquanto um programa cresce, fica cada vez mais difícil lembrar por que cada trecho de código foi escrito daquele jeito. Para isso, o Python permite escrever <b>comentários</b>: textos colocados dentro do código-fonte que <b>não são executados</b> — servem apenas para quem está lendo o código, seja você no futuro, seja outra pessoa.',
+          'Em Python, um comentário de uma linha começa com o símbolo <span class="icode">#</span> (chamado de <i>cerquilha</i>). Tudo o que vem depois do <span class="icode">#</span>, até o fim daquela linha, é ignorado pelo interpretador.'
+        ],
+        glossary: [
+          { term:'comentário', def:'um texto dentro do código que o interpretador ignora completamente', example:'serve para explicar, para quem lê o código, o motivo ou a intenção de um trecho.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'# Este texto é um comentário e não faz o computador fazer nada\nprint("Olá!")   ← esta linha SIM é executada\n\n              ↓ (durante a execução)\n\nO interpretador lê a linha do comentário e a ignora por completo\n              ↓\nO interpretador executa print("Olá!") normalmente\n              ↓\nSaída:\n   Olá!',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Exibir uma mensagem de boas-vindas ao usuário, documentando o programa com comentários.',
+        algoritmo:null,
+        code:'# Este programa exibe uma mensagem de boas-vindas na tela.\n# Comentários como este servem apenas para explicar o código —\n# eles não afetam o que o programa faz quando é executado.\nprint("Bem-vindo ao programa!")',
+        codeNote:'Clique em "Executar" — repare que somente a mensagem aparece na saída; os comentários não aparecem em lugar nenhum.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Acompanhe como o interpretador trata cada linha, uma de cada vez.',
+        steps:[
+          'Linha 1: # Este programa exibe uma mensagem de boas-vindas na tela.',
+          'O interpretador reconhece o símbolo # no início da linha',
+          'Ignora completamente o restante da linha (é apenas texto explicativo)',
+          'Linha 4: print("Bem-vindo ao programa!")',
+          'Esta linha NÃO começa com #, então é executada normalmente',
+          'Saída:\n   Bem-vindo ao programa!'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique para ver a explicação de cada trecho.',
+        lines:[
+          { code:'# Este programa exibe uma mensagem de boas-vindas na tela.\n# Comentários como este servem apenas para explicar o código —\n# eles não afetam o que o programa faz quando é executado.', explanation:'Cada uma dessas três linhas começa com <span class="icode">#</span>. O interpretador as reconhece como comentários e simplesmente pula para a próxima linha, sem tentar executar nada do que está escrito ali.' },
+          { code:'print("Bem-vindo ao programa!")', explanation:'Esta linha não começa com <span class="icode">#</span>, portanto é uma instrução de verdade, e é executada normalmente — exibindo o texto na tela.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Bem-vindo ao programa!\n\n(nenhuma parte dos comentários aparece na saída — eles existem apenas dentro do arquivo .py, para quem está lendo o código.)',
+        modIntro:'É possível colocar um comentário também no final de uma linha que já tem código, e não apenas em uma linha própria:',
+        modCode:'print("Bem-vindo ao programa!")  # Mensagem inicial exibida ao usuário',
+        modNote:'Nesse caso, o Python executa normalmente tudo o que vem antes do #, e ignora tudo o que vem depois dele na mesma linha.',
+        runnable:true,
+        naoConfunda:{ text:'Um comentário não é uma forma de "desativar temporariamente" código de maneira definitiva — na prática, muitos programadores usam o # também para isso durante testes (chamado de "comentar uma linha"), mas isso é diferente de um comentário explicativo. Na linha comentada abaixo, o print() dentro dela nunca é executado — a linha inteira foi "desativada".', code:'print("Olá!")\n# print("Isso não vai aparecer, porque a linha virou um comentário")' }
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Escrever comentários óbvios, que não ensinam nada', code:'idade = 18  # idade recebe 18', body:'Esse comentário apenas repete o que o código já diz. Um bom comentário explica a <b>intenção</b>, não a mecânica óbvia: <span class="icode"># Idade mínima usada como referência para liberar o acesso ao conteúdo</span>' },
+          { title:'🐞 Esquecer que o # comenta até o fim da linha inteira', code:'print("Preço: R$ 10,00")  # valor sem desconto print("Preço final")', body:'Tudo depois do # é ignorado, inclusive o segundo print() — ele nunca será executado, porque, para o Python, faz parte do comentário.' },
+          { title:'🐞 Usar # dentro de uma string pensando que vira comentário', code:'print("Ganhe 10# de desconto")', body:'Isso <b>não</b> é um erro — dentro de uma string (entre aspas), o símbolo # é apenas um caractere de texto normal, exibido normalmente. O # só tem efeito de comentário fora de strings.' }
+        ],
+        howToRead:'Comentários bem escritos não geram erros — eles são inofensivos para o interpretador. O cuidado real é lógico: verificar se, ao "comentar" uma linha de código para desativá-la, você não acabou também comentando parte de uma linha que ainda precisava ser executada.',
+        tryIt:true,
+        tryItCode:'print("Preço: R$ 10,00")  # valor sem desconto print("Preço final")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Documentar um pequeno programa que exibe o nome de um produto e seu preço, explicando a intenção de cada parte.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Programa simples que exibe informações de um produto para o cliente\n\n# Nome do produto que será exibido\nprint("Produto: Caderno universitário")\n\n# Preço do produto, já formatado como o cliente deve visualizar\nprint("Preço: R$ 24,90")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que acontece quando o interpretador Python encontra uma linha que começa com #?', gabarito:'Ele ignora completamente aquele trecho da linha; o comentário não é executado.' },
+          { kind:'code', prompt:'Escreva um comentário de uma linha explicando a intenção de um programa que exibe a mensagem "Sistema iniciado".', starter:'', gabarito:'# Programa inicia o sistema, exibindo uma mensagem de status\nprint("Sistema iniciado")' },
+          { kind:'text', prompt:'É possível colocar um comentário depois de uma instrução de código, na mesma linha? Dê um exemplo.', gabarito:'Sim: print("Olá!")  # exibe uma saudação inicial' },
+          { kind:'text', prompt:'O símbolo # dentro de uma string (entre aspas) é tratado como comentário? Explique.', gabarito:'Não — dentro de uma string, # é apenas um caractere de texto comum.' },
+          { kind:'code', prompt:'Reescreva o comentário abaixo para que ele explique a intenção, e não apenas repita o código:\nnome = "Ana"  # nome recebe Ana', starter:'nome = "Ana"  # nome recebe Ana', gabarito:'# idade mínima considerada para liberar o conteúdo (exemplo do gabarito oficial — o importante é o comentário explicar o "porquê", não repetir o "o quê")' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa com pelo menos três print(), cada um precedido por um comentário explicando a intenção daquela linha (não apenas descrevendo o óbvio).', starter:'', gabarito:'Resposta prática — três print() com comentários explicando a intenção (por que aquele texto está sendo exibido), não apenas repetindo o código.' },
+          { kind:'code', prompt:'No código abaixo, um dos print() foi acidentalmente "comentado" junto com o de cima. Reescreva o código para que as duas mensagens sejam exibidas:\nprint("Primeira mensagem")  # exibe a primeira mensagem print("Segunda mensagem")', starter:'print("Primeira mensagem")  # exibe a primeira mensagem print("Segunda mensagem")', gabarito:'print("Primeira mensagem")\nprint("Segunda mensagem")' },
+          { kind:'text', prompt:'Explique, em suas palavras, por que comentários são úteis mesmo quando você é a única pessoa que vai ler aquele código.', gabarito:'Comentários ajudam a lembrar, meses depois, por que uma decisão foi tomada — a memória da intenção se perde mais rápido do que o código em si.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um pequeno programa que simule a exibição de um recibo simples de compra, com pelo menos quatro linhas de print(), cada uma precedida de um comentário explicando o propósito daquela linha do recibo (nome da loja, item comprado, valor, mensagem de agradecimento).', starter:'', gabarito:'Resposta prática — o importante é cada linha de print() ter um comentário explicando o propósito (ex.: # nome da loja, # item comprado), sem comentários redundantes como # print exibe algo.' },
+          { kind:'code', prompt:'Desafio: pegue um programa que você já escreveu (por exemplo, o sobre_mim.py do Capítulo 3) e adicione comentários explicativos em cada linha de print(), sem alterar o comportamento do programa.', starter:'print("Maria")\nprint("17 anos")\nprint("Gosta de desenhar")', gabarito:'Resposta prática — adicione um comentário acima (ou ao final) de cada print(), explicando a intenção, e confirme que a saída continua idêntica ao executar novamente.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'#  → inicia um comentário\n      tudo depois do # naquela linha é ignorado pelo interpretador\n\nBOM comentário  → explica a intenção ("por quê")\nCOMENTÁRIO INÚTIL → apenas repete o código ("o quê", que já é óbvio)\n\n# dentro de uma string → é só um caractere de texto, não vira comentário'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é um comentário e para que ele serve.',
+          'Sei escrever comentários de uma linha com #.',
+          'Sei diferenciar um bom comentário de um comentário inútil.',
+          'Sei que o # comenta até o fim da linha.',
+          'Sei que # dentro de uma string não vira comentário.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que o interpretador Python faz com uma linha que começa com #?', options:['Executa normalmente','Ignora completamente aquela parte da linha','Gera um erro','Exibe a linha na tela'], correct:1, explanation:'O interpretador ignora completamente o trecho comentado.' },
+          { q:'Até onde vai o efeito de um comentário iniciado com #?', options:['Até o próximo #','Até o fim daquela mesma linha','Até o fim do arquivo inteiro','Até a próxima linha em branco'], correct:1, explanation:'O comentário vale até o fim daquela mesma linha.' },
+          { q:'Qual das opções é um bom comentário?', options:['idade = 18  # idade recebe 18','idade = 18  # idade mínima exigida para acesso ao conteúdo','idade = 18  # dezoito','idade = 18  # variável'], correct:1, explanation:'Um bom comentário explica a intenção, não repete o código.' },
+          { q:'O símbolo # dentro de uma string, como em "10% # de desconto", é tratado como:', options:['Início de um comentário','Um erro de sintaxe','Um caractere de texto normal','O fim do programa'], correct:2, explanation:'# dentro de uma string é apenas um caractere de texto normal.' },
+          { q:'Por que comentários são úteis mesmo em programas pequenos?', options:['Porque deixam o programa mais rápido','Porque ajudam a explicar a intenção do código para quem lê depois (inclusive você mesmo)','Porque são obrigatórios em Python','Porque substituem a necessidade de testar o programa'], correct:1, explanation:'Ajudam a explicar a intenção do código para quem lê depois.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Usando Python como calculadora (introduz comentários)', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#using-python-as-a-calculator' },
+          { label:'Referência da linguagem — comentários', url:'https://docs.python.org/pt-br/3/reference/lexical_analysis.html#comments' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap5',
+  title: 'Capítulo 5 — Variáveis',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é uma variável e para que ela serve.',
+          'Como criar uma variável em Python (atribuição com =).',
+          'Como usar o valor guardado em uma variável.',
+          'Regras para nomear variáveis corretamente.',
+          'Como o valor de uma variável pode mudar ao longo do programa.'
+        ],
+        antes: 'É necessário saber usar print() e escrever comentários com # (Capítulos 2 e 4).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, todo texto que exibimos com print() estava "fixo" dentro do próprio comando. Mas a maioria dos programas precisa <b>guardar</b> valores para usá-los mais de uma vez, ou para usá-los depois de calculados. Para isso, usamos <b>variáveis</b>.',
+          'Para criar uma variável em Python, usamos o símbolo <span class="icode">=</span>, chamado de operador de <b>atribuição</b>. Ele não significa "igual", como na matemática — significa "guarde o valor à direita, e associe esse nome a ele".'
+        ],
+        glossary: [
+          { term:'variável', def:'um nome que usamos para guardar e acessar um valor dentro do programa', example:'idade, nome, preco.' },
+          { term:'atribuição', def:'a ação de associar um valor a um nome de variável, feita com o símbolo =', example:'em idade = 18, o valor 18 é atribuído ao nome idade.' }
+        ],
+        callout:'NÃO CONFUNDA: em Python, = não é o símbolo de igualdade matemática. idade = 18 não está "comparando" idade com 18 — está <b>guardando</b> o valor 18 na variável idade. Comparação de igualdade usa um símbolo diferente (==), estudado no Capítulo 12.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'Uma forma inicial (e simplificada) de imaginar uma variável é como uma caixa com uma etiqueta, guardando um valor dentro:',
+        diagram:'┌─────────────┐\n│   idade     │  ← etiqueta (nome da variável)\n│             │\n│     18      │  ← valor guardado\n└─────────────┘\n\nCódigo correspondente:\n   idade = 18',
+        note:null,
+        extra:'Essa imagem de "caixa" é útil para começar, mas não é tecnicamente exata. Na prática, o Python cria o valor 18 na memória do computador, e o nome idade funciona como uma <b>referência</b> que aponta para esse valor — mais parecido com uma etiqueta colada em um objeto do que com uma caixa que guarda uma cópia dele. Essa distinção fica mais importante ao trabalharmos com listas (Capítulo 25), mas por enquanto a ideia de "guardar um valor com um nome" já é suficiente para programar corretamente.'
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Guardar a idade de uma pessoa em uma variável e exibi-la.',
+        algoritmo:null,
+        code:'# Armazena a idade de uma pessoa na variável "idade"\nidade = 18\n\n# Exibe o valor guardado na variável "idade"\nprint(idade)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo" para acompanhar.',
+        steps:[
+          'Linha: idade = 18',
+          'O Python cria o valor 18',
+          'Associa o nome "idade" a esse valor',
+          'idade agora "vale" 18',
+          'Linha: print(idade)',
+          'O Python procura o valor guardado em "idade"',
+          'Encontra: 18',
+          'Exibe: 18'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'idade = 18', explanation:'<b>idade</b> é o nome da variável — escolhido por quem escreve o programa, de forma que descreva o que aquele valor representa.<br><br><b>=</b> é o operador de atribuição: guarda o valor à direita na variável à esquerda.<br><br><b>18</b> é o valor que está sendo guardado, um número inteiro.<br><br>Depois desta linha, sempre que escrevermos idade no restante do programa, o Python vai substituir esse nome pelo valor 18.' },
+          { code:'print(idade)', explanation:'Repare que <b>não há aspas</b> ao redor de idade aqui. Isso é intencional: idade sem aspas é o <b>nome da variável</b>, e o Python vai buscar o valor guardado nela. Se colocássemos aspas (print("idade")), o Python exibiria literalmente a palavra idade, e não o número 18.<br><br>print(idade) exibe o <b>valor atual</b> da variável idade, ou seja, 18.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'18',
+        modIntro:'O valor guardado em uma variável pode ser alterado a qualquer momento, bastando fazer uma nova atribuição:',
+        modCode:'# Armazena a idade inicial\nidade = 18\nprint(idade)\n\n# Atualiza o valor guardado na mesma variável\nidade = 19\nprint(idade)',
+        modTrace:'idade = 18\n   ↓\nidade vale 18\n   ↓\nprint(idade) → exibe 18\n\nidade = 19\n   ↓\nidade agora vale 19 (o valor anterior, 18, foi substituído)\n   ↓\nprint(idade) → exibe 19',
+        modResult:'18\n19',
+        modNote:'Note que a variável idade sempre guarda um único valor por vez: ao receber um novo valor, o valor anterior é substituído, não somado nem mantido em paralelo.',
+        runnable:true
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Usar aspas ao exibir o valor de uma variável', code:'nome = "Ana"\nprint("nome")', body:'Isso exibe literalmente a palavra nome, e não o valor Ana, porque "nome" entre aspas é tratado como texto fixo, não como o nome de uma variável. O correto é print(nome).' },
+          { title:'🐞 Usar uma variável antes de criá-la', code:'print(cidade)\ncidade = "Recife"', body:'O Python executa as linhas em ordem, de cima para baixo. Na primeira linha, a variável cidade ainda não existe, então o programa é interrompido com um erro.' },
+          { title:'🐞 Nomes de variáveis inválidos', code:'1idade = 18', body:'Nomes de variáveis em Python não podem começar com um número. Nomes válidos podem começar com letras ou _ (sublinhado), e podem conter números depois da primeira posição (ex.: idade1 é válido).' }
+        ],
+        howToRead:'Ao tentar usar uma variável que ainda não foi criada, o Python mostra: <span class="icode">NameError: name \'cidade\' is not defined</span><br><br>NameError → erro relacionado a um <b>nome</b> que o Python não reconhece.<br>name \'cidade\' is not defined → o nome cidade não foi definido (não existe nenhuma variável com esse nome até aquele ponto do programa).<br><br>Sempre que aparecer NameError, verifique se a variável foi criada (com =) <b>antes</b> de ser usada.',
+        tryIt:true,
+        tryItCode:'print(cidade)\ncidade = "Recife"'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Guardar o nome e a cidade de uma pessoa em variáveis, e exibir essas informações.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'nome = "Carlos"     → nome vale "Carlos"\ncidade = "Curitiba" → cidade vale "Curitiba"\nprint(nome)         → exibe Carlos\nprint(cidade)       → exibe Curitiba',
+        code:'# Guarda o nome da pessoa\nnome = "Carlos"\n\n# Guarda a cidade onde a pessoa mora\ncidade = "Curitiba"\n\n# Exibe o nome guardado\nprint(nome)\n\n# Exibe a cidade guardada\nprint(cidade)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'code', prompt:'Crie uma variável chamada nome_produto guardando o texto "Caneta azul", e exiba seu valor com print().', starter:'', gabarito:'nome_produto = "Caneta azul"\nprint(nome_produto)' },
+          { kind:'text', prompt:'O que a linha preco = 15 faz?', gabarito:'Cria (ou atualiza) a variável preco, guardando o valor 15.' },
+          { kind:'text', prompt:'Por que print(idade) e print("idade") produzem resultados diferentes?', gabarito:'Porque print(idade) busca o valor guardado na variável idade, enquanto print("idade") exibe literalmente o texto "idade".' },
+          { kind:'text', prompt:'Um nome de variável pode começar com um número? Justifique.', gabarito:'Não — nomes de variáveis não podem começar com número em Python.' },
+          { kind:'text', prompt:'O que acontece quando você atribui um novo valor a uma variável que já existia?', gabarito:'O valor anterior é substituído pelo novo valor; a variável passa a guardar apenas o valor mais recente.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie três variáveis (nome, idade, cidade) com valores à sua escolha, e exiba cada uma delas em uma linha separada.', starter:'', gabarito:'nome = "Samuel"\nidade = 17\ncidade = "São Paulo"\nprint(nome)\nprint(idade)\nprint(cidade)' },
+          { kind:'code', prompt:'Crie uma variável saldo com o valor 100. Em seguida, atualize essa mesma variável para o valor 150, exibindo o valor de saldo antes e depois da atualização.', starter:'', gabarito:'saldo = 100\nprint(saldo)\nsaldo = 150\nprint(saldo)' },
+          { kind:'code', prompt:'Encontre e corrija o erro no código abaixo:\nprint(pontuacao)\npontuacao = 0', starter:'print(pontuacao)\npontuacao = 0', gabarito:'Erro: pontuacao é usada antes de existir.\nCorreção:\npontuacao = 0\nprint(pontuacao)' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que simule o controle de um placar de jogo: crie uma variável pontos começando em 0, exiba seu valor, depois atualize essa variável três vezes seguidas (10, depois 25, depois 40), exibindo o valor de pontos a cada atualização.', starter:'', gabarito:'pontos = 0\nprint(pontos)\npontos = 10\nprint(pontos)\npontos = 25\nprint(pontos)\npontos = 40\nprint(pontos)' },
+          { kind:'text', prompt:'Desafio: explique, com suas próprias palavras, por que a analogia da "caixa com etiqueta" é útil para começar a entender variáveis, mas não é totalmente precisa sobre o que realmente acontece dentro do Python.', gabarito:'A explicação deve mencionar que o Python não guarda uma cópia dentro de uma "caixa fechada": o nome da variável é uma referência ao valor, o que fica mais evidente ao estudar listas (Capítulo 25).' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'CRIAR UMA VARIÁVEL:\n   nome_da_variavel = valor\n\nUSAR O VALOR GUARDADO:\n   print(nome_da_variavel)     ← sem aspas!\n\nATUALIZAR O VALOR:\n   nome_da_variavel = novo_valor\n   (o valor anterior é substituído)\n\nREGRAS DE NOME:\n   - pode conter letras, números e _\n   - não pode começar com número\n   - não pode ter espaços\n   - é sensível a maiúsculas/minúsculas (idade ≠ Idade)'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é uma variável e para que ela serve.',
+          'Sei criar uma variável usando =.',
+          'Sei exibir o valor de uma variável com print(), sem usar aspas.',
+          'Sei que = em Python é atribuição, não igualdade matemática.',
+          'Sei que usar uma variável antes de criá-la gera NameError.',
+          'Sei as regras básicas para nomear variáveis.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que a linha preco = 15 faz?', options:['Compara preco com 15','Guarda o valor 15 na variável preco','Exibe o valor 15 na tela','Cria um erro, pois preco já deveria existir'], correct:1, explanation:'preco = 15 guarda o valor 15 na variável preco.' },
+          { q:'Qual é a diferença entre print(nome) e print("nome")?', options:['Nenhuma diferença','print(nome) exibe o valor guardado na variável; print("nome") exibe literalmente a palavra "nome"','print("nome") exibe o valor guardado na variável; print(nome) gera erro','Ambos geram erro'], correct:1, explanation:'print(nome) usa a variável; print("nome") é texto literal.' },
+          { q:'O que acontece se você tentar usar uma variável antes de criá-la?', options:['O Python cria a variável automaticamente com valor 0','O programa gera um NameError','O programa executa normalmente, exibindo um espaço em branco','O Python ignora a linha'], correct:1, explanation:'Gera NameError.' },
+          { q:'Qual das opções é um nome de variável válido em Python?', options:['2idade','idade do aluno','idade_aluno','idade-aluno'], correct:2, explanation:'idade_aluno é um nome válido.' },
+          { q:'Depois de saldo = 100 e, em seguida, saldo = 150, qual é o valor de saldo?', options:['100','150','250','Os dois valores ao mesmo tempo'], correct:1, explanation:'O valor mais recente substitui o anterior: 150.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Primeiros passos para a programação (variáveis)', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#first-steps-towards-programming' },
+          { label:'Referência da linguagem — instruções de atribuição', url:'https://docs.python.org/pt-br/3/reference/simple_stmts.html#assignment-statements' },
+          { label:'Referência da linguagem — identificadores e palavras-chave', url:'https://docs.python.org/pt-br/3/reference/lexical_analysis.html#identifiers' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap6',
+  title: 'Capítulo 6 — Tipos de dados',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Por que todo valor em Python possui um tipo.',
+          'Os quatro tipos básicos: int, float, str e bool.',
+          'Como descobrir o tipo de um valor com type().',
+          'Por que misturar tipos incompatíveis pode gerar erro.'
+        ],
+        antes: 'É necessário saber criar e usar variáveis (Capítulo 5).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Todo valor que existe dentro de um programa Python possui um <b>tipo de dado</b>, que determina o que aquele valor representa e quais operações podem ser feitas com ele. Por exemplo, faz sentido somar dois números, mas não faz sentido "somar" duas frases da mesma forma.',
+          'Os quatro tipos básicos que vamos usar neste início da apostila: <b>int</b> (números inteiros: 18, -3, 0), <b>float</b> (números com casas decimais, sempre com ponto: 1.5, -0.25, 10.0), <b>str</b> (texto, entre aspas: "Ana", "São Paulo") e <b>bool</b> (apenas dois valores possíveis: True, False).',
+          'Para descobrir o tipo de um valor ou de uma variável, o Python oferece a função <span class="icode">type()</span>.'
+        ],
+        glossary: [
+          { term:'tipo de dado', def:'a categoria de um valor, que determina como ele pode ser usado', example:'18 é um número inteiro; "Ana" é um texto.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'18        →  int    (número inteiro)\n1.5       →  float  (número com casas decimais)\n"Ana"     →  str    (texto)\nTrue      →  bool   (verdadeiro/falso)\n\ntype(18)     →  <class \'int\'>\ntype(1.5)    →  <class \'float\'>\ntype("Ana")  →  <class \'str\'>\ntype(True)   →  <class \'bool\'>',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Descobrir o tipo de dado guardado em uma variável.',
+        algoritmo:null,
+        code:'# Guarda a idade de uma pessoa (um número inteiro)\nidade = 18\n\n# Exibe o tipo de dado da variável idade\nprint(type(idade))',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'idade = 18',
+          'Python cria o valor 18, do tipo int, e associa a idade',
+          'type(idade)',
+          'Python verifica o tipo do valor guardado em idade',
+          'Encontra: int',
+          'print(type(idade))',
+          'Exibe: <class \'int\'>'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'idade = 18', explanation:'Cria a variável idade, guardando o valor 18, que é do tipo int (número inteiro).' },
+          { code:'print(type(idade))', explanation:'type(idade) é uma chamada de função que <b>recebe</b> a variável idade e <b>devolve</b> o tipo daquele valor.<br><br>O resultado devolvido por type() é então passado para print(), que o exibe na tela.<br><br>A saída <span class="icode">&lt;class \'int\'&gt;</span> é a forma como o Python informa que o valor é do tipo int. Por enquanto, basta reconhecer o nome do tipo (int) dentro do texto exibido — a palavra "class" (classe) será explicada em profundidade no Capítulo 48.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'<class \'int\'>',
+        modIntro:'Vamos verificar o tipo de vários valores diferentes:',
+        modCode:'# Testa o tipo de diferentes valores\nprint(type(18))         # número inteiro\nprint(type(1.5))        # número com casas decimais\nprint(type("Ana"))      # texto\nprint(type(True))       # booleano',
+        modResult:'<class \'int\'>\n<class \'float\'>\n<class \'str\'>\n<class \'bool\'>',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'int versus float: 10 é int (inteiro), mas 10.0 é float (ponto flutuante), mesmo representando "o mesmo número" na matemática. Para o Python, a presença do ponto decimal já define o tipo como float.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar somar texto com número diretamente', code:'idade = 18\nprint("Idade: " + idade)', body:'Isso gera erro, porque "Idade: " é do tipo str e idade é do tipo int — o Python não sabe automaticamente como "juntar" um texto com um número usando +. A conversão de tipos, que resolve esse problema, será estudada no Capítulo 10.' },
+          { title:'🐞 Usar vírgula em vez de ponto em números decimais', code:'preco = 19,90', body:'Em Python, o separador decimal é sempre o ponto. 19,90 não é interpretado como o número 19,9 — o Python entende essa linha como algo completamente diferente. O correto é preco = 19.90' }
+        ],
+        howToRead:'Ao tentar somar uma str com um int diretamente, o Python mostra: <span class="icode">TypeError: can only concatenate str (not "int") to str</span><br><br>TypeError → erro relacionado a um <b>tipo</b> de dado incompatível com a operação tentada.<br><br>Sempre que aparecer TypeError, o problema está relacionado a uma operação sendo usada com tipos de dado que não combinam entre si.',
+        tryIt:true,
+        tryItCode:'idade = 18\nprint("Idade: " + idade)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Criar variáveis de cada tipo básico e confirmar seus tipos.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Cria uma variável de cada tipo básico\nnome = "Beatriz"     # str\nidade = 16           # int\naltura = 1.65        # float\nestudante = True     # bool\n\n# Exibe o tipo de cada uma\nprint(type(nome))\nprint(type(idade))\nprint(type(altura))\nprint(type(estudante))',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Qual é o tipo de dado do valor 25?', gabarito:'int' },
+          { kind:'text', prompt:'Qual é o tipo de dado do valor 25.5?', gabarito:'float' },
+          { kind:'text', prompt:'Qual é o tipo de dado do valor "25" (com aspas)?', gabarito:'str' },
+          { kind:'text', prompt:'Qual é o tipo de dado do valor False?', gabarito:'bool' },
+          { kind:'code', prompt:'Escreva o código que descobre o tipo da variável cidade = "Belém".', starter:'cidade = "Belém"', gabarito:'cidade = "Belém"\nprint(type(cidade))' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie quatro variáveis, uma de cada tipo básico (int, float, str, bool), com valores à sua escolha, e exiba o tipo de cada uma.', starter:'', gabarito:'Resposta prática com uma variável de cada tipo e type() para cada uma.' },
+          { kind:'text', prompt:'Explique por que 10 e "10" têm tipos diferentes, mesmo "parecendo" o mesmo valor.', gabarito:'10 é um número (int); "10" é um texto (str) — mesmo "parecendo" o mesmo valor, são tipos diferentes, com operações diferentes disponíveis.' },
+          { kind:'text', prompt:'O código abaixo gera erro. Explique por quê:\nmensagem = "Você tem " + 15 + " anos"', gabarito:'Gera erro porque "Você tem " é str e 15 é int; o Python não soma diretamente uma string com um número usando +.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que crie cinco variáveis representando dados de um produto de loja: nome (str), preço (float), quantidade em estoque (int), se está em promoção (bool) e categoria (str). Exiba o valor e o tipo de cada uma dessas variáveis.', starter:'', gabarito:'Resposta prática, criando cinco variáveis de tipos variados e exibindo valor e tipo de cada.' },
+          { kind:'text', prompt:'Desafio: por que você acha que Python diferencia int de float, em vez de tratar todo número da mesma forma? Que tipo de problema isso pode evitar?', gabarito:'A reflexão deve citar que separar int de float evita ambiguidades e erros de arredondamento em cálculos que precisam ser exatos (como contagem de itens).' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'int    → números inteiros           18, -3, 0\nfloat  → números com casas decimais 1.5, -0.25, 10.0\nstr    → texto, entre aspas         "Ana", "São Paulo"\nbool   → verdadeiro ou falso        True, False\n\ntype(valor)  → descobre o tipo de um valor ou variável'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é um tipo de dado.',
+          'Sei diferenciar int, float, str e bool.',
+          'Sei usar type() para descobrir o tipo de um valor.',
+          'Sei que números decimais em Python usam ponto, não vírgula.',
+          'Sei que somar str com int diretamente gera TypeError.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual é o tipo de dado do valor 3.14?', options:['int','float','str','bool'], correct:1, explanation:'3.14 tem casas decimais: float.' },
+          { q:'Qual é o tipo de dado do valor "3.14" (entre aspas)?', options:['int','float','str','bool'], correct:2, explanation:'Entre aspas é sempre str.' },
+          { q:'O que type() faz?', options:['Converte um valor para outro tipo','Exibe o tipo de um valor ou variável','Cria uma nova variável','Soma dois valores'], correct:1, explanation:'type() exibe o tipo de um valor.' },
+          { q:'O que aconteceria ao executar "Nota: " + 10?', options:['Exibiria Nota: 10','Geraria um TypeError','Exibiria Nota:  sem o número','Exibiria apenas 10'], correct:1, explanation:'str + int gera TypeError.' },
+          { q:'Como Python representa números decimais?', options:['Com vírgula, como 19,90','Com ponto, como 19.90','Sempre como texto','Não é possível representar números decimais'], correct:1, explanation:'Sempre com ponto.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Números', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#numbers' },
+          { label:'Documentação Python — Strings', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#strings' },
+          { label:'Referência da biblioteca padrão — Tipos embutidos', url:'https://docs.python.org/pt-br/3/library/stdtypes.html' },
+          { label:'Referência da função embutida type()', url:'https://docs.python.org/pt-br/3/library/functions.html#type' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap7',
+  title: 'Capítulo 7 — Números e operações matemáticas',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Os operadores matemáticos básicos do Python: +, -, *, /, //, %, **.',
+          'A diferença entre divisão normal (/) e divisão inteira (//).',
+          'Para que serve o operador de resto da divisão (%).',
+          'A ordem em que o Python resolve operações misturadas (precedência).',
+          'Como guardar o resultado de um cálculo em uma variável.'
+        ],
+        antes: 'É necessário saber criar variáveis (Capítulo 5) e conhecer os tipos int e float (Capítulo 6).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Python oferece operadores para realizar as operações matemáticas mais comuns diretamente sobre números (int ou float): <span class="icode">+</span> soma, <span class="icode">-</span> subtração, <span class="icode">*</span> multiplicação, <span class="icode">/</span> divisão (sempre float), <span class="icode">//</span> divisão inteira, <span class="icode">%</span> módulo (resto) e <span class="icode">**</span> potência.',
+          'Dois operadores merecem atenção especial: <b>// (divisão inteira)</b> divide dois números e <b>descarta</b> qualquer parte decimal do resultado (7 // 2 é 3, e não 3.5). <b>% (módulo, ou resto da divisão)</b> retorna <b>apenas o resto</b> que sobraria em uma divisão inteira (7 % 2 é 1, porque 7 dividido por 2 dá 3, e sobra 1).'
+        ],
+        glossary: [
+          { term:'operador', def:'um símbolo que representa uma operação a ser realizada sobre um ou mais valores', example:'+ é o operador de adição.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'Assim como na matemática tradicional, o Python resolve operações misturadas seguindo uma ordem de precedência: multiplicação, divisão, divisão inteira e módulo são resolvidos antes de adição e subtração. Parênteses forçam uma ordem diferente.',
+        diagram:'7 dividido por 2:\n\n   7 ÷ 2 = 3, e sobra 1\n\n   7 // 2  →  3   (quantas vezes o 2 "cabe" inteiro dentro do 7)\n   7 %  2  →  1   (o que sobra depois dessas 3 vezes)\n   7 /  2  →  3.5 (divisão normal, com casas decimais)\n\n\n2 + 3 * 4\n      ↓        (multiplicação primeiro)\n2 + 12\n      ↓\n14\n\n(2 + 3) * 4\n      ↓        (parênteses primeiro)\n5 * 4\n      ↓\n20',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Calcular e guardar o resultado de uma soma.',
+        algoritmo:null,
+        code:'# Calcula a soma de dois valores e guarda o resultado\nresultado = 5 + 2\n\n# Exibe o resultado do cálculo\nprint(resultado)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'resultado = 5 + 2',
+          'Python calcula 5 + 2',
+          '7',
+          'resultado = 7',
+          'print(resultado)',
+          'Exibe: 7'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'resultado = 5 + 2', explanation:'O Python primeiro calcula a expressão à direita do = (5 + 2), obtendo 7. Só depois esse valor calculado (7) é guardado na variável resultado. Essa ordem — calcular primeiro, atribuir depois — vale para qualquer atribuição em Python.' },
+          { code:'print(resultado)', explanation:'Exibe o valor atualmente guardado em resultado, que é 7.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'7',
+        modIntro:'Vamos testar os sete operadores com os mesmos dois números, 7 e 2:',
+        modCode:'# Testa os operadores matemáticos com os valores 7 e 2\nprint(7 + 2)   # adição\nprint(7 - 2)   # subtração\nprint(7 * 2)   # multiplicação\nprint(7 / 2)   # divisão normal\nprint(7 // 2)  # divisão inteira\nprint(7 % 2)   # resto da divisão\nprint(7 ** 2)  # potência',
+        modResult:'9\n5\n14\n3.5\n3\n1\n49',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'/ versus //: / sempre devolve um float, mesmo quando o resultado é "exato" (10 / 2 resulta em 5.0, não 5). Já // devolve a parte inteira da divisão, descartando qualquer resto (10 // 2 resulta em 5, e 7 // 2 resulta em 3, não 3.5).'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Dividir por zero', code:'resultado = 10 / 0', body:'Matematicamente, divisão por zero não é definida, e o Python não permite essa operação — ela interrompe o programa com um erro.' },
+          { title:'🐞 Esquecer a precedência dos operadores', code:'media = 8 + 6 / 2', body:'Um iniciante pode esperar que isso calcule (8 + 6) / 2 = 7, mas o Python resolve a divisão antes da soma: 8 + (6 / 2) = 8 + 3.0 = 11.0. Quando a intenção é somar primeiro, é necessário usar parênteses explicitamente: (8 + 6) / 2.' },
+          { title:'🐞 Confundir // com /', code:'media = 17 // 2', body:'Se a intenção era calcular uma média exata (8.5), usar // por engano resulta em 8 (a parte inteira apenas), o que está incorreto para esse caso.' }
+        ],
+        howToRead:'Ao dividir por zero, o Python mostra: <span class="icode">ZeroDivisionError: division by zero</span><br><br>ZeroDivisionError → erro específico de uma divisão cujo divisor é zero.<br><br>A solução é sempre garantir, no próprio programa, que o valor usado como divisor nunca seja zero.',
+        tryIt:true,
+        tryItCode:'resultado = 10 / 0\nprint(resultado)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Calcular quantas caixas fechadas de 6 unidades são necessárias para embalar 20 produtos, e quantos produtos sobram soltos.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'produtos = 20\npor_caixa = 6\n\ncaixas_cheias = 20 // 6\n             ↓\n             3        (6 cabe 3 vezes inteiras em 20)\n\nprodutos_restantes = 20 % 6\n             ↓\n             2        (sobram 2 depois de 3 caixas de 6: 3×6=18, 20-18=2)',
+        code:'# Quantidade total de produtos a embalar\nprodutos = 20\n\n# Quantidade de produtos que cabem em cada caixa\npor_caixa = 6\n\n# Calcula quantas caixas cheias são possíveis\ncaixas_cheias = produtos // por_caixa\n\n# Calcula quantos produtos sobram, sem completar uma caixa\nprodutos_restantes = produtos % por_caixa\n\n# Exibe os resultados\nprint(caixas_cheias)\nprint(produtos_restantes)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'code', prompt:'Calcule, sem usar o computador primeiro, o resultado de 9 + 3 * 2, e depois confirme escrevendo e executando o código.', starter:'print(9 + 3 * 2)', gabarito:'9 + 3 * 2 → 9 + 6 → 15.' },
+          { kind:'text', prompt:'Qual é o resultado de 10 / 4? E de 10 // 4?', gabarito:'10 / 4 → 2.5; 10 // 4 → 2.' },
+          { kind:'text', prompt:'Qual é o resultado de 10 % 4?', gabarito:'10 % 4 → 2.' },
+          { kind:'code', prompt:'Escreva o código que calcula 3 elevado a 4.', starter:'', gabarito:'print(3 ** 4)' },
+          { kind:'text', prompt:'Por que 10 / 2 resulta em 5.0, e não 5?', gabarito:'Porque / em Python sempre devolve um float, mesmo em divisões exatas.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que calcule a área de um retângulo de largura 8 e altura 5, guardando o resultado em uma variável chamada area, e exibindo-o.', starter:'', gabarito:'area = 8 * 5\nprint(area)' },
+          { kind:'code', prompt:'Escreva um programa que, dado um valor de 50 minutos, calcule quantas horas completas (//) e quantos minutos restantes (%) esse tempo representa.', starter:'', gabarito:'minutos = 50\nhoras = minutos // 60\nminutos_restantes = minutos % 60\nprint(horas)\nprint(minutos_restantes)' },
+          { kind:'code', prompt:'Explique por que media = 8 + 6 / 2 não resulta em 7, e reescreva o código para que ele calcule corretamente a média de 8 e 6.', starter:'media = 8 + 6 / 2\nprint(media)', gabarito:'O Python resolve / antes de +; o correto é media = (8 + 6) / 2' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Uma van transporta no máximo 15 passageiros por viagem. Para um grupo de 47 pessoas, calcule quantas viagens completas são necessárias e quantas pessoas sobrariam na última viagem.', starter:'', gabarito:'pessoas = 47\ncapacidade = 15\nviagens_completas = pessoas // capacidade\npessoas_restantes = pessoas % capacidade\nprint(viagens_completas)\nprint(pessoas_restantes)\n# Nesta etapa (sem decisões, Parte III), basta concluir em comentário que\n# é necessária mais uma viagem quando pessoas_restantes > 0.' },
+          { kind:'code', prompt:'Desafio: calcule o valor de uma potência usando multiplicações repetidas manualmente (ex.: 2 * 2 * 2 * 2 para 2 elevado a 4), e compare com o resultado obtido usando **.', starter:'', gabarito:'resultado_manual = 2 * 2 * 2 * 2\nresultado_operador = 2 ** 4\nprint(resultado_manual)\nprint(resultado_operador)\n# Ambos resultam em 16.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'+   soma\n-   subtração\n*   multiplicação\n/   divisão (sempre resulta em float)\n//  divisão inteira (descarta a parte decimal)\n%   resto da divisão\n**  potência\n\nORDEM DE RESOLUÇÃO (precedência):\n   1º: parênteses ()\n   2º: potência **\n   3º: *, /, //, %  (da esquerda para a direita)\n   4º: +, -         (da esquerda para a direita)'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar os operadores +, -, *, /, //, % e **.',
+          'Sei explicar a diferença entre / e //.',
+          'Sei explicar para que serve o operador %.',
+          'Sei que operações são resolvidas em uma ordem de precedência, e como usar parênteses para alterá-la.',
+          'Sei que dividir por zero gera ZeroDivisionError.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual é o resultado de 7 // 2?', options:['3.5','3','1','14'], correct:1, explanation:'Divisão inteira descarta a parte decimal: 3.' },
+          { q:'Qual é o resultado de 7 % 2?', options:['3.5','3','1','14'], correct:2, explanation:'O resto de 7 ÷ 2 é 1.' },
+          { q:'Qual é o resultado de 2 + 3 * 4?', options:['20','14','24','9'], correct:1, explanation:'Multiplicação primeiro: 2 + 12 = 14.' },
+          { q:'O que acontece ao tentar calcular 10 / 0?', options:['O resultado é 0','O resultado é 10','O Python interrompe o programa com ZeroDivisionError','O Python arredonda para 1'], correct:2, explanation:'Divisão por zero gera ZeroDivisionError.' },
+          { q:'Qual é o resultado de 4 ** 3?', options:['12','43','64','7'], correct:2, explanation:'4 elevado a 3 é 64.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Números (operadores aritméticos)', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#numbers' },
+          { label:'Referência da linguagem — operações aritméticas', url:'https://docs.python.org/pt-br/3/reference/expressions.html#binary-arithmetic-operations' },
+          { label:'Referência da linguagem — precedência de operadores', url:'https://docs.python.org/pt-br/3/reference/expressions.html#operator-precedence' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap8',
+  title: 'Capítulo 8 — Strings',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é uma string e como criá-la.',
+          'Como juntar (concatenar) strings com +.',
+          'O que é índice e como acessar um caractere específico de uma string.',
+          'O que é fatiamento (slicing) e como obter partes de uma string.',
+          'Métodos fundamentais de string: .upper(), .lower(), .strip(), .replace(), len().'
+        ],
+        antes: 'É necessário saber criar variáveis (Capítulo 5) e conhecer o tipo str (Capítulo 6).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Uma <b>string</b> é o tipo de dado usado para representar texto em Python. Já usamos strings desde o Capítulo 2, sempre que escrevemos algo entre aspas.',
+          'Uma forma útil de entender uma string é pensar nela como uma <b>sequência ordenada de caracteres</b>, onde cada caractere ocupa uma posição numerada, chamada de <b>índice</b>. A contagem em Python <b>sempre começa em zero</b>.',
+          'Para acessar um caractere específico, usamos colchetes <span class="icode">[]</span> com o número do índice desejado. Também é possível obter uma <b>parte</b> da string usando dois índices separados por dois-pontos — isso é chamado de <b>fatiamento</b>. Duas strings podem ser combinadas usando o operador <span class="icode">+</span>, em uma operação chamada <b>concatenação</b>.'
+        ],
+        glossary: [
+          { term:'índice', def:'a posição de um caractere dentro de uma string, contada a partir de 0', example:'na string "Ana", o caractere A está no índice 0.' },
+          { term:'fatiamento (slicing)', def:'obter um "pedaço" de uma string, indicando onde começar e onde parar', example:'texto[inicio:fim] retorna os caracteres do índice inicio até o índice fim - 1 (o índice final não é incluído).' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'"Python"\n   ↓\nP  y  t  h  o  n\n0  1  2  3  4  5     ← índices\n\ntexto[0]     →  "P"\ntexto[5]     →  "n"\ntexto[0:3]   →  "Pyt"    (do índice 0 até o 2, o 3 não entra)\ntexto[2:]    →  "thon"   (do índice 2 até o final)\ntexto[:2]    →  "Py"     (do início até o índice 1, o 2 não entra)',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Acessar o primeiro caractere de uma string por índice.',
+        algoritmo:null,
+        code:'# Guarda o nome da linguagem em uma variável do tipo string\nnome = "Python"\n\n# Exibe o primeiro caractere da string (índice 0)\nprint(nome[0])',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'nome = "Python"',
+          'Python cria a string "Python" e organiza seus caracteres com índices:\n   P(0) y(1) t(2) h(3) o(4) n(5)',
+          'nome[0]',
+          'Python busca o caractere no índice 0',
+          'Encontra: "P"',
+          'print(nome[0])',
+          'Exibe: P'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'nome = "Python"', explanation:'Cria a variável nome, guardando a string "Python".' },
+          { code:'print(nome[0])', explanation:'nome[0] acessa o caractere no índice 0 da string guardada em nome. Como a contagem começa em 0, o índice 0 corresponde ao <b>primeiro</b> caractere, "P". print() exibe esse caractere.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'P',
+        modIntro:'Vamos combinar concatenação, índices, fatiamento e alguns métodos úteis:',
+        modCode:'nome = "Ana Beatriz"\n\n# Concatenação: junta duas strings\nsaudacao = "Olá, " + nome\nprint(saudacao)\n\n# Índice: acessa um único caractere\nprint(nome[0])\n\n# Fatiamento: obtém uma parte da string\nprint(nome[0:3])\n\n# len(): descobre o comprimento (quantidade de caracteres) da string\nprint(len(nome))\n\n# .upper(): converte todos os caracteres para maiúsculas\nprint(nome.upper())\n\n# .lower(): converte todos os caracteres para minúsculas\nprint(nome.lower())',
+        modResult:'Olá, Ana Beatriz\nA\nAna\n11\nANA BEATRIZ\nana beatriz',
+        modNote:'.upper() e .lower() são chamados de métodos — funções associadas a um valor específico, chamadas com um ponto (.) logo depois dele. Já vale reconhecer o padrão valor.metodo() — o assunto será aprofundado no Capítulo 33.',
+        runnable:true,
+        extraBlocks:[
+          { title:'Mais dois métodos úteis: .strip() e .replace()', intro:'.strip() remove espaços em branco do início e do fim de uma string; .replace() substitui um trecho da string por outro.', code:'mensagem = "   Olá!   "\nprint(mensagem.strip())          # "Olá!" (sem os espaços nas pontas)\n\nfrase = "Eu gosto de Java"\nprint(frase.replace("Java", "Python"))  # "Eu gosto de Python"', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar acessar um índice que não existe', code:'nome = "Ana"\nprint(nome[10])', body:'A string "Ana" só tem os índices 0, 1 e 2. Tentar acessar o índice 10 gera um erro, porque essa posição não existe.' },
+          { title:'🐞 Esquecer que a contagem de índices começa em zero', code:'nome = "Ana"\nprint(nome[1])  # esperando "A", mas o resultado é "n"', body:'Um erro comum de iniciantes é pensar que nome[1] retorna o primeiro caractere. Na verdade, nome[0] é o primeiro; nome[1] já é o segundo.' },
+          { title:'🐞 Confundir concatenação com soma numérica', code:'resultado = "5" + "3"\nprint(resultado)', body:'Como "5" e "3" são strings (não números), o + aqui <b>concatena</b> os textos, resultando em "53", e não em 8.' }
+        ],
+        howToRead:'Ao acessar um índice que não existe, o Python mostra: <span class="icode">IndexError: string index out of range</span><br><br>IndexError → erro relacionado a um <b>índice</b> inválido.<br><br>A solução é sempre confirmar quantos caracteres a string realmente tem (por exemplo, usando len()) antes de acessar um índice específico.',
+        tryIt:true,
+        tryItCode:'nome = "Ana"\nprint(nome[10])'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'A partir do nome completo de uma pessoa, exibir apenas as suas iniciais e o nome em maiúsculas.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'nome_completo = "joana silva"\n\nnome_completo[0]         →  "j"\n"j".upper()               →  "J"\nprimeira_letra = "J"\n\nnome_completo.upper()    →  "JOANA SILVA"\nnome_maiusculo = "JOANA SILVA"',
+        code:'# Nome completo da pessoa\nnome_completo = "joana silva"\n\n# Primeira letra do nome, convertida para maiúscula\nprimeira_letra = nome_completo[0].upper()\n\n# Nome completo inteiro, convertido para maiúsculas\nnome_maiusculo = nome_completo.upper()\n\n# Exibe os resultados\nprint(primeira_letra)\nprint(nome_maiusculo)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Dada a string linguagem = "Python", qual é o valor de linguagem[0]? E de linguagem[5]?', gabarito:'linguagem[0] → "P"; linguagem[5] → "n".' },
+          { kind:'text', prompt:'O que len("Programação") retorna?', gabarito:'12 (contando o espaço, se houver; "Programação" tem 12 caracteres).' },
+          { kind:'text', prompt:'O que "casa" + "co" retorna?', gabarito:'"casaco".' },
+          { kind:'text', prompt:'O que "Python".upper() retorna?', gabarito:'"PYTHON".' },
+          { kind:'text', prompt:'Qual é o índice do primeiro caractere de qualquer string em Python?', gabarito:'0.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Dada a string cidade = "Florianópolis", escreva o código que exibe apenas os quatro primeiros caracteres, usando fatiamento.', starter:'cidade = "Florianópolis"', gabarito:'cidade = "Florianópolis"\nprint(cidade[0:4])  # "Flor"' },
+          { kind:'code', prompt:'Escreva um programa que defina o nome de um produto com espaços extras nas pontas, como "   Caderno   ", e exiba o nome já sem esses espaços, usando .strip().', starter:'produto = "   Caderno   "', gabarito:'produto = "   Caderno   "\nprint(produto.strip())' },
+          { kind:'code', prompt:'Escreva um programa que substitua a palavra "ruim" por "ótimo" na frase "O produto está ruim", usando .replace(), e exiba o resultado.', starter:'frase = "O produto está ruim"', gabarito:'frase = "O produto está ruim"\nprint(frase.replace("ruim", "ótimo"))' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'A partir de frase = "Python é divertido", exiba: (1) o comprimento total, (2) a frase em maiúsculas, (3) apenas a primeira palavra (fatiamento, o espaço está no índice 6), e (4) o último caractere, usando um índice negativo (frase[-1]).', starter:'frase = "Python é divertido"', gabarito:'frase = "Python é divertido"\nprint(len(frase))\nprint(frase.upper())\nprint(frase[0:6])\nprint(frase[-1])\n# Índices negativos contam a partir do final da string (-1 é o último\n# caractere), útil para acessar o fim de um texto sem saber seu comprimento.' },
+          { kind:'code', prompt:'Desafio: monte um "crachá" simples a partir de duas variáveis, nome e cargo, concatenando-as junto com textos fixos, de forma que a saída fique parecida com:\n=================\n   Ana Beatriz\n   Desenvolvedora\n=================', starter:'nome = "Ana Beatriz"\ncargo = "Desenvolvedora"', gabarito:'nome = "Ana Beatriz"\ncargo = "Desenvolvedora"\nprint("=================")\nprint("   " + nome)\nprint("   " + cargo)\nprint("=================")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'STRING → sequência de caracteres, sempre entre aspas\n\nÍNDICE     texto[posicao]        → um único caractere (contagem começa em 0)\nFATIAMENTO texto[inicio:fim]     → um pedaço da string (fim não é incluído)\nCONCATENAÇÃO texto1 + texto2     → junta duas strings\n\nlen(texto)          → quantidade de caracteres\ntexto.upper()        → tudo em maiúsculas\ntexto.lower()        → tudo em minúsculas\ntexto.strip()        → remove espaços das pontas\ntexto.replace(a, b)  → troca "a" por "b" no texto'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é uma string e como criá-la.',
+          'Sei acessar um caractere por índice, sabendo que a contagem começa em 0.',
+          'Sei usar fatiamento ([inicio:fim]) para obter parte de uma string.',
+          'Sei concatenar strings com +.',
+          'Sei usar len(), .upper(), .lower(), .strip() e .replace().',
+          'Sei que acessar um índice inexistente gera IndexError.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Na string "Brasil", qual é o valor de "Brasil"[0]?', options:['"B"','"r"','"l"','Erro'], correct:0, explanation:'Índice 0 é o primeiro caractere: "B".' },
+          { q:'O que "Brasil"[0:3] retorna?', options:['"Bra"','"Bras"','"rasil"','"B"'], correct:0, explanation:'Índices 0, 1 e 2: "Bra".' },
+          { q:'O que len("Python") retorna?', options:['5','6','7','"Python"'], correct:1, explanation:'"Python" tem 6 caracteres.' },
+          { q:'O que "5" + "3" retorna?', options:['8','"53"','Erro','"8"'], correct:1, explanation:'São strings: o + concatena, resultando em "53".' },
+          { q:'O que acontece ao acessar um índice que não existe em uma string?', options:['O Python retorna um espaço em branco','O Python retorna None','O Python gera IndexError','O Python arredonda para o índice mais próximo'], correct:2, explanation:'Gera IndexError.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Strings (criação, concatenação, índices e fatiamento)', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#strings' },
+          { label:'Documentação Python — Mais sobre Strings (métodos)', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html' },
+          { label:'Referência da biblioteca padrão — Métodos de str', url:'https://docs.python.org/pt-br/3/library/stdtypes.html#string-methods' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap9',
+  title: 'Capítulo 9 — Entrada de dados com input()',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como receber um valor digitado pelo usuário com input().',
+          'Por que input() sempre devolve um texto (str), mesmo que o usuário digite números.',
+          'Como guardar o valor recebido em uma variável.',
+          'Os primeiros problemas ao tentar fazer contas com um valor vindo de input() sem conversão (resolvido no Capítulo 10).'
+        ],
+        antes: 'É necessário saber criar variáveis (Capítulo 5), conhecer tipos de dados (Capítulo 6) e usar print() (Capítulo 2).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, todos os valores usados em nossos programas já estavam fixos dentro do próprio código. Para que um programa seja realmente interativo, ele precisa conseguir <b>receber informações de quem está usando ele</b>. Em Python, isso é feito com a função <span class="icode">input()</span>.',
+          'Quando <span class="icode">nome = input("Digite seu nome: ")</span> é executado, o programa exibe a mensagem, <b>pausa</b> a execução esperando o usuário digitar algo, e quando o usuário pressiona Enter, o texto digitado é devolvido por input() e guardado na variável.',
+          'Um ponto <b>fundamental</b>, que gera muita confusão em iniciantes: não importa o que o usuário digite — mesmo que sejam apenas números — input() <b>sempre</b> devolve o valor como uma string (str).'
+        ],
+        glossary: [
+          { term:'input()', def:'função que pausa o programa, exibe uma mensagem (opcional) e espera o usuário digitar algo e pressionar Enter', example:'o valor digitado é devolvido pela função, sempre como uma string (str).' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'input("Digite sua idade: ")\n        ↓\nTela exibe: Digite sua idade:\n        ↓\nUsuário digita: 20\n        ↓\nUsuário pressiona Enter\n        ↓\ninput() devolve: "20"     ← ainda é texto! (str)\n        ↓\nidade = "20"',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Neste app, input() abre uma caixa de diálogo do navegador simulando o terminal — digite algo e clique em OK.',
+        problem:'Perguntar o nome do usuário e exibi-lo.',
+        algoritmo:null,
+        code:'# Pergunta o nome do usuário e guarda a resposta na variável "nome"\nnome = input("Digite seu nome: ")\n\n# Exibe o valor que foi digitado\nprint(nome)',
+        codeNote:'Clique em "Executar" — uma caixa de diálogo vai pedir o seu nome.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Supondo que o usuário digite "Rafael". Clique em "Próximo passo".',
+        steps:[
+          'nome = input("Digite seu nome: ")',
+          'Tela exibe: Digite seu nome:',
+          'Programa pausa, esperando o usuário digitar',
+          'Usuário digita: Rafael',
+          'Usuário pressiona Enter',
+          'input() devolve: "Rafael"',
+          'nome = "Rafael"',
+          'print(nome)',
+          'Exibe: Rafael'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'nome = input("Digite seu nome: ")', explanation:'input(...) é uma chamada de função. O texto entre os parênteses, "Digite seu nome: ", é a <b>mensagem</b> exibida ao usuário antes de esperar a digitação (chamada de <i>prompt</i>). Ela é opcional — input() sozinho também funciona, apenas sem exibir nenhuma mensagem antes.<br><br>O valor digitado pelo usuário é devolvido por input() e guardado na variável nome. O tipo do valor guardado é <b>sempre</b> str, mesmo que o usuário digite apenas números.' },
+          { code:'print(nome)', explanation:'Exibe o valor guardado na variável nome — o que foi digitado pelo usuário.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Digite seu nome: Rafael\nRafael\n\n(a primeira linha combina a mensagem do input() com o que o usuário digitou; a segunda é o resultado de print(nome).)',
+        modIntro:'Vamos pedir dois dados e confirmar o tipo do que foi recebido (experimente digitar seu nome e depois um número quando as caixas de diálogo aparecerem):',
+        modCode:'# Pergunta o nome do usuário\nnome = input("Digite seu nome: ")\n\n# Pergunta a idade do usuário\nidade = input("Digite sua idade: ")\n\n# Exibe os valores recebidos\nprint(nome)\nprint(idade)\n\n# Exibe o tipo da variável idade — repare que é str, não int!\nprint(type(idade))',
+        modResult:'Digite seu nome: Camila\nDigite sua idade: 17\nCamila\n17\n<class \'str\'>',
+        modNote:'Mesmo digitando um número (17), o tipo exibido é str — input() sempre devolve texto.',
+        runnable:true,
+        naoConfunda:'"17" (string) versus 17 (inteiro): visualmente parecem o mesmo valor, mas para o Python são coisas completamente diferentes. "17" é uma sequência de dois caracteres (\'1\' e \'7\'); 17 é um número inteiro que pode ser usado em cálculos. Todo valor vindo de input() é sempre do primeiro tipo, str — mesmo quando "parece" um número.'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar fazer contas diretamente com o resultado de input()', code:'idade = input("Digite sua idade: ")\nidade_futura = idade + 5', body:'Isso gera erro, porque idade é uma str (por exemplo, "17"), e não é possível somar uma str com um número (int) diretamente usando +. Esse problema será resolvido no próximo capítulo, com <b>conversão de tipos</b>.' },
+          { title:'🐞 Esperar que input() valide automaticamente o que foi digitado', code:'idade = input("Digite sua idade: ")', body:'Se o usuário digitar "abc" em vez de um número, o Python <b>aceita</b> normalmente — input() sempre devolve o texto digitado, seja lá o que for. Validar o valor é responsabilidade de quem escreve o programa (Capítulo 46).' },
+          { title:'🐞 Esquecer de guardar o valor de input() em uma variável', code:'input("Digite seu nome: ")\nprint(nome)', body:'Se o valor digitado não for atribuído a nenhuma variável, ele é perdido assim que a linha termina de executar. A linha print(nome) geraria NameError, pois nome nunca foi criado.' }
+        ],
+        howToRead:'Ao tentar somar uma string vinda de input() com um número, o Python mostra: <span class="icode">TypeError: can only concatenate str (not "int") to str</span><br><br>O mesmo tipo de erro visto no Capítulo 6: uma operação sendo usada entre tipos incompatíveis. A causa mais comum, especificamente logo depois de um input(), é esquecer que o valor recebido é sempre uma str.',
+        tryIt:true,
+        tryItCode:'idade = input("Digite sua idade: ")\nidade_futura = idade + 5\nprint(idade_futura)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Perguntar o nome e a cidade do usuário, e exibir uma mensagem de boas-vindas combinando as duas informações.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'nome = "Lucas"\ncidade = "Salvador"\n\n"Bem-vindo(a), " + nome + ", de " + cidade + "!"\n   ↓\n"Bem-vindo(a), " + "Lucas" + ", de " + "Salvador" + "!"\n   ↓\n"Bem-vindo(a), Lucas, de Salvador!"',
+        code:'# Pergunta o nome do usuário\nnome = input("Digite seu nome: ")\n\n# Pergunta a cidade do usuário\ncidade = input("Digite sua cidade: ")\n\n# Monta e exibe uma mensagem de boas-vindas, concatenando strings\nprint("Bem-vindo(a), " + nome + ", de " + cidade + "!")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que a função input() sempre devolve, independentemente do que o usuário digite?', gabarito:'Sempre uma string (str).' },
+          { kind:'code', prompt:'Escreva o código que pergunta a cor favorita do usuário e guarda a resposta em uma variável chamada cor.', starter:'', gabarito:'cor = input("Digite sua cor favorita: ")\nprint(cor)' },
+          { kind:'text', prompt:'O que aparece na tela quando input("Digite algo: ") é executado, antes mesmo do usuário digitar qualquer coisa?', gabarito:'A mensagem "Digite algo: ", e o cursor (ou, neste app, a caixa de diálogo) aguardando digitação.' },
+          { kind:'text', prompt:'Por que idade = input("Digite sua idade: ") seguido de idade + 5 gera erro?', gabarito:'Porque idade é uma str, e str + int não é uma operação válida em Python.' },
+          { kind:'code', prompt:'É possível usar input() sem nenhuma mensagem dentro dos parênteses? Dê um exemplo.', starter:'', gabarito:'Sim: dado = input()' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que pergunte o nome de um produto e seu preço (como texto, sem se preocupar com cálculos ainda), e exiba uma frase combinando as duas informações, como "O produto Caderno custa R$ 12,90".', starter:'', gabarito:'produto = input("Nome do produto: ")\npreco = input("Preço: ")\nprint("O produto " + produto + " custa R$ " + preco)' },
+          { kind:'code', prompt:'Escreva um programa que pergunte três informações do usuário (nome, cidade e um hobby) e exiba um pequeno "cartão de visitas" combinando as três, usando concatenação.', starter:'', gabarito:'nome = input("Nome: ")\ncidade = input("Cidade: ")\nhobby = input("Hobby: ")\nprint(nome + " - " + cidade + " - " + hobby)' },
+          { kind:'text', prompt:'Explique, com suas palavras, por que type() aplicado ao resultado de um input() sempre mostra <class \'str\'>, mesmo quando o usuário digita apenas números.', gabarito:'Porque input() sempre devolve o que foi digitado como texto (str), independentemente do conteúdo digitado — a conversão para número precisa ser feita manualmente.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Pergunte ao usuário o nome de um filme e o nome de um ator/atriz favorito, e monte uma frase de recomendação, como: "Recomendo assistir a \'Nome do Filme\', com Nome do Ator!" (preste atenção em como combinar aspas simples dentro de um texto delimitado por aspas duplas).', starter:'', gabarito:'filme = input("Nome do filme: ")\nator = input("Ator/atriz favorito: ")\nprint("Recomendo assistir a \'" + filme + "\', com " + ator + "!")' },
+          { kind:'code', prompt:'Peça ao usuário para digitar sua idade, e exiba o tipo dessa variável usando type(), mesmo depois de o usuário digitar um número. Escreva, em um comentário, por que o tipo exibido é str.', starter:'', gabarito:'idade = input("Digite sua idade: ")\nprint(type(idade))\n# O tipo é str porque input() sempre devolve o valor digitado como texto,\n# independente de o conteúdo parecer um número.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'input("mensagem")\n   1. exibe a mensagem (se houver)\n   2. pausa o programa, esperando o usuário digitar\n   3. devolve o que foi digitado, SEMPRE como str\n\nvalor = input("Digite algo: ")\n   ↓\ntype(valor)  →  <class \'str\'>   (mesmo se o usuário digitar números)'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar input() para receber um dado digitado pelo usuário.',
+          'Sei guardar o valor recebido em uma variável.',
+          'Sei que input() sempre devolve uma string, mesmo com números digitados.',
+          'Sei explicar por que somar diretamente um valor de input() com um número gera erro.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que input() sempre devolve?', options:['Um número inteiro','Um valor booleano','Uma string (texto)','Depende do que o usuário digitar'], correct:2, explanation:'input() sempre devolve uma string.' },
+          { q:'O que aparece na tela ao executar nome = input("Digite seu nome: "), antes do usuário digitar algo?', options:['Nada','A mensagem "Digite seu nome:"','Um erro','O valor None'], correct:1, explanation:'A mensagem do prompt é exibida antes da digitação.' },
+          { q:'Se o usuário digitar 25 em resposta a um input(), qual é o tipo do valor guardado na variável?', options:['int','float','str','bool'], correct:2, explanation:'input() sempre devolve str.' },
+          { q:'Por que idade + 5 gera erro logo após idade = input(...)?', options:['Porque input() não existe em Python','Porque idade é uma string, e não é possível somá-la diretamente com um número','Porque 5 não é um número válido','Porque input() só aceita textos, nunca números'], correct:1, explanation:'idade é str; str + int gera erro.' },
+          { q:'É obrigatório passar uma mensagem para input()?', options:['Sim, sempre','Não, input() pode ser usado sem nenhuma mensagem','Só é obrigatório se o valor for um número','Não, mas nesse caso o programa não funciona'], correct:1, explanation:'input() pode ser usado sem mensagem.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Solicitando entrada de usuário', url:'https://docs.python.org/pt-br/3/tutorial/inputoutput.html' },
+          { label:'Referência da função embutida input()', url:'https://docs.python.org/pt-br/3/library/functions.html#input' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap10',
+  title: 'Capítulo 10 — Conversão de tipos',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como converter um valor de um tipo para outro com int(), float(), str() e bool().',
+          'Como resolver o problema visto no Capítulo 9: usar em cálculos um valor vindo de input().',
+          'Quais conversões são possíveis e quais geram erro.'
+        ],
+        antes: 'É necessário conhecer os tipos básicos (Capítulo 6) e saber usar input() (Capítulo 9).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'No capítulo anterior, vimos que input() sempre devolve uma str, e que tentar somar essa str diretamente com um número gera erro. Para resolver isso, o Python oferece funções que <b>convertem</b> um valor de um tipo para outro: <span class="icode">int()</span> converte para número inteiro, <span class="icode">float()</span> para número decimal, <span class="icode">str()</span> para texto e <span class="icode">bool()</span> para verdadeiro/falso.',
+          'Isso resolve exatamente o problema visto no capítulo anterior: <span class="icode">idade = int(input("Digite sua idade: "))</span> já converte o valor assim que ele é recebido, permitindo somá-lo com outros números em seguida.'
+        ],
+        glossary: [
+          { term:'conversão de tipo', def:'transformar um valor de um tipo em outro tipo equivalente', example:'transformar o texto "20" no número inteiro 20, usando int("20").' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'Usuário digita 17\n        ↓\ninput()\n        ↓\n"17"          ← ainda é texto (str)\n        ↓\nint("17")\n        ↓\n17            ← agora é número (int)\n        ↓\nidade = 17\n        ↓\nidade + 5\n        ↓\n22',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Converter um texto para número inteiro.',
+        algoritmo:null,
+        code:'# Guarda um valor como texto (str)\ntexto = "20"\n\n# Converte o texto para número inteiro (int)\nnumero = int(texto)\n\n# Exibe o valor já convertido\nprint(numero)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'texto = "20"',
+          'texto vale "20"  (tipo: str)',
+          'int(texto)',
+          'int("20")',
+          '20               (tipo: int)',
+          'numero = 20',
+          'print(numero)',
+          'Exibe: 20'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'texto = "20"', explanation:'Cria a variável texto, guardando a string "20" (dois caracteres: \'2\' e \'0\').' },
+          { code:'numero = int(texto)', explanation:'int(texto) recebe o valor guardado em texto e tenta convertê-lo para um número inteiro. Como "20" representa um número válido, a conversão funciona, resultando em 20 (agora um int de verdade, que pode ser usado em cálculos). Esse valor convertido é guardado na nova variável numero.' },
+          { code:'print(numero)', explanation:'Exibe o valor de numero, que é 20.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'20',
+        modIntro:'Vamos resolver, de verdade, o problema do Capítulo 9 — calcular a idade daqui a 5 anos, a partir de um valor digitado pelo usuário:',
+        modCode:'# Pergunta a idade atual do usuário (input devolve uma str)\nidade_texto = input("Digite sua idade: ")\n\n# Converte o texto recebido para número inteiro\nidade = int(idade_texto)\n\n# Agora é possível somar, pois idade é um int\nidade_futura = idade + 5\n\n# Exibe o resultado\nprint(idade_futura)',
+        modResult:'Digite sua idade: 17\n22',
+        modNote:'Também é comum ver a versão "combinada": idade = int(input("Digite sua idade: ")) faz exatamente a mesma coisa em uma única linha.',
+        runnable:true,
+        naoConfunda:'int versus float: use int() quando o valor deve ser um número inteiro (idade, quantidade de itens); use float() quando o valor pode ter casas decimais (preço, altura, peso). Converter "2.5" com int() gera erro — nesse caso, o correto é float("2.5").'
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tentar converter um texto que não representa um número', code:'idade = int("dezoito")', body:'O texto "dezoito" não é um número reconhecido pelo Python — int() só converte textos que representam dígitos, como "18". Essa tentativa interrompe o programa com um erro.' },
+          { title:'🐞 Usar int() em um texto com casas decimais', code:'preco = int("19.90")', body:'Isso também gera erro: int() não converte diretamente um texto que contém ponto decimal. Para textos assim, use float() primeiro.' },
+          { title:'🐞 Esquecer de converter antes de fazer uma conta', code:'preco = input("Digite o preço: ")\ntotal = preco * 2', body:'Se preco continuar sendo uma str, o Python permite multiplicar uma string por um número inteiro, mas o resultado é a string <b>repetida</b> (ex.: "10" * 2 resulta em "1010", não 20).' }
+        ],
+        howToRead:'Ao tentar converter um texto que não representa um número, o Python mostra: <span class="icode">ValueError: invalid literal for int() with base 10: \'dezoito\'</span><br><br>ValueError → erro relacionado a um <b>valor</b> que não é adequado para a operação, mesmo tendo o tipo "certo" (uma str, nesse caso).<br><br>ValueError, ao converter tipos, normalmente significa que o texto recebido não representa o tipo de número esperado.',
+        tryIt:true,
+        tryItCode:'idade = int("dezoito")\nprint(idade)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Calcular o valor final de uma compra, aplicando um desconto fixo de R$ 5,00 sobre um preço digitado pelo usuário.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'preco_texto = "29.90"      (str)\npreco = float("29.90")\n     → 29.9                (float)\npreco_final = 29.9 - 5\n     → 24.9',
+        code:'# Pergunta o preço original do produto (input devolve uma str)\npreco_texto = input("Digite o preço do produto: R$ ")\n\n# Converte o texto para número decimal (float), pois o preço pode ter centavos\npreco = float(preco_texto)\n\n# Calcula o preço com desconto fixo de R$ 5,00\npreco_final = preco - 5\n\n# Exibe o resultado\nprint(preco_final)',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Qual função converte um texto para número inteiro?', gabarito:'int()' },
+          { kind:'text', prompt:'Qual função converte um número para texto?', gabarito:'str()' },
+          { kind:'text', prompt:'O que int("42") retorna? E o tipo desse resultado?', gabarito:'42, do tipo int.' },
+          { kind:'text', prompt:'O que aconteceria ao tentar executar int("3.5")? E float("3.5")?', gabarito:'int("3.5") gera ValueError; float("3.5") retorna 3.5 com sucesso.' },
+          { kind:'text', prompt:'Por que é necessário converter o resultado de input() antes de usá-lo em uma conta?', gabarito:'Porque input() sempre devolve str, e não é possível somar str com int diretamente.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que peça dois números ao usuário (via input()), converta ambos para int, e exiba a soma dos dois.', starter:'', gabarito:'a = int(input("Primeiro número: "))\nb = int(input("Segundo número: "))\nprint(a + b)' },
+          { kind:'code', prompt:'Escreva um programa que peça o preço de um produto (input()), converta para float, e exiba o valor com um acréscimo de 10% (multiplicando por 1.10).', starter:'', gabarito:'preco = float(input("Preço: "))\nprint(preco * 1.10)' },
+          { kind:'text', prompt:'Explique por que int("19.90") gera erro, mas float("19.90") não.', gabarito:'int() não aceita textos com ponto decimal; float() sim, pois foi feita exatamente para números com casas decimais.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário o valor de uma compra e o valor pago em dinheiro (ambos via input(), convertidos para float), calcule o troco e exiba o resultado.', starter:'', gabarito:'compra = float(input("Valor da compra: "))\npago = float(input("Valor pago: "))\ntroco = pago - compra\nprint(troco)' },
+          { kind:'code', prompt:'Desafio: peça ao usuário um número, converta para int, depois converta esse int de volta para str, e concatene esse texto com uma frase, como "Você digitou o número " + numero_como_texto. Explique, em comentário, por que a concatenação não funcionaria diretamente com o número no formato int.', starter:'', gabarito:'numero = int(input("Digite um número: "))\nnumero_texto = str(numero)\nprint("Você digitou o número " + numero_texto)\n# A concatenação direta com numero (tipo int) geraria TypeError,\n# porque + entre str e int não é permitido.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'int(valor)    → converte para número inteiro\nfloat(valor)  → converte para número decimal\nstr(valor)    → converte para texto\nbool(valor)   → converte para verdadeiro/falso\n\nFLUXO TÍPICO COM input():\n\n   Usuário digita\n        ↓\n   input() → sempre devolve str\n        ↓\n   int() ou float() → converte para número\n        ↓\n   agora é possível fazer cálculos'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar int(), float(), str() e bool() para converter valores.',
+          'Sei converter o resultado de um input() antes de usá-lo em cálculos.',
+          'Sei identificar quando uma conversão vai gerar ValueError.',
+          'Sei a diferença entre usar int() e float() conforme o tipo de número esperado.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que int("35") retorna?', options:['"35"','35 (como texto)','35 (como número inteiro)','Erro'], correct:2, explanation:'int("35") retorna o número inteiro 35.' },
+          { q:'O que acontece ao executar int("dez")?', options:['Retorna 10','Retorna 0','Gera ValueError','Gera TypeError'], correct:2, explanation:'"dez" não é um número reconhecido: ValueError.' },
+          { q:'Qual função deve ser usada para converter "19.90" corretamente?', options:['int()','float()','str()','bool()'], correct:1, explanation:'float() aceita textos com ponto decimal.' },
+          { q:'Por que é necessário converter o resultado de input() antes de somar com um número?', options:['Porque input() sempre gera erro','Porque o resultado de input() é sempre uma string','Porque somar sempre exige float()','Não é necessário, o Python converte automaticamente'], correct:1, explanation:'input() sempre devolve string.' },
+          { q:'O que str(42) retorna?', options:['42 (número)','"42" (texto)','4.2','Erro'], correct:1, explanation:'str(42) retorna o texto "42".' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Números (conversão entre int e float)', url:'https://docs.python.org/pt-br/3/tutorial/introduction.html#numbers' },
+          { label:'Referência da biblioteca padrão — int()', url:'https://docs.python.org/pt-br/3/library/functions.html#int' },
+          { label:'Referência da biblioteca padrão — float()', url:'https://docs.python.org/pt-br/3/library/functions.html#float' },
+          { label:'Referência da biblioteca padrão — str()', url:'https://docs.python.org/pt-br/3/library/functions.html#str' },
+          { label:'Referência da biblioteca padrão — bool()', url:'https://docs.python.org/pt-br/3/library/functions.html#bool' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap11',
+  title: 'Capítulo 11 — Saída com print()',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como exibir múltiplos valores em uma única chamada de print().',
+          'Os parâmetros sep e end de print().',
+          'Como formatar textos combinando variáveis usando f-strings.',
+          'Como controlar casas decimais na exibição de números com f-strings.'
+        ],
+        antes: 'É necessário saber usar print() (Capítulo 2), variáveis (Capítulo 5), tipos de dados (Capítulo 6) e conversão de tipos (Capítulo 10).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Já usamos print() várias vezes, sempre com um único valor entre parênteses. Na verdade, print() aceita <b>vários valores separados por vírgula</b>, exibindo todos na mesma linha, separados por um espaço: <span class="icode">print("Idade:", 18)</span>.',
+          'Só que combinar textos fixos com valores de variáveis usando vírgulas tem limites. Para isso, Python oferece as <b>f-strings</b> (<i>formatted strings</i>), a forma moderna e recomendada de combinar texto com valores de variáveis.',
+          'Tudo que está dentro das chaves <span class="icode">{}</span> em uma f-string é tratado como código Python de verdade (geralmente o nome de uma variável), e seu valor é inserido automaticamente no lugar, já convertido para texto — sem a necessidade de usar str() manualmente.'
+        ],
+        glossary: [
+          { term:'f-string', def:'uma string especial, escrita com um f antes das aspas, que permite inserir o valor de variáveis diretamente dentro do texto, usando chaves {}', example:'f"Olá, {nome}!".' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'nome = "Ana"\nidade = 16\n\nf"Olá, {nome}! Você tem {idade} anos."\n        ↓\nPython substitui {nome} pelo valor de nome  → "Ana"\nPython substitui {idade} pelo valor de idade → 16\n        ↓\n"Olá, Ana! Você tem 16 anos."',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Cumprimentar uma pessoa pelo nome, usando f-string.',
+        algoritmo:null,
+        code:'# Guarda o nome da pessoa que será saudada\nnome = "Ana"\n\n# Exibe uma saudação, inserindo o valor de "nome" dentro do texto\nprint(f"Olá, {nome}!")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'nome = "Ana"',
+          'nome vale "Ana"',
+          'f"Olá, {nome}!"',
+          'Python encontra {nome} dentro da f-string',
+          'Substitui pelo valor atual de nome: "Ana"',
+          'Resultado da f-string: "Olá, Ana!"',
+          'print("Olá, Ana!")',
+          'Exibe: Olá, Ana!'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique em cada linha.',
+        lines:[
+          { code:'nome = "Ana"', explanation:'Cria a variável nome, guardando o texto "Ana".' },
+          { code:'print(f"Olá, {nome}!")', explanation:'O f logo antes da primeira aspas indica que essa é uma <b>f-string</b>. Dentro do texto, {nome} é substituído automaticamente pelo valor atual da variável nome. Tudo que está fora das chaves ("Olá, " e "!") é exibido exatamente como escrito. O resultado final, já combinado, é passado para print(), que o exibe.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Olá, Ana!',
+        modIntro:'Vamos combinar várias variáveis, inclusive números, em uma única f-string:',
+        modCode:'nome = "Camila"\nidade = 17\ncidade = "Fortaleza"\n\nprint(f"{nome} tem {idade} anos e mora em {cidade}.")',
+        modResult:'Camila tem 17 anos e mora em Fortaleza.',
+        modNote:'Repare que não foi necessário converter idade (um int) para str manualmente — a f-string faz essa conversão automaticamente ao montar o texto final.',
+        runnable:true,
+        naoConfunda:'print(nome, idade) versus print(f"{nome} tem {idade} anos"): a primeira forma exibe os valores separados por espaço, sem texto adicional entre eles. A segunda forma, com f-string, permite montar frases completas e naturais, com controle total sobre a formatação.',
+        extraBlocks:[
+          { title:'Controlando casas decimais', intro:'Ao exibir valores monetários, geralmente queremos controlar quantas casas decimais aparecem. As f-strings permitem isso com :.2f, colocada logo depois da variável, dentro das chaves.', code:'preco = 19.9\nprint(f"O preço é R$ {preco:.2f}")', result:'O preço é R$ 19.90', note:'.2f significa "formate como um número decimal (f, de float), com 2 casas depois do ponto (.2)". Trocar .2f por .1f exibiria apenas uma casa decimal, e assim por diante.', runnable:true },
+          { title:'Os parâmetros sep e end de print()', intro:'Por padrão, print() separa múltiplos valores por um espaço (sep=" ") e termina cada chamada pulando para uma nova linha (end="\\n"). Ambos podem ser alterados:', code:'print("maçã", "banana", "uva", sep=", ")\nprint("Carregando", end="...")\nprint("concluído!")', result:'maçã, banana, uva\nCarregando...concluído!', note:'No primeiro print(), sep=", " separa os valores por vírgula e espaço. No segundo e terceiro print(), end="..." faz com que, em vez de pular linha, "..." seja adicionado ao final — por isso "concluído!" aparece logo depois de "Carregando...", na mesma linha.', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Esquecer o f antes das aspas', code:'nome = "Ana"\nprint("Olá, {nome}!")', body:'Sem o f, o Python trata {nome} como texto literal, exibindo exatamente Olá, {nome}! — as chaves não são substituídas pelo valor da variável.' },
+          { title:'🐞 Esquecer as chaves ao usar uma variável dentro de uma f-string', code:'nome = "Ana"\nprint(f"Olá, nome!")', body:'Sem as chaves {}, a palavra nome dentro da f-string é tratada como texto comum, exibindo literalmente Olá, nome!, em vez do valor da variável.' },
+          { title:'🐞 Usar um nome de variável que não existe dentro da f-string', code:'print(f"Olá, {usuario}!")', body:'Se a variável usuario nunca foi criada, o Python gera NameError, do mesmo jeito que geraria fora de uma f-string.' }
+        ],
+        howToRead:'Ao usar o nome de uma variável inexistente dentro de uma f-string, o Python mostra o mesmo tipo de erro visto no Capítulo 5: <span class="icode">NameError: name \'usuario\' is not defined</span><br><br>A causa e a solução são as mesmas de sempre: confirmar que a variável foi criada antes de ser usada — inclusive dentro de f-strings.',
+        tryIt:true,
+        tryItCode:'print(f"Olá, {usuario}!")'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Exibir um resumo de compra formatado, combinando texto fixo, variáveis de texto e um valor monetário com duas casas decimais.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'# Dados da compra\nproduto = "Fone de ouvido"\npreco = 89.9\n\n# Exibe um resumo formatado da compra\nprint(f"Produto: {produto}")\nprint(f"Preço: R$ {preco:.2f}")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'code', prompt:'Reescreva print("Nome:", nome) usando uma f-string equivalente.', starter:'nome = "Ana"\nprint("Nome:", nome)', gabarito:'print(f"Nome: {nome}")' },
+          { kind:'text', prompt:'O que print("a", "b", "c", sep="-") exibe?', gabarito:'a-b-c' },
+          { kind:'text', prompt:'O que f"{10 + 5}" retorna?', gabarito:'"15" — dentro das chaves é possível escrever expressões, não apenas nomes de variáveis.' },
+          { kind:'text', prompt:'Escreva uma f-string que exiba preco com exatamente duas casas decimais.', gabarito:'f"{preco:.2f}"' },
+          { kind:'text', prompt:'O que acontece se você esquecer o f antes de uma string que contém {variavel}?', gabarito:'As chaves {variavel} são exibidas literalmente, como texto comum.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Crie as variáveis nome, idade e cidade, e exiba uma frase completa sobre a pessoa usando uma única f-string.', starter:'', gabarito:'nome = "Samuel"\nidade = 17\ncidade = "São Paulo"\nprint(f"{nome} tem {idade} anos e mora em {cidade}.")' },
+          { kind:'code', prompt:'Escreva um programa que peça o preço de um produto (input() + float()) e exiba esse preço formatado com duas casas decimais, usando f-string.', starter:'', gabarito:'preco = float(input("Preço: "))\nprint(f"R$ {preco:.2f}")' },
+          { kind:'code', prompt:'Use print() com o parâmetro end="" para exibir três palavras na mesma linha, sem quebra entre elas, cada uma vinda de um print() separado.', starter:'', gabarito:'print("um ", end="")\nprint("dois ", end="")\nprint("três")' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça ao usuário o nome de um produto, a quantidade comprada e o preço unitário (via input(), com as devidas conversões), calcule o valor total e exiba um resumo formatado como:\nProduto: Caderno\nQuantidade: 3\nValor total: R$ 44.70', starter:'', gabarito:'produto = input("Produto: ")\nquantidade = int(input("Quantidade: "))\npreco_unitario = float(input("Preço unitário: "))\ntotal = quantidade * preco_unitario\nprint(f"Produto: {produto}")\nprint(f"Quantidade: {quantidade}")\nprint(f"Valor total: R$ {total:.2f}")' },
+          { kind:'code', prompt:'Desafio: reescreva, usando f-strings, um programa anterior que usava concatenação com + para combinar texto e variáveis. Compare a legibilidade das duas versões.', starter:'nome = "Lucas"\ncidade = "Salvador"\nprint("Bem-vindo(a), " + nome + ", de " + cidade + "!")', gabarito:'nome = "Lucas"\ncidade = "Salvador"\nprint(f"Bem-vindo(a), {nome}, de {cidade}!")' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'print(a, b, c)              → exibe vários valores separados por espaço\nprint(a, b, sep="-")        → troca o separador padrão\nprint(a, end="")            → troca a quebra de linha padrão\n\nf"texto {variavel} texto"   → insere o valor da variável no texto\nf"{variavel:.2f}"           → formata um número com 2 casas decimais'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei exibir múltiplos valores em um único print().',
+          'Sei usar os parâmetros sep e end de print().',
+          'Sei criar e usar f-strings para combinar texto e variáveis.',
+          'Sei formatar um número decimal com casas decimais controladas em uma f-string.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'Qual é a forma correta de uma f-string que exibe o valor de nome?', options:['print("Olá, {nome}!")','print(f"Olá, {nome}!")','print(f"Olá, nome!")','print("Olá, " f"nome" "!")'], correct:1, explanation:'print(f"Olá, {nome}!") é a forma correta.' },
+          { q:'O que f"{10 + 5}" produz?', options:['"10 + 5"','"15"','Erro','10 + 5 (número, não texto)'], correct:1, explanation:'A expressão é calculada e o resultado vira texto: "15".' },
+          { q:'O que faz :.2f dentro de uma f-string?', options:['Converte o valor para inteiro','Formata o valor com exatamente duas casas decimais','Duplica o valor','Remove o valor'], correct:1, explanation:'Formata com duas casas decimais.' },
+          { q:'O que print("a", "b", sep="-") exibe?', options:['a b','a-b','ab','a, b'], correct:1, explanation:'sep="-" troca o separador padrão por hífen: a-b.' },
+          { q:'O que acontece se você usar {variavel} em uma f-string sem antes criar essa variável?', options:['O Python exibe um espaço em branco','O Python gera NameError','O Python exibe None','O Python ignora aquela parte do texto'], correct:1, explanation:'Gera NameError, como fora da f-string.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Formatação sofisticada de saída (f-strings)', url:'https://docs.python.org/pt-br/3/tutorial/inputoutput.html#fancier-output-formatting' },
+          { label:'Referência da linguagem — Literais de string formatada (f-strings)', url:'https://docs.python.org/pt-br/3/reference/lexical_analysis.html#formatted-string-literals' },
+          { label:'Referência da biblioteca padrão — print()', url:'https://docs.python.org/pt-br/3/library/functions.html#print' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'revisao2',
+  title: 'Parada para Revisão 2 — Fim da Parte II',
+  screens: [
+    { id:'mapa', title:'Mapa mental', type:'diagram', data:{
+        intro:'Um resumo visual de tudo que vimos nos Capítulos 4 a 11.',
+        diagram:'FUNDAMENTOS\n   │\n   ├── Comentários (#) → explicam a intenção do código, ignorados na execução\n   │\n   ├── Variáveis (nome = valor)\n   │      └── guardam valores para uso posterior\n   │\n   ├── Tipos de dados\n   │      ├── int    → números inteiros\n   │      ├── float  → números decimais\n   │      ├── str    → texto\n   │      └── bool   → verdadeiro/falso\n   │\n   ├── Operadores matemáticos\n   │      + - * / // % **\n   │\n   ├── Strings\n   │      ├── índice        texto[posicao]\n   │      ├── fatiamento    texto[inicio:fim]\n   │      ├── concatenação  texto1 + texto2\n   │      └── métodos       .upper() .lower() .strip() .replace()\n   │\n   ├── input() → sempre devolve str\n   │\n   ├── Conversão de tipos\n   │      int() float() str() bool()\n   │\n   └── print() avançado\n          sep, end, f-strings, formatação :.2f',
+        note:null
+    }},
+    { id:'tabela', title:'Comandos vistos até aqui', type:'table', data:{
+        headers:['Comando/conceito','Para que serve','Exemplo'],
+        rows:[
+          ['<code>#</code>','comentar uma linha','<code># explica a intenção</code>'],
+          ['<code>=</code>','atribuir um valor a uma variável','<code>idade = 18</code>'],
+          ['<code>type()</code>','descobrir o tipo de um valor','<code>type(idade)</code>'],
+          ['<code>+ - * / // % **</code>','operações matemáticas','<code>7 // 2</code> → <code>3</code>'],
+          ['<code>texto[i]</code>','acessar caractere por índice','<code>"Ana"[0]</code> → <code>"A"</code>'],
+          ['<code>texto[i:j]</code>','fatiar uma string','<code>"Ana"[0:2]</code> → <code>"An"</code>'],
+          ['<code>len()</code>','comprimento de uma string','<code>len("Ana")</code> → <code>3</code>'],
+          ['<code>.upper()</code> / <code>.lower()</code>','maiúsculas / minúsculas','<code>"Ana".upper()</code>'],
+          ['<code>input()</code>','receber um valor digitado (sempre str)','<code>input("Nome: ")</code>'],
+          ['<code>int()</code> / <code>float()</code>','converter texto em número','<code>int("20")</code> → <code>20</code>'],
+          ['f-string','combinar texto e variáveis','<code>f"Olá, {nome}!"</code>']
+        ]
+    }},
+    { id:'errosfreq', title:'Erros frequentes', type:'list', data:{
+        intro:'Os erros mais comuns desta etapa:',
+        items:[
+          'Somar str com int diretamente (TypeError).',
+          'Esquecer que input() sempre devolve str.',
+          'Confundir / (sempre float) com // (descarta decimais).',
+          'Acessar um índice de string que não existe (IndexError).',
+          'Esquecer o f antes de uma string que usa {variavel}.',
+          'Tentar converter um texto que não representa um número (ValueError).'
+        ]
+    }},
+    { id:'perguntas', title:'Perguntas rápidas', type:'qa', data:{
+        intro:'Tente responder mentalmente antes de clicar para revelar.',
+        items:[
+          { q:'Por que idade = input("Digite sua idade: ") não pode ser somada diretamente com 5?', a:'Porque o valor devolvido por input() é sempre str; somar str com int gera erro.' },
+          { q:'Qual é a diferença entre 7 / 2 e 7 // 2?', a:'/ sempre resulta em float (com decimais); // descarta a parte decimal, retornando a parte inteira da divisão.' },
+          { q:'O que "Python"[0:3] retorna?', a:'"Pyt"' },
+          { q:'O que é necessário fazer antes de somar um valor vindo de input() com um número?', a:'Converter o valor com int() ou float().' },
+          { q:'Como se escreve uma f-string que exibe o valor de preco com duas casas decimais?', a:'f"{preco:.2f}"' }
+        ]
+    }},
+    { id:'exrevisao', title:'Exercícios de revisão', type:'exercises', data:{
+        level:'Exercícios de revisão',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que peça o nome e a idade do usuário (input()), converta a idade para int, e exiba uma frase como "Ana tem 17 anos", usando f-string.', starter:'', gabarito:'nome = input("Nome: ")\nidade = int(input("Idade: "))\nprint(f"{nome} tem {idade} anos")' },
+          { kind:'code', prompt:'Escreva um programa que peça dois números ao usuário, converta ambos para float, e exiba a soma, a subtração, a multiplicação e a divisão entre eles, cada resultado em uma linha, formatado com duas casas decimais.', starter:'', gabarito:'a = float(input("Primeiro número: "))\nb = float(input("Segundo número: "))\nprint(f"{a + b:.2f}")\nprint(f"{a - b:.2f}")\nprint(f"{a * b:.2f}")\nprint(f"{a / b:.2f}")' },
+          { kind:'code', prompt:'Dada a string frase = "Programar em Python é ótimo", exiba: o comprimento da frase, a frase em maiúsculas, e apenas os 10 primeiros caracteres (usando fatiamento).', starter:'frase = "Programar em Python é ótimo"', gabarito:'frase = "Programar em Python é ótimo"\nprint(len(frase))\nprint(frase.upper())\nprint(frase[0:10])' }
+        ]
+    }},
+    { id:'desafio', title:'Pequeno desafio', type:'exercises', data:{
+        level:'Pequeno desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa calculadora_simples.py que peça dois números ao usuário (input() + float()) e uma operação desejada (+, -, * ou /, também via input()). Por enquanto (sem usar decisões, ainda não estudadas), calcule e exiba as quatro operações possíveis entre os dois números, deixando claro qual resultado corresponde a qual operação, usando f-strings.', starter:'', gabarito:'a = float(input("Primeiro número: "))\nb = float(input("Segundo número: "))\noperacao = input("Operação desejada (+, -, * ou /): ")\nprint(f"{a} + {b} = {a + b:.2f}")\nprint(f"{a} - {b} = {a - b:.2f}")\nprint(f"{a} * {b} = {a * b:.2f}")\nprint(f"{a} / {b} = {a / b:.2f}")\n# A entrada "operacao" ainda não é usada para decidir nada — isso chega na Parte III.' }
+        ]
+    }},
+    { id:'checklist', title:'Checklist de domínio da Parte II', type:'checklist', data:{
+        items:[
+          'Sei comentar código com #, explicando a intenção.',
+          'Sei criar e atualizar variáveis.',
+          'Sei identificar e usar os quatro tipos básicos (int, float, str, bool).',
+          'Sei usar os operadores matemáticos, incluindo // e %.',
+          'Sei acessar caracteres e fatiar strings.',
+          'Sei usar input() e sei que ele sempre devolve str.',
+          'Sei converter tipos com int(), float() e str().',
+          'Sei usar f-strings para formatar saídas, incluindo casas decimais.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte III — Tomada de Decisão, onde aprenderemos comparações, valores booleanos e as estruturas if, elif, else e match.'
+    }}
+  ]
 }
 ];
 
@@ -952,6 +2130,17 @@ function ensurePyodide() {
   if (!pyodideReadyPromise) {
     pyodideReadyPromise = (async () => {
       const py = await loadPyodide();
+      // input() não existe em um navegador (não há terminal de verdade).
+      // Simulamos o comportamento pedindo o valor por uma caixa de diálogo,
+      // que pausa a execução exatamente como um terminal faria.
+      py.runPython([
+        'import builtins',
+        'def _apostila_input(prompt_msg=""):',
+        '    import js',
+        '    val = js.prompt(str(prompt_msg))',
+        '    return val if val is not None else ""',
+        'builtins.input = _apostila_input'
+      ].join('\n'));
       return py;
     })();
   }
@@ -967,7 +2156,18 @@ function formatPythonError(raw) {
   const kept = ['Traceback (most recent call last):', ...lines.slice(execIdx)];
   return kept.join('\n').trim();
 }
-async function runPythonCode(code, outEl, runBtn) {
+// O Pyodide é UMA ÚNICA instância global compartilhada por todos os
+// blocos de código da página — setStdout/setStderr são estado global, não
+// por execução. Se dois "Executar" forem clicados quase ao mesmo tempo, a
+// saída de um pode vazar para o outro. Por isso todas as execuções passam
+// por esta fila, que garante uma execução de cada vez, na ordem dos cliques.
+let pyodideExecQueue = Promise.resolve();
+function runPythonCode(code, outEl, runBtn) {
+  const run = pyodideExecQueue.then(() => runPythonCodeNow(code, outEl, runBtn));
+  pyodideExecQueue = run.catch(() => {});
+  return run;
+}
+async function runPythonCodeNow(code, outEl, runBtn) {
   outEl.classList.remove('error');
   outEl.textContent = 'Carregando o interpretador Python (isso só demora na primeira vez)...';
   if (runBtn) runBtn.disabled = true;
@@ -1081,6 +2281,9 @@ function renderConcept(body, mod, screen) {
       body.appendChild(gb);
     });
   }
+  if (d.callout) {
+    body.appendChild(el('div','callout', '⚠ '+d.callout));
+  }
 }
 
 function renderDiagram(body, mod, screen) {
@@ -1090,6 +2293,7 @@ function renderDiagram(body, mod, screen) {
   card.appendChild(el('pre','diagram', esc(d.diagram)));
   if (d.note) card.appendChild(el('p','', esc(d.note)));
   body.appendChild(card);
+  if (d.extra) body.appendChild(el('div','callout', '🧠 '+d.extra));
 }
 
 function renderExample(body, mod, screen) {
@@ -1163,6 +2367,7 @@ function renderLines(body, mod, screen) {
   body.appendChild(card);
 }
 
+let runnerIdCounter = 0;
 function renderResultMod(body, mod, screen) {
   const d = screen.data;
   const card = el('div','card');
@@ -1170,21 +2375,46 @@ function renderResultMod(body, mod, screen) {
   card.appendChild(el('pre','codeblock', esc(d.resultado)));
   body.appendChild(card);
 
-  const card2 = el('div','card');
-  card2.appendChild(el('h3','', '🔧 Vamos modificar o programa'));
-  card2.appendChild(el('p','', esc(d.modIntro)));
-  if (d.modTrace) card2.appendChild(el('pre','diagram', esc(d.modTrace)));
-  if (d.modCode) card2.appendChild(el('pre','codeblock', esc(d.modCode)));
-  if (d.modResult) {
-    card2.appendChild(el('p','', '<b>Resultado esperado:</b>'));
-    card2.appendChild(el('pre','codeblock', esc(d.modResult)));
+  if (d.modIntro || d.modCode) {
+    const card2 = el('div','card');
+    card2.appendChild(el('h3','', '🔧 Vamos modificar o programa'));
+    if (d.modIntro) card2.appendChild(el('p','', esc(d.modIntro)));
+    if (d.modTrace) card2.appendChild(el('pre','diagram', esc(d.modTrace)));
+    if (d.modCode) card2.appendChild(el('pre','codeblock', esc(d.modCode)));
+    if (d.modResult) {
+      card2.appendChild(el('p','', '<b>Resultado esperado:</b>'));
+      card2.appendChild(el('pre','codeblock', esc(d.modResult)));
+    }
+    if (d.modNote) card2.appendChild(el('p','', esc(d.modNote)));
+    if (d.runnable && d.modCode) card2.insertAdjacentHTML('beforeend', codeRunnerHTML(d.modCode, 'runner-'+(runnerIdCounter++)));
+    body.appendChild(card2);
   }
-  if (d.modNote) card2.appendChild(el('p','', esc(d.modNote)));
-  if (d.runnable && d.modCode) card2.insertAdjacentHTML('beforeend', codeRunnerHTML(d.modCode, 'runner-mod'));
-  body.appendChild(card2);
+
+  if (d.extraBlocks) {
+    d.extraBlocks.forEach(ex => {
+      const c = el('div','card');
+      if (ex.title) c.appendChild(el('h3','', ex.title));
+      if (ex.intro) c.appendChild(el('p','', esc(ex.intro)));
+      if (ex.code) c.appendChild(el('pre','codeblock', esc(ex.code)));
+      if (ex.result) {
+        c.appendChild(el('p','', '<b>Resultado esperado:</b>'));
+        c.appendChild(el('pre','codeblock', esc(ex.result)));
+      }
+      if (ex.note) c.appendChild(el('p','', esc(ex.note)));
+      if (ex.runnable && ex.code) c.insertAdjacentHTML('beforeend', codeRunnerHTML(ex.code, 'runner-'+(runnerIdCounter++)));
+      body.appendChild(c);
+    });
+  }
 
   if (d.naoConfunda) {
-    const callout = el('div','callout', '⚠ '+esc(d.naoConfunda.replace(/^⚠\s*NÃO CONFUNDA:\s*/,'')));
+    const text = typeof d.naoConfunda === 'string' ? d.naoConfunda : d.naoConfunda.text;
+    const callout = el('div','callout');
+    callout.innerHTML = '⚠ ' + esc(text.replace(/^⚠\s*NÃO CONFUNDA:\s*/,''));
+    if (typeof d.naoConfunda === 'object' && d.naoConfunda.code) {
+      const pre = el('pre','codeblock', esc(d.naoConfunda.code));
+      pre.style.marginTop = '10px';
+      callout.appendChild(pre);
+    }
     body.appendChild(callout);
   }
 }
@@ -1207,8 +2437,8 @@ function renderErrors(body, mod, screen) {
   card2.appendChild(el('h3','', '🩺 Como interpretar o erro'));
   card2.appendChild(el('p','', d.howToRead));
   if (d.tryIt) {
-    card2.appendChild(el('p','', 'Quer ver o erro de verdade? Tente rodar um código sem aspas ou sem fechar o parêntese:'));
-    card2.insertAdjacentHTML('beforeend', codeRunnerHTML('print(Olá, mundo!)', 'runner-err'));
+    card2.appendChild(el('p','', 'Quer ver o erro de verdade? Execute o código abaixo e observe a mensagem:'));
+    card2.insertAdjacentHTML('beforeend', codeRunnerHTML(d.tryItCode || 'print(Olá, mundo!)', 'runner-'+(runnerIdCounter++)));
   }
   body.appendChild(card2);
 }
