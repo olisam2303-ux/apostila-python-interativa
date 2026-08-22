@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Apostila Python Interativa — Partes I a VIII</title>
+<title>Apostila Python Interativa — Partes I a IX</title>
 <style>
 :root {
   --bg: #f6f7fb;
@@ -419,7 +419,7 @@ footer.bottomnav .center-label { font-size: 12.5px; color: var(--text-dim); text
     <button id="menuBtn" aria-label="Abrir menu">☰</button>
     <div class="brand">
       <strong>Python do Zero — Modo Interativo</strong>
-      <span>Partes I a VIII · Primeiros Passos até Arquivos e Dados</span>
+      <span>Partes I a IX · Primeiros Passos até Erros</span>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar"><div id="progressFill"></div></div>
@@ -6545,6 +6545,606 @@ const MODULES = [
           { label:'Documentação Python — Salvando Dados Estruturados com json', url:'https://docs.python.org/pt-br/3/tutorial/inputoutput.html#saving-structured-data-with-json' },
           { label:'Referência da biblioteca padrão — módulo json', url:'https://docs.python.org/pt-br/3/library/json.html' }
         ]
+    }}
+  ]
+},
+{
+  id: 'cap43',
+  title: 'Capítulo 43 — Aprendendo a ler erros',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Que erros são uma parte normal e esperada do desenvolvimento.',
+          'Como identificar, em uma mensagem de erro do Python, a linha do problema, o tipo do erro e a mensagem explicativa.',
+          'Como ler um "traceback" (o rastro de chamadas que levou ao erro).'
+        ],
+        antes: 'Este capítulo revisita e organiza mensagens de erro já vistas em vários capítulos anteriores (SyntaxError, NameError, TypeError, IndexError, KeyError, ValueError, ZeroDivisionError, FileNotFoundError), sem exigir conhecimento novo.'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Desde o início desta apostila, mensagens de erro apareceram em vários capítulos — e isso é <b>absolutamente normal</b>. Programar envolve, o tempo todo, escrever código, testá-lo, encontrar problemas e corrigi-los. Erros não são sinal de fracasso: são parte do processo, inclusive para programadores experientes.',
+          'Um erro que interrompe a execução do programa é chamado, de forma geral, de <b>exceção</b> (formalizado no Capítulo 45). Quando isso acontece, o Python exibe um bloco de texto chamado <b>traceback</b>, contendo informações valiosas para entender e corrigir o problema.'
+        ],
+        glossary: [
+          { term:'traceback', def:'o rastro de chamadas que levou a um erro, exibido pelo Python quando uma exceção interrompe o programa', example:'indica o arquivo, a linha, o código e o tipo/mensagem do erro.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'Toda mensagem de erro do Python segue, em geral, esta estrutura:',
+        diagram:'Traceback (most recent call last):\n  File "programa.py", line 3, in <module>\n    idade = int(idade_texto)\nValueError: invalid literal for int() with base 10: \'dezoito\'\n\nMENSAGEM DE ERRO\n   │\n   ├── Traceback (most recent call last):     ← indica que é um rastro de erro\n   │\n   ├── File "programa.py", line 3, in <module>\n   │        ↑                    ↑\n   │     arquivo              linha exata\n   │\n   ├── idade = int(idade_texto)                ← o código que causou o problema\n   │\n   └── ValueError: invalid literal for int()...\n              ↑                        ↑\n         TIPO do erro          MENSAGEM explicativa',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Tentar converter um texto que não representa um número.',
+        algoritmo:null,
+        code:'# Um texto que NÃO representa um número válido\nidade_texto = "dezoito"\n\n# Tentativa de conversão, que vai falhar\nidade = int(idade_texto)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'idade_texto = "dezoito"',
+          'idade = int(idade_texto)',
+          'Python tenta interpretar "dezoito" como um número',
+          '"dezoito" não é um número válido',
+          'O Python INTERROMPE a execução',
+          'Exibe o traceback, apontando exatamente a linha e o motivo'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique para ver a explicação de cada parte da mensagem de erro.',
+        lines:[
+          { code:'File "programa.py", line 2', explanation:'O erro ocorreu no arquivo programa.py, na linha 2.' },
+          { code:'idade = int(idade_texto)', explanation:'Essa é a linha exata que causou o problema.' },
+          { code:'ValueError: invalid literal for int() with base 10: \'dezoito\'', explanation:'ValueError é o tipo do erro — já estudado no Capítulo 10, indica um valor inadequado para a operação. A mensagem explica que o texto \'dezoito\' não pôde ser interpretado como um número inteiro.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Traceback (most recent call last):\n  File "programa.py", line 2, in <module>\n    idade = int(idade_texto)\nValueError: invalid literal for int() with base 10: \'dezoito\'',
+        modIntro:'Vamos comparar o traceback de diferentes tipos de erro, já vistos em capítulos anteriores, reforçando o padrão comum entre eles. Em TODOS os casos, o padrão se repete: linha exata, código correspondente, tipo do erro, mensagem explicativa.',
+        modCode:'# Exemplo 1: variável usada antes de existir (Capítulo 5)\nprint(cidade)',
+        modResult:"Traceback (most recent call last):\n  File \"programa.py\", line 2, in <module>\n    print(cidade)\nNameError: name 'cidade' is not defined",
+        modNote:null,
+        runnable:true,
+        naoConfunda:'Um erro que interrompe o programa (como os exemplos acima) versus um erro de LÓGICA (Capítulo 16, condições mal ordenadas): o primeiro tipo SEMPRE gera uma mensagem de erro visível, apontando exatamente onde e por quê. O segundo tipo NÃO GERA NENHUMA MENSAGEM — o programa executa normalmente, mas produz um resultado incorreto (Capítulo 55, sobre depuração).',
+        extraBlocks:[
+          { title:'Mais dois exemplos: IndexError e KeyError', code:'# Exemplo 2: índice fora do intervalo (Capítulo 25)\nnumeros = [1, 2, 3]\nprint(numeros[10])', runnable:true },
+          { title:'', code:'# Exemplo 3: chave inexistente em dicionário (Capítulo 30)\naluno = {"nome": "Ana"}\nprint(aluno["idade"])', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Entrar em pânico ao ver um traceback longo', code:null, body:'A estratégia recomendada é sempre olhar primeiro para a ÚLTIMA LINHA (o tipo do erro e a mensagem), e depois localizar a linha do código apontada logo acima dela — são essas duas informações que, na grande maioria dos casos, já indicam a causa do problema.' },
+          { title:'🐞 Ignorar a mensagem explicativa, e olhar apenas o tipo do erro', code:null, body:'Saber que o erro é um TypeError já ajuda, mas a mensagem completa (por exemplo, can only concatenate str (not "int") to str) costuma explicar EXATAMENTE o que deu errado, evitando adivinhações.' },
+          { title:'🐞 Corrigir "no escuro", sem reler a mensagem com atenção', code:null, body:'É comum, sob pressão, tentar alterar o código aleatoriamente até o erro desaparecer. A leitura cuidadosa da mensagem — linha, tipo, explicação — quase sempre aponta diretamente para a correção necessária.' }
+        ],
+        howToRead:'Como roteiro geral, ao encontrar qualquer traceback: 1) Leia a ÚLTIMA LINHA primeiro: qual é o tipo do erro, e o que a mensagem diz? 2) Localize a LINHA DO CÓDIGO apontada logo acima: o que ela faz? 3) Combine as duas informações: por que aquela linha, especificamente, causaria aquele tipo de erro? 4) Corrija o código, salve, e execute novamente para confirmar.'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Ler e interpretar o traceback abaixo, sem executar o código — apenas com base na leitura.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'Traceback (most recent call last):\n  File "vendas.py", line 5, in <module>\n    total = preco * quantidade\nTypeError: can\'t multiply sequence by non-int of type \'float\'\n\nInterpretação:\n1. Tipo do erro: TypeError (operação com tipos incompatíveis).\n2. Mensagem: uma "sequência" (provavelmente uma string) está sendo multiplicada por um float, o que não é permitido.\n3. Linha do código: total = preco * quantidade\n4. Hipótese: "preco" provavelmente é uma string (vinda de input() sem conversão), e "quantidade" é um float.\n5. Correção provável: converter "preco" com float() antes de multiplicar.',
+        code:null
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um traceback?', gabarito:'O rastro de informações exibido quando uma exceção interrompe o programa.' },
+          { kind:'text', prompt:'Quais três informações principais uma mensagem de erro do Python costuma trazer?', gabarito:'Arquivo e linha, tipo do erro, mensagem explicativa.' },
+          { kind:'text', prompt:'Por que erros não devem ser vistos como sinal de fracasso ao programar?', gabarito:'Porque fazem parte natural do processo de programar, inclusive para profissionais experientes.' },
+          { kind:'text', prompt:'Qual é a diferença entre um erro que interrompe o programa e um erro de lógica?', gabarito:'Erro que interrompe o programa gera mensagem visível; erro de lógica não gera mensagem, mas produz resultado incorreto.' },
+          { kind:'text', prompt:'Qual linha de um traceback deve ser lida primeiro, segundo a estratégia sugerida neste capítulo?', gabarito:'A última linha (tipo do erro e mensagem).' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Execute e explique, com suas palavras, cada parte do traceback gerado:\nidade = "dezoito"\nprint(idade + 5)', starter:'idade = "dezoito"\nprint(idade + 5)', gabarito:'TypeError, pois idade é str e 5 é int; a mensagem indicaria incompatibilidade de concatenação (can only concatenate str (not "int") to str).' },
+          { kind:'code', prompt:'Escreva um pequeno programa que, propositalmente, gere um ZeroDivisionError, e explique a mensagem de erro resultante.', starter:'', gabarito:'resultado = 10 / 0\nprint(resultado)\n\n# Gera: ZeroDivisionError: division by zero' },
+          { kind:'text', prompt:'Dado o traceback abaixo, identifique o tipo do erro, a linha provável, e uma hipótese de correção:\nFile "cadastro.py", line 8, in <module>\n    print(clientes[5])\nIndexError: list index out of range', gabarito:'IndexError; a lista clientes provavelmente tem menos de 6 itens (índices 0 a 4, no máximo); correção: verificar len(clientes) antes de acessar o índice 5.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Escreva cinco pequenos trechos de código, cada um gerando propositalmente um tipo diferente de erro (SyntaxError, NameError, TypeError, IndexError, ValueError). Para cada um, anote a mensagem esperada.', starter:'', gabarito:'print(nao_existe)  # NameError\nprint("a" + 1)  # TypeError\n[1,2,3][10]  # IndexError\nint("abc")  # ValueError\n# SyntaxError: if True print(1) — sem dois-pontos' },
+          { kind:'text', prompt:'Desafio: revise um programa que você escreveu que já gerou algum erro. Escreva o "roteiro" que você seguiu (ou deveria ter seguido) para identificá-lo e corrigi-lo.', gabarito:'Resposta aberta — deve seguir as quatro etapas: ler a última linha, localizar a linha do código, combinar as informações, corrigir e testar.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'Traceback (most recent call last):\n  File "arquivo.py", line N, in <module>\n    LINHA DE CÓDIGO QUE CAUSOU O ERRO\nTIPO_DO_ERRO: mensagem explicativa\n\nROTEIRO DE LEITURA:\n   1. Leia o tipo do erro e a mensagem (última linha)\n   2. Localize a linha de código apontada\n   3. Combine as duas informações\n   4. Corrija, salve e teste novamente'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei que erros são normais e esperados ao programar.',
+          'Sei identificar, em um traceback, a linha, o tipo e a mensagem do erro.',
+          'Sei aplicar um roteiro simples para interpretar qualquer erro.',
+          'Sei diferenciar um erro que interrompe o programa de um erro de lógica.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é um traceback?', options:['Um tipo de variável','O rastro de informações exibido quando um erro interrompe o programa','Um método de lista','Um comando para desfazer alterações'], correct:1, explanation:'O rastro exibido quando um erro interrompe o programa.' },
+          { q:'Qual linha de um traceback traz o tipo do erro e a mensagem explicativa?', options:['A primeira','A última','Sempre a linha 1 do código','Não é possível saber'], correct:1, explanation:'A última linha.' },
+          { q:'Um erro de lógica gera uma mensagem de erro visível?', options:['Sim, sempre','Não, o programa executa normalmente, mas produz resultado incorreto','Sim, mas apenas em modo interativo','Depende do sistema operacional'], correct:1, explanation:'Não gera mensagem visível.' },
+          { q:'Qual é a primeira etapa recomendada ao encontrar um traceback?', options:['Reescrever o programa do zero','Ler a última linha (tipo do erro e mensagem)','Ignorar e executar novamente','Apagar a linha indicada sem entender o motivo'], correct:1, explanation:'Ler a última linha primeiro.' },
+          { q:'Erros durante o desenvolvimento de um programa são:', options:['Sinal de que a pessoa não sabe programar','Parte normal e esperada do processo de programar','Sempre causados por falhas do Python','Algo que só acontece com iniciantes'], correct:1, explanation:'Parte normal e esperada.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Erros e Exceções', url:'https://docs.python.org/pt-br/3/tutorial/errors.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap44',
+  title: 'Capítulo 44 — Erros de sintaxe',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é um erro de sintaxe, e como ele se diferencia de outros tipos de erro.',
+          'Os erros de sintaxe mais comuns cometidos por iniciantes.',
+          'Por que um erro de sintaxe impede o programa de sequer começar a executar.'
+        ],
+        antes: 'É necessário ter lido o Capítulo 43 (como ler mensagens de erro em geral).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Um <b>erro de sintaxe</b> (SyntaxError) acontece quando o código escrito <b>não segue as regras gramaticais</b> da linguagem Python — de forma parecida com uma frase mal construída em português.'
+        ],
+        glossary: [
+          { term:'erro de sintaxe', def:'um erro causado por código que não segue a estrutura/gramática correta da linguagem', example:'o Python nem chega a executar o programa: ele é identificado antes mesmo de qualquer linha rodar.' }
+        ],
+        callout:'NÃO CONFUNDA: erro de sintaxe versus exceção (Capítulo 45): um erro de sintaxe impede o programa de COMEÇAR A RODAR. Uma exceção acontece DURANTE a execução de um programa gramaticalmente correto — o programa começa a rodar normalmente, mas encontra um problema no meio do caminho.'
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:'Os erros de sintaxe mais comuns já vistos: esquecer dois-pontos, aspas não fechadas/misturadas, parênteses não fechados, indentação incorreta, usar = em vez de == numa condição.',
+        diagram:'CÓDIGO COM ERRO DE SINTAXE\n        ↓\nPython tenta "ler" a estrutura do programa inteiro, ANTES de executar\n        ↓\nEncontra uma construção que não segue as regras da gramática do Python\n        ↓\nInterrompe IMEDIATAMENTE, sem executar NENHUMA linha\n        ↓\nExibe SyntaxError, apontando o local aproximado do problema',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Um if sem os dois-pontos obrigatórios.',
+        algoritmo:null,
+        code:'# Cria a variável idade\nidade = 18\n\n# ERRO: falta o ":" no final desta linha\nif idade >= 18\n    print("Maior de idade")',
+        codeNote:'Clique em "Executar" para ver o SyntaxError real.',
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'Python analisa o arquivo inteiro ANTES de executar qualquer linha',
+          'Ao chegar em "if idade >= 18", espera encontrar um ":" no final',
+          'Não encontra',
+          'A estrutura da linha está incompleta/incorreta',
+          'Python interrompe a análise: NENHUMA linha do programa chega a executar',
+          'Exibe: SyntaxError'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'if idade >= 18', explanation:'Falta o : obrigatório no final — já estudado desde o Capítulo 14. Sem ele, o Python não consegue interpretar onde o bloco do if deveria começar, e considera a linha gramaticalmente incompleta.' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'File "programa.py", line 3\n    if idade >= 18\n                  ^\nSyntaxError: expected \':\'',
+        modIntro:'Repare que, diferente dos erros do Capítulo 43, um SyntaxError NÃO apresenta um Traceback completo — porque o erro é detectado ANTES de qualquer execução começar. Vamos observar mais alguns exemplos, cada um com sua correção:',
+        modCode:'# Erro: aspas não fechadas\nprint("Olá, mundo!)',
+        modResult:'SyntaxError: unterminated string literal (detected at line 1)',
+        modNote:'Correção: print("Olá, mundo!")',
+        runnable:true,
+        naoConfunda:'A LINHA INDICADA em um SyntaxError nem sempre é exatamente onde o problema "começou" — às vezes, o Python só percebe que algo está errado uma linha (ou mais) depois de onde o erro realmente está. Por isso, ao investigar um SyntaxError, vale sempre olhar também as linhas imediatamente anteriores.',
+        extraBlocks:[
+          { title:'Mais dois exemplos', code:'# Erro: parêntese não fechado\nprint("Olá, mundo!"', runnable:true },
+          { title:'', code:'# Erro: uso de = em vez de == dentro de uma condição\nidade = 18\nif idade = 18:\n    print("Maior de idade")', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Misturar tabulação e espaços na indentação', code:'if idade >= 18:\n    print("Maior de idade")\n\tprint("Bem-vindo")', body:'Misturar espaços e tabulações (mesmo que pareçam alinhados no editor) pode gerar TabError ou IndentationError. A recomendação (PEP 8, Capítulo 54) é usar sempre espaços, de forma consistente.' },
+          { title:'🐞 Esquecer de fechar uma estrutura de dados', code:'lista = [1, 2, 3\nprint(lista)', body:'Colchetes, parênteses e chaves não fechados fazem o Python continuar "esperando" o fechamento, muitas vezes confundindo linhas seguintes com parte da mesma estrutura.' },
+          { title:'🐞 Copiar código de outra fonte com formatação inconsistente', code:null, body:'Copiar trechos de sites, PDFs ou outras fontes pode trazer espaços invisíveis, aspas "curvas" (diferentes das aspas retas usadas pelo Python) ou indentação incompatível.' }
+        ],
+        howToRead:'Ao encontrar um SyntaxError: 1) Localize a linha indicada (e a marcação "^", se houver). 2) Verifique, nessa linha: dois-pontos, aspas, parênteses/colchetes/chaves. 3) Se a linha parecer correta, verifique a linha ANTERIOR. 4) Corrija, salve e execute novamente.',
+        tryIt:true,
+        tryItCode:'lista = [1, 2, 3\nprint(lista)'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Identificar e corrigir os três erros de sintaxe no trecho abaixo.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'nome = "Ana\nidade = 18\nif idade >= 18\n    print("Maior de idade")\n\nAnálise:\nLinha 1: nome = "Ana          → aspas não fechadas\nLinha 3: if idade >= 18       → falta o ":"\n\nCódigo corrigido:\nnome = "Ana"\nidade = 18\nif idade >= 18:\n    print("Maior de idade")',
+        code:'nome = "Ana"\nidade = 18\nif idade >= 18:\n    print("Maior de idade")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é um erro de sintaxe?', gabarito:'Um erro causado por código que não segue a gramática da linguagem.' },
+          { kind:'text', prompt:'Um erro de sintaxe permite que o programa execute parcialmente, até o ponto do erro?', gabarito:'Não, nenhuma linha executa.' },
+          { kind:'text', prompt:'Cite três causas comuns de SyntaxError.', gabarito:': faltando, aspas não fechadas, parênteses não fechados (entre outras).' },
+          { kind:'text', prompt:'Um SyntaxError apresenta um Traceback completo, como os erros do Capítulo 43? Por quê?', gabarito:'Não, pois o erro é detectado antes de qualquer execução, sem chamadas a rastrear.' },
+          { kind:'text', prompt:'Por que misturar espaços e tabulações pode causar erro?', gabarito:'Porque a indentação é significativa em Python, e misturar os dois pode gerar ambiguidade na leitura dos níveis de bloco.' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'🐞 Encontre o bug:\nnome = input(\'Digite seu nome: ")\nprint(nome)', starter:'nome = input(\'Digite seu nome: ")\nprint(nome)', gabarito:'Bug: mistura aspas simples e duplas.\nCorreção: nome = input("Digite seu nome: ")' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nnumeros = [1, 2, 3, 4\nprint(numeros)', starter:'numeros = [1, 2, 3, 4\nprint(numeros)', gabarito:'Bug: colchete não fechado.\nCorreção: numeros = [1, 2, 3, 4]' },
+          { kind:'code', prompt:'🐞 Encontre o bug:\nfor numero in range(5)\n    print(numero)', starter:'for numero in range(5)\n    print(numero)', gabarito:'Bug: falta o : no for.\nCorreção: for numero in range(5):' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Escreva cinco pequenos trechos de código com erros de sintaxe propositais, cada um representando uma causa diferente.', gabarito:'Resposta aberta — cobrir as causas: : faltando, aspas não fechadas, parênteses não fechados, indentação inconsistente, = em vez de ==.' },
+          { kind:'text', prompt:'Desafio: escreva um "checklist" pessoal para revisar antes de executar qualquer programa, cobrindo os erros de sintaxe mais comuns que você já cometeu.', gabarito:'Resposta aberta.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'ERRO DE SINTAXE (SyntaxError)\n   → o Python não consegue nem "ler" a estrutura do código\n   → NENHUMA linha chega a ser executada\n   → causas comuns: ":" faltando, aspas/parênteses não fechados,\n     indentação inconsistente, "=" em vez de "=="\n\nDiferente de uma EXCEÇÃO (Capítulo 45):\n   → a exceção acontece DURANTE a execução de um código gramaticalmente correto'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é um erro de sintaxe.',
+          'Sei que um erro de sintaxe impede qualquer execução do programa.',
+          'Sei identificar as causas mais comuns de SyntaxError.',
+          'Sei diferenciar erro de sintaxe de exceção.',
+          'Sei aplicar um roteiro de revisão para encontrar erros de sintaxe.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que caracteriza um erro de sintaxe?', options:['Um valor incorreto durante a execução','Código que não segue a gramática/estrutura da linguagem','Um arquivo não encontrado','Uma divisão por zero'], correct:1, explanation:'Código que não segue a gramática da linguagem.' },
+          { q:'Um SyntaxError permite que parte do programa execute antes de ocorrer?', options:['Sim, sempre','Não, nenhuma linha chega a executar','Sim, mas só a primeira linha','Depende do tipo de erro'], correct:1, explanation:'Nenhuma linha executa.' },
+          { q:'Qual das opções abaixo NÃO é uma causa comum de SyntaxError?', options:['Esquecer os dois-pontos em um if','Um valor de índice fora do intervalo (IndexError)','Aspas não fechadas','Parênteses não fechados'], correct:1, explanation:'IndexError é uma exceção, não um erro de sintaxe.' },
+          { q:'Um SyntaxError apresenta um Traceback completo, como visto no Capítulo 43?', options:['Sim, sempre da mesma forma','Não, pois o erro é detectado antes de qualquer execução','Sim, mas apenas em arquivos grandes','Depende da versão do Python'], correct:1, explanation:'Não, é detectado antes da execução.' },
+          { q:'O que fazer quando a linha indicada por um SyntaxError parece correta?', options:['Ignorar o erro','Verificar a linha anterior, pois o problema pode ter começado ali','Reiniciar o computador','Apagar o arquivo e recomeçar'], correct:1, explanation:'Verificar a linha anterior.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Erros de Sintaxe', url:'https://docs.python.org/pt-br/3/tutorial/errors.html#syntax-errors' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap45',
+  title: 'Capítulo 45 — Exceções',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'O que é uma exceção, formalmente.',
+          'Uma revisão organizada das exceções mais comuns já vistas: ValueError, TypeError, NameError, IndexError, KeyError, ZeroDivisionError.',
+          'Que cada exceção tem um propósito específico, indicando um tipo diferente de problema.'
+        ],
+        antes: 'É necessário ter lido os Capítulos 43 e 44 (leitura de erros, e erros de sintaxe).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Uma <b>exceção</b> é um erro que ocorre <b>durante a execução</b> de um programa gramaticalmente correto — diferente do erro de sintaxe (Capítulo 44), que impede a execução de sequer começar. Uma exceção "interrompe" o fluxo normal do programa no momento exato em que o problema acontece.',
+          'Já encontramos várias exceções específicas ao longo desta apostila: ValueError (valor com tipo correto, conteúdo inadequado), TypeError (tipos incompatíveis), NameError (nome não encontrado), IndexError (índice fora do intervalo), KeyError (chave não encontrada) e ZeroDivisionError (divisão por zero).'
+        ],
+        glossary: [
+          { term:'exceção', def:'um evento que ocorre durante a execução de um programa, interrompendo o fluxo normal quando alguma operação não pode ser concluída com sucesso', example:null }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'PROGRAMA (gramaticalmente correto)\n        ↓\nComeça a executar normalmente, linha por linha\n        ↓\nChega a uma linha que tenta uma operação impossível de completar\n        ↓\nUma EXCEÇÃO é levantada (raised)\n        ↓\nA execução é interrompida NAQUELE PONTO\n        ↓\nPython exibe o traceback, com o tipo específico da exceção',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:null,
+        problem:'Uma conversão de texto para número que levanta ValueError.',
+        algoritmo:null,
+        code:'# Um texto que não representa um número\nidade_texto = "dezoito"\n\n# Tentativa de conversão que levanta uma exceção ValueError\nidade = int(idade_texto)',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Clique em "Próximo passo".',
+        steps:[
+          'idade_texto = "dezoito"',
+          'Linha executa normalmente, sem problemas',
+          'idade = int(idade_texto)',
+          'Python tenta converter "dezoito" para int',
+          '"dezoito" não é um número válido',
+          'Uma EXCEÇÃO ValueError é levantada',
+          'A execução do programa é interrompida',
+          'Python exibe o traceback correspondente'
+        ],
+        after:null
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Traceback (most recent call last):\n  File "programa.py", line 2, in <module>\n    idade = int(idade_texto)\nValueError: invalid literal for int() with base 10: \'dezoito\'',
+        modIntro:'Vamos revisar, rapidamente, um exemplo de cada exceção da tabela. Cada exceção APONTA PARA UMA CAUSA DIFERENTE — reconhecer o tipo já reduz bastante a investigação necessária.',
+        modCode:'# TypeError: tipos incompatíveis\nidade = 18\nprint("Idade: " + idade)',
+        modResult:'TypeError: can only concatenate str (not "int") to str',
+        modNote:null,
+        runnable:true,
+        naoConfunda:'Ao ver KeyError, já sabemos que o problema envolve uma CHAVE DE DICIONÁRIO ausente, sem nem precisar ler o resto da mensagem; ao ver IndexError, já sabemos que o problema é uma POSIÇÃO INVÁLIDA em uma lista ou string.',
+        extraBlocks:[
+          { title:'Mais exemplos: NameError, IndexError, KeyError, ZeroDivisionError', code:'# NameError: nome não encontrado\nprint(cidade)', runnable:true },
+          { title:'', code:'# IndexError: índice fora do intervalo\nnumeros = [1, 2, 3]\nprint(numeros[10])', runnable:true },
+          { title:'', code:'# KeyError: chave inexistente\naluno = {"nome": "Ana"}\nprint(aluno["idade"])', runnable:true },
+          { title:'', code:'# ZeroDivisionError: divisão por zero\nresultado = 10 / 0', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Tratar todas as exceções como "o mesmo tipo de problema"', code:null, body:'Cada exceção tem um significado específico. Confundir ValueError (valor inadequado) com TypeError (tipos incompatíveis) pode levar a tentativas de correção que não resolvem a causa real.' },
+          { title:'🐞 Não perceber que uma exceção pode ter mais de uma causa possível', code:null, body:'Um mesmo TypeError pode surgir tanto de somar str com int quanto de multiplicar tipos incompatíveis — o tipo da exceção reduz as possibilidades, mas a mensagem completa ainda precisa ser lida.' },
+          { title:'🐞 Não relacionar a exceção ao capítulo/conceito correspondente', code:null, body:'Vale relacionar mentalmente cada exceção ao conceito de onde ela costuma surgir (ex.: ZeroDivisionError quase sempre está ligado a uma divisão sem verificar antes se o divisor pode ser zero).' }
+        ],
+        howToRead:'Referência rápida:<br>ValueError → o TIPO do valor está certo, mas o CONTEÚDO não serve (ex.: int("abc"))<br>TypeError → os TIPOS envolvidos são incompatíveis com a operação (ex.: "texto" + 10)<br>NameError → o NOME usado não existe ainda<br>IndexError → a POSIÇÃO pedida não existe na lista/string<br>KeyError → a CHAVE pedida não existe no dicionário<br>ZeroDivisionError → tentativa de dividir por ZERO'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Para cada trecho de código abaixo, identificar, sem executar, qual exceção será levantada.',
+        entrada:null, processamento:null, saida:null, algoritmo:null,
+        simulation:'Trecho A: lista = [10, 20, 30]; print(lista[5]) → lista tem 3 itens; índice 5 não existe → IndexError\n\nTrecho B: preco = "vinte"; total = preco * 2.5 → "vinte" (str) vezes 2.5 (float) não é permitido → TypeError\n\nTrecho C: dados = {"nome": "Bruno"}; print(dados["telefone"]) → "telefone" não é chave existente → KeyError',
+        code:'lista = [10, 20, 30]\nprint(lista[5])',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'O que é uma exceção?', gabarito:'Um erro que ocorre durante a execução de um programa gramaticalmente correto.' },
+          { kind:'text', prompt:'Qual é a diferença entre exceção e erro de sintaxe?', gabarito:'Erro de sintaxe impede a execução de começar; exceção ocorre durante a execução.' },
+          { kind:'text', prompt:'Qual exceção indica uma chave inexistente em um dicionário?', gabarito:'KeyError' },
+          { kind:'text', prompt:'Qual exceção indica um índice fora do intervalo válido de uma lista?', gabarito:'IndexError' },
+          { kind:'text', prompt:'Qual exceção indica uma tentativa de divisão por zero?', gabarito:'ZeroDivisionError' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Para cada exceção da tabela deste capítulo, escreva um pequeno trecho de código (diferente dos exemplos já apresentados) que a provoque propositalmente.', starter:'', gabarito:'int("abc")  # ValueError\n"a" + 1  # TypeError\nprint(x)  # NameError\n[1,2][5]  # IndexError\n{"a":1}["b"]  # KeyError\n1/0  # ZeroDivisionError' },
+          { kind:'text', prompt:'Dado o código abaixo, identifique a exceção esperada, sem executar:\nidade = int("dezesseis")', gabarito:'ValueError (o texto "dezesseis" não representa um número válido).' },
+          { kind:'text', prompt:'Explique por que reconhecer o tipo de uma exceção já ajuda a direcionar a investigação do problema.', gabarito:'Porque o tipo já reduz bastante as hipóteses de causa, direcionando a investigação sem precisar adivinhar entre todas as possibilidades.' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'text', prompt:'Escreva um programa com cinco blocos de código separados, cada um levantando propositalmente uma exceção diferente das estudadas neste capítulo. Para cada bloco, escreva um comentário explicando qual exceção é esperada e por quê.', gabarito:'Resposta prática com blocos comentados, cada um gerando uma exceção diferente.' },
+          { kind:'text', prompt:'Desafio: volte a um programa anterior. Identifique um ponto onde uma exceção PODERIA ocorrer (mesmo que não tenha ocorrido durante seus testes). Anote qual exceção seria levantada.', gabarito:'Resposta aberta — tipicamente conversões com int()/float() após input(), sem garantias de que o usuário digitará um valor válido.' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'EXCEÇÃO\n   → ocorre DURANTE a execução (código gramaticalmente correto)\n   → interrompe o programa no momento exato do problema\n\nValueError        → valor com conteúdo inadequado\nTypeError         → tipos incompatíveis\nNameError         → nome inexistente\nIndexError        → índice fora do intervalo\nKeyError          → chave inexistente\nZeroDivisionError → divisão por zero'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei o que é uma exceção, formalmente.',
+          'Sei diferenciar exceção de erro de sintaxe.',
+          'Sei reconhecer as seis exceções mais comuns estudadas nesta apostila.',
+          'Sei associar cada exceção ao tipo de problema que ela indica.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que é uma exceção?', options:['Um erro de sintaxe','Um erro que ocorre durante a execução de um programa correto','Um tipo de variável','Um comentário especial'], correct:1, explanation:'Um erro que ocorre durante a execução de um programa correto.' },
+          { q:'Qual exceção indica uma tentativa de acessar uma chave inexistente em um dicionário?', options:['IndexError','KeyError','ValueError','NameError'], correct:1, explanation:'KeyError.' },
+          { q:'Qual exceção indica que um valor não pôde ser convertido para o tipo esperado?', options:['TypeError','ValueError','NameError','IndexError'], correct:1, explanation:'ValueError.' },
+          { q:'Qual exceção indica o uso de tipos incompatíveis em uma operação?', options:['TypeError','IndexError','KeyError','ZeroDivisionError'], correct:0, explanation:'TypeError.' },
+          { q:'Qual exceção indica uma tentativa de dividir um número por zero?', options:['ValueError','TypeError','ZeroDivisionError','NameError'], correct:2, explanation:'ZeroDivisionError.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Exceções', url:'https://docs.python.org/pt-br/3/tutorial/errors.html#exceptions' },
+          { label:'Referência da biblioteca padrão — hierarquia de exceções embutidas', url:'https://docs.python.org/pt-br/3/library/exceptions.html' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'cap46',
+  title: 'Capítulo 46 — try e except',
+  screens: [
+    { id:'abertura', title:'Abertura', type:'intro', data:{
+        objetivos: [
+          'Como evitar que uma exceção interrompa o programa, usando try e except.',
+          'Como capturar um tipo específico de exceção.',
+          'Como usar else e finally dentro de um tratamento de exceção.',
+          'Como validar entradas do usuário de forma robusta.'
+        ],
+        antes: 'É necessário conhecer exceções (Capítulo 45) e if/else (Capítulo 15).'
+    }},
+    { id:'conceito', title:'Conceito', type:'concept', data:{
+        paragraphs: [
+          'Até agora, sempre que uma exceção ocorria, o programa era <b>interrompido</b> imediatamente. Mas, em muitos casos, é possível <b>prever</b> que um erro pode acontecer e tratar essa situação, sem que o programa inteiro pare de funcionar. Isso é feito com <span class="icode">try</span> e <span class="icode">except</span>.'
+        ],
+        glossary: [
+          { term:'try', def:'bloco onde colocamos código que pode levantar uma exceção', example:'o Python tenta executá-lo normalmente.' },
+          { term:'except', def:'bloco executado apenas se uma exceção do tipo especificado ocorrer dentro do try correspondente', example:'evita que o programa seja interrompido.' }
+        ]
+    }},
+    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+        intro:null,
+        diagram:'try:\n    idade = int(input("Digite sua idade: "))\nexcept ValueError:\n    print("Isso não é um número válido!")\n\nUsuário digita "vinte"\n        ↓\nPython tenta executar o bloco try\n        ↓\nint("vinte") levanta ValueError\n        ↓\nEm vez de interromper o programa, o Python PULA para o except correspondente\n        ↓\nExecuta: print("Isso não é um número válido!")\n        ↓\nO programa CONTINUA normalmente depois do try/except',
+        note:null
+    }},
+    { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
+        intro:'Uma caixa de diálogo vai pedir sua idade — tente digitar um texto (como "abc") para ver o except funcionando.',
+        problem:'Pedir a idade ao usuário, tratando entrada inválida.',
+        algoritmo:null,
+        code:'# Tenta executar o código que pode falhar\ntry:\n    # Se o usuário digitar algo que não seja um número, int() vai falhar\n    idade = int(input("Digite sua idade: "))\n    print(f"Você tem {idade} anos.")\n# Executa apenas se um ValueError ocorrer dentro do try\nexcept ValueError:\n    print("Isso não é um número válido!")',
+        codeNote:null,
+        runnable:true
+    }},
+    { id:'pordentro', title:'Por dentro do computador', type:'trace', data:{
+        intro:'Caso o usuário digite "vinte" (inválido). Clique em "Próximo passo".',
+        steps:[
+          'try:',
+          'idade = int(input(...))',
+          'Usuário digita "vinte"',
+          'int("vinte") tenta converter e FALHA (ValueError)',
+          'Python interrompe o bloco try IMEDIATAMENTE',
+          'Procura um except que capture ValueError',
+          'Encontra: except ValueError: → Executa: print("Isso não é um número válido!")',
+          'O programa continua normalmente depois da estrutura try/except'
+        ],
+        after:null
+    }},
+    { id:'linhaalinha', title:'Explicação linha por linha', type:'lines', data:{
+        intro:'Clique na linha.',
+        lines:[
+          { code:'try:', explanation:'Inicia o bloco de código que será "tentado" — se algo der errado dentro dele, o Python não interrompe o programa, apenas pula para o except correspondente.' },
+          { code:'except ValueError:', explanation:'Captura ESPECIFICAMENTE exceções do tipo ValueError — se ocorrer qualquer OUTRO tipo de exceção dentro do try, este except NÃO a captura (o programa seria interrompido normalmente, a menos que houvesse outro except apropriado).' }
+        ]
+    }},
+    { id:'resultado', title:'Resultado e variação', type:'resultmod', data:{
+        resultado:'Se o usuário digitar "vinte": Digite sua idade: vinte / Isso não é um número válido!\nSe o usuário digitar "20": Digite sua idade: 20 / Você tem 20 anos.',
+        modIntro:'Vamos repetir a pergunta até que o usuário digite um valor válido, combinando try/except com while (Capítulo 20). Tente digitar algo inválido e depois um número válido:',
+        modCode:'idade_valida = False\n\nwhile not idade_valida:\n    try:\n        idade = int(input("Digite sua idade: "))\n        idade_valida = True\n    except ValueError:\n        print("Por favor, digite um número válido.")\n\nprint(f"Você tem {idade} anos.")',
+        modNote:'Este while é seguro para executar: mesmo que você cancele a caixa de diálogo repetidamente, nada trava — apenas continua pedindo.',
+        runnable:true,
+        naoConfunda:'except versus else: o bloco except executa QUANDO OCORRE a exceção especificada. O bloco else executa QUANDO NÃO OCORRE nenhuma exceção no try. Já finally executa SEMPRE, em ambos os casos.',
+        extraBlocks:[
+          { title:'else e finally', intro:'try/except também aceita, opcionalmente, else (executado apenas se nenhuma exceção ocorrer) e finally (executado sempre):', code:'try:\n    numero = int(input("Digite um número: "))\nexcept ValueError:\n    print("Valor inválido!")\nelse:\n    print(f"Você digitou {numero}, que é válido.")\nfinally:\n    print("Fim da verificação.")', runnable:true }
+        ]
+    }},
+    { id:'erros', title:'Erros comuns', type:'errors', data:{
+        items:[
+          { title:'🐞 Capturar except: sem especificar o tipo de exceção', code:'try:\n    idade = int(input("Digite sua idade: "))\nexcept:\n    print("Algo deu errado")', body:'Isso captura QUALQUER tipo de exceção, o que pode esconder problemas inesperados no código. A boa prática é sempre especificar o tipo esperado, como except ValueError:' },
+          { title:'🐞 Colocar código demais dentro do try', code:'try:\n    nome = input("Nome: ")\n    idade = int(input("Idade: "))\n    print(f"{nome} tem {idade} anos")\nexcept ValueError:\n    print("Erro!")', body:'Isso funciona, mas dificulta saber exatamente qual linha causou o problema. Em programas maiores, é boa prática manter dentro do try apenas as linhas que realmente podem falhar.' },
+          { title:'🐞 Usar try/except para esconder erros de lógica do próprio programa', code:'try:\n    resultado = calcular_algo_com_bug()\nexcept Exception:\n    resultado = 0', body:'Capturar exceções genéricas (Exception) para simplesmente "seguir em frente" pode mascarar bugs reais no código.' }
+        ],
+        howToRead:'Quando uma exceção NÃO é capturada por nenhum except compatível (ex.: ocorre um TypeError mas o código só tem except ValueError:), o programa é interrompido normalmente, exibindo o traceback de sempre — o try/except só protege contra os tipos de exceção que ele especificamente lista.'
+    }},
+    { id:'praticaguiada', title:'Prática guiada', type:'guided', data:{
+        problem:'Calcular a divisão entre dois números digitados pelo usuário, tratando tanto entradas inválidas quanto divisão por zero.',
+        entrada:null, processamento:null, saida:null, algoritmo:null, simulation:null,
+        code:'try:\n    numerador = float(input("Digite o numerador: "))\n    denominador = float(input("Digite o denominador: "))\n    resultado = numerador / denominador\nexcept ValueError:\n    print("Por favor, digite apenas números.")\nexcept ZeroDivisionError:\n    print("Não é possível dividir por zero.")\nelse:\n    print(f"Resultado: {resultado}")',
+        runnable:true
+    }},
+    { id:'ex-n1', title:'Exercícios — Nível 1', type:'exercises', data:{
+        level:'🟢 Nível 1 — Fixação',
+        items:[
+          { kind:'text', prompt:'Para que serve o bloco try?', gabarito:'Envolver código que pode falhar.' },
+          { kind:'text', prompt:'Para que serve o bloco except?', gabarito:'Executar um bloco alternativo quando a exceção especificada ocorre.' },
+          { kind:'text', prompt:'É possível especificar qual tipo de exceção um except deve capturar? Como?', gabarito:'Sim, com except TipoDaExcecao:' },
+          { kind:'text', prompt:'Qual é a diferença entre else e finally em um try/except?', gabarito:'else executa quando NÃO há erro; finally executa sempre.' },
+          { kind:'text', prompt:'O que acontece se ocorrer uma exceção não coberta por nenhum except?', gabarito:'O programa é interrompido normalmente (a exceção não é tratada).' }
+        ]
+    }},
+    { id:'ex-n2', title:'Exercícios — Nível 2', type:'exercises', data:{
+        level:'🟡 Nível 2 — Aplicação',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que peça um número ao usuário, tratando ValueError caso o valor digitado não seja válido.', starter:'', gabarito:'try:\n    numero = float(input("Número: "))\nexcept ValueError:\n    print("Valor inválido.")' },
+          { kind:'code', prompt:'Escreva um programa que peça dois números e calcule a divisão entre eles, tratando tanto ValueError quanto ZeroDivisionError.', starter:'', gabarito:'try:\n    a = float(input("Primeiro número: "))\n    b = float(input("Segundo número: "))\n    print(a / b)\nexcept ValueError:\n    print("Digite apenas números.")\nexcept ZeroDivisionError:\n    print("Não é possível dividir por zero.")' },
+          { kind:'code', prompt:'Reescreva um programa que lê um arquivo, adicionando tratamento para FileNotFoundError, exibindo uma mensagem amigável caso o arquivo não exista.', starter:'', gabarito:'try:\n    with open("arquivo.txt", "r") as arquivo:\n        print(arquivo.read())\nexcept FileNotFoundError:\n    print("Arquivo não encontrado.")' }
+        ]
+    }},
+    { id:'ex-n3', title:'Nível 3 e Desafio', type:'exercises', data:{
+        level:'🔴 Nível 3 — Desafio',
+        items:[
+          { kind:'code', prompt:'Peça repetidamente (com while) uma nota de 0 a 10, tratando entradas não numéricas (ValueError) e valores fora do intervalo (com if dentro do try, forçando nova tentativa com continue, sem usar exceções para essa segunda verificação).', starter:'', gabarito:'while True:\n    try:\n        nota = float(input("Nota (0-10): "))\n        if nota < 0 or nota > 10:\n            print("Nota fora do intervalo, tente novamente.")\n            continue\n        break\n    except ValueError:\n        print("Digite um número válido.")\nprint(nota)' },
+          { kind:'text', prompt:'Desafio: volte ao ponto de risco identificado no Capítulo 45. Adicione um tratamento apropriado com try/except para esse ponto específico.', gabarito:'Resposta aberta — aplicar try/except ao ponto de risco identificado (tipicamente uma conversão int(input(...))).' }
+        ]
+    }},
+    { id:'resumo', title:'Resumo visual', type:'summary', data:{
+        text:'try:\n    CÓDIGO QUE PODE FALHAR\nexcept TIPO_DE_EXCECAO:\n    CÓDIGO SE A EXCEÇÃO OCORRER\nelse:\n    CÓDIGO SE NENHUMA EXCEÇÃO OCORRER\nfinally:\n    CÓDIGO QUE SEMPRE EXECUTA\n\nSempre prefira especificar o TIPO exato de exceção esperada,\nem vez de um "except:" genérico.'
+    }},
+    { id:'checklist', title:'Checklist', type:'checklist', data:{
+        items:[
+          'Sei usar try/except para evitar que o programa seja interrompido.',
+          'Sei capturar um tipo específico de exceção.',
+          'Sei usar else e finally.',
+          'Sei combinar try/except com while para repetir até obter uma entrada válida.',
+          'Sei por que evitar except: genérico.'
+        ]
+    }},
+    { id:'miniquiz', title:'Miniquiz', type:'quiz', data:{
+        questions:[
+          { q:'O que acontece se o código dentro de um try executar sem nenhum erro?', options:['O except executa mesmo assim','O except é ignorado','O programa é interrompido','Nada é executado'], correct:1, explanation:'O except é ignorado.' },
+          { q:'Como capturar especificamente um ValueError?', options:['except:','except ValueError:','catch ValueError:','if ValueError:'], correct:1, explanation:'except ValueError:' },
+          { q:'Quando o bloco else de um try/except é executado?', options:['Sempre','Apenas se nenhuma exceção ocorrer no try','Apenas se uma exceção ocorrer','Nunca é executado automaticamente'], correct:1, explanation:'Apenas se nenhuma exceção ocorrer.' },
+          { q:'Quando o bloco finally é executado?', options:['Apenas se houver erro','Apenas se não houver erro','Sempre, independentemente de erro','Nunca'], correct:2, explanation:'Sempre.' },
+          { q:'Por que evitar except: sem especificar o tipo de exceção?', options:['Porque é mais lento','Porque pode esconder erros inesperados no programa','Porque o Python não permite','Porque sempre gera outro erro'], correct:1, explanation:'Pode esconder erros inesperados.' }
+        ]
+    }},
+    { id:'refs', title:'Referências oficiais', type:'refs', data:{
+        links:[
+          { label:'Documentação Python — Tratando Exceções', url:'https://docs.python.org/pt-br/3/tutorial/errors.html#handling-exceptions' },
+          { label:'Documentação Python — Levantando Exceções', url:'https://docs.python.org/pt-br/3/tutorial/errors.html#raising-exceptions' },
+          { label:'Documentação Python — Definindo Ações de Limpeza (finally)', url:'https://docs.python.org/pt-br/3/tutorial/errors.html#defining-clean-up-actions' }
+        ]
+    }}
+  ]
+},
+{
+  id: 'revisao7',
+  title: 'Parada para Revisão 7 — Fim da Parte IX',
+  screens: [
+    { id:'mapa', title:'Mapa mental', type:'diagram', data:{
+        intro:'Um resumo visual de tudo que vimos nos Capítulos 43 a 46.',
+        diagram:'ERROS\n   │\n   ├── Ler erros\n   │      Traceback: arquivo, linha, tipo, mensagem\n   │      roteiro: ler última linha → localizar linha do código → corrigir\n   │\n   ├── Erro de sintaxe (SyntaxError)\n   │      impede a EXECUÇÃO de sequer começar\n   │      causas: ":" faltando, aspas/parênteses não fechados, indentação\n   │\n   ├── Exceções (ocorrem DURANTE a execução)\n   │      ValueError, TypeError, NameError,\n   │      IndexError, KeyError, ZeroDivisionError\n   │\n   └── try / except\n          evita que a exceção interrompa o programa\n          except TIPO_ESPECÍFICO (nunca "except:" genérico)\n          else → se não houve erro\n          finally → sempre executa',
+        note:null
+    }},
+    { id:'tabela', title:'Comandos vistos até aqui', type:'table', data:{
+        headers:['Comando/conceito','Para que serve','Exemplo'],
+        rows:[
+          ['<code>Traceback</code>','rastro de um erro em execução','linha, tipo, mensagem'],
+          ['<code>SyntaxError</code>','erro de gramática do código','<code>:</code> faltando'],
+          ['<code>ValueError</code>','valor com tipo certo, conteúdo inadequado','<code>int("abc")</code>'],
+          ['<code>TypeError</code>','tipos incompatíveis','<code>"a" + 1</code>'],
+          ['<code>try</code>/<code>except</code>','evitar interrupção do programa','<code>except ValueError:</code>'],
+          ['<code>else</code> / <code>finally</code>','complementos do try/except','executa condicional/sempre']
+        ]
+    }},
+    { id:'errosfreq', title:'Erros frequentes', type:'list', data:{
+        intro:'Os erros mais comuns desta etapa:',
+        items:[
+          'Confundir erro de sintaxe (não executa nada) com exceção (interrompe no meio da execução).',
+          'Usar except: genérico, escondendo problemas reais.',
+          'Colocar código demais dentro de um único try.',
+          'Não reler a mensagem completa de erro antes de tentar corrigir.'
+        ]
+    }},
+    { id:'perguntas', title:'Perguntas rápidas', type:'qa', data:{
+        intro:'Tente responder mentalmente antes de clicar para revelar.',
+        items:[
+          { q:'Qual é a diferença entre erro de sintaxe e exceção?', a:'Erro de sintaxe impede a execução de começar; exceção ocorre durante a execução de um programa correto.' },
+          { q:'Quais informações uma mensagem de erro do Python costuma trazer?', a:'Arquivo, linha, tipo do erro e mensagem explicativa.' },
+          { q:'Qual exceção indica uma chave inexistente em um dicionário?', a:'KeyError.' },
+          { q:'Por que evitar except: sem especificar o tipo de exceção?', a:'Porque pode esconder erros inesperados/bugs reais do programa.' },
+          { q:'Quando o bloco finally é executado?', a:'Sempre, independentemente de ter ocorrido erro ou não.' }
+        ]
+    }},
+    { id:'exrevisao', title:'Exercícios de revisão', type:'exercises', data:{
+        level:'Exercícios de revisão',
+        items:[
+          { kind:'code', prompt:'Escreva um programa que peça uma nota ao usuário, tratando ValueError caso o valor digitado não seja um número.', starter:'', gabarito:'try:\n    nota = float(input("Nota: "))\n    print(nota)\nexcept ValueError:\n    print("Valor inválido.")' },
+          { kind:'text', prompt:'Dado o traceback abaixo, identifique o tipo do erro e proponha uma correção:\nFile "vendas.py", line 4, in <module>\n    preco_total = preco * quantidade\nTypeError: can\'t multiply sequence by non-int of type \'float\'', gabarito:'TypeError — preco provavelmente é uma str (vinda de input() sem conversão); correção: converter preco com float() antes de multiplicar.' },
+          { kind:'code', prompt:'Escreva um programa que peça repetidamente um número ao usuário (com while e try/except) até que uma entrada válida seja digitada.', starter:'', gabarito:'while True:\n    try:\n        numero = float(input("Número: "))\n        break\n    except ValueError:\n        print("Digite um número válido.")\nprint(numero)' }
+        ]
+    }},
+    { id:'desafio', title:'Pequeno desafio', type:'exercises', data:{
+        level:'Pequeno desafio',
+        items:[
+          { kind:'code', prompt:'Escreva um programa calculadora_segura.py que peça dois números e uma operação (+, -, *, /), tratando: entradas não numéricas (ValueError), divisão por zero (ZeroDivisionError), e operações inválidas (usando if/elif/else).', starter:'', gabarito:'try:\n    a = float(input("Primeiro número: "))\n    b = float(input("Segundo número: "))\n    operacao = input("Operação (+, -, *, /): ")\n    if operacao == "+":\n        print(a + b)\n    elif operacao == "-":\n        print(a - b)\n    elif operacao == "*":\n        print(a * b)\n    elif operacao == "/":\n        print(a / b)\n    else:\n        print("Operação inválida")\nexcept ValueError:\n    print("Digite apenas números.")\nexcept ZeroDivisionError:\n    print("Não é possível dividir por zero.")' }
+        ]
+    }},
+    { id:'checklist', title:'Checklist de domínio da Parte IX', type:'checklist', data:{
+        items:[
+          'Sei ler um traceback e identificar linha, tipo e mensagem do erro.',
+          'Sei identificar erros de sintaxe comuns.',
+          'Sei reconhecer as exceções mais comuns e o que cada uma indica.',
+          'Sei usar try/except para tratar exceções esperadas.',
+          'Sei usar else e finally apropriadamente.'
+        ],
+        finalNote:'Se todos os itens acima estão marcados, você está pronto(a) para avançar para a Parte X — Orientação a Objetos, onde aprenderemos classes, objetos, atributos, métodos e herança.'
     }}
   ]
 }
