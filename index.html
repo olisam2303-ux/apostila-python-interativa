@@ -10322,7 +10322,7 @@ render();
     clone.querySelectorAll('pre, .code-runner, .runner-out, .runner-bar, button, select, textarea, script, .pyodide-note, .btn-row')
       .forEach(function(n){ n.remove(); });
     var text = (clone.innerText || clone.textContent || '')
-      .replace(/[\u00a0\t ]+/g, ' ')
+      .replace(/[^\S\n]+/g, ' ')
       .replace(/\n[ \t]+/g, '\n').replace(/\n{2,}/g, '\n').trim();
     var chunks = [], buf = '';
     splitSentences(text).forEach(function(s){
