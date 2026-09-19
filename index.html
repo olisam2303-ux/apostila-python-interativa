@@ -717,10 +717,12 @@ const MODULES = [
           { term:'script', def:'um arquivo de texto (.py) contendo uma sequência de instruções Python, executadas em ordem, de cima para baixo, quando o arquivo é executado', example:'um arquivo chamado programa.py.' }
         ]
     }},
-    { id:'visualizando', title:'Visualizando o conceito', type:'diagram', data:{
+    { id:'visualizando', title:'Visualizando o conceito', type:'iframe', data:{
         intro:'Compare os dois modos de trabalhar com Python:',
-        diagram:'MODO INTERATIVO                          SCRIPT (arquivo .py)\n\nVocê digita uma linha                    Você escreve várias linhas\n        ↓                                          ↓\nPython executa aquela linha              Você salva o arquivo\n        ↓                                          ↓\nVocê vê o resultado na hora               Você manda executar o arquivo\n        ↓                                          ↓\nVocê digita a próxima linha              Python executa TODAS as linhas,\n                                          de cima para baixo, em ordem',
-        note:null
+        src:'animations/cap2-modo-interativo-script.html',
+        height:640,
+        hideText:['380px', 'Handbook Academy'],
+        note:'Interativo = navegador / teste rápido. Script = arquivo .py / programa completo.'
     }},
     { id:'exemplo', title:'Primeiro exemplo', type:'example', data:{
         intro:'O primeiro programa tradicional de qualquer curso de programação é exibir uma mensagem de saudação na tela. Em Python, isso é feito com a função print().',
@@ -10096,7 +10098,11 @@ function pyHighlight(line) {
   return out;
 }
 /* Animação pronta (gerada externamente, ex.: Meta IA), embutida via iframe.
-   Auto-contida: sem dependência do motor de sintaxe/passos do execflow. */
+   Auto-contida: sem dependência do motor de sintaxe/passos do execflow.
+   d.hideText: lista de textos (ex.: rótulos de preview/marca-d'água que
+   vêm de sobra na geração) cujos elementos-folha devem ser escondidos
+   assim que o iframe carrega — mesma origem, então dá pra limpar sem
+   precisar pedir um novo arquivo. */
 function renderIframeEmbed(body, mod, screen) {
   const d = screen.data;
   if (d.intro) body.appendChild(el('div','card', '<p>'+esc(d.intro)+'</p>'));
@@ -10107,6 +10113,33 @@ function renderIframeEmbed(body, mod, screen) {
   frame.style.height = (d.height || 580) + 'px';
   frame.setAttribute('loading', 'lazy');
   frame.setAttribute('title', screen.title);
+  if (d.hideText && d.hideText.length) {
+    // o documento do iframe carrega antes de apps React terminarem de
+    // renderizar (e podem re-renderizar durante a animação), então
+    // tenta escoder por um tempo em vez de só uma vez no "load".
+    frame.addEventListener('load', function(){
+      var tries = 0;
+      var timer = setInterval(function(){
+        tries++;
+        try {
+          var fdoc = frame.contentDocument;
+          d.hideText.forEach(function(txt){
+            var matches = [];
+            fdoc.querySelectorAll('*').forEach(function(elm){
+              if (elm.textContent && elm.textContent.indexOf(txt) !== -1) matches.push(elm);
+            });
+            // esconde só os elementos mais internos (nenhum filho também bate o texto),
+            // pra não esconder um ancestral grande demais quando o texto vem dividido
+            matches.forEach(function(elm){
+              var hasMatchingChild = matches.some(function(other){ return other !== elm && elm.contains(other); });
+              if (!hasMatchingChild) elm.style.display = 'none';
+            });
+          });
+        } catch (e) {}
+        if (tries >= 40) clearInterval(timer);
+      }, 300);
+    });
+  }
   wrap.appendChild(frame);
   body.appendChild(wrap);
   if (d.note) body.appendChild(el('p','', esc(d.note)));
