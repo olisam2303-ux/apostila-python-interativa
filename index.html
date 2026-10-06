@@ -3703,7 +3703,8 @@ const MODULES = [
         links:[
           { label:'Documentação Python — Mais ferramentas de controle de fluxo', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html' },
           { label:'Referência da linguagem — instrução composta while', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#the-while-statement' }
-        ]
+        ],
+        atividade: ativS21('No sistema da Papelaria Ponto Certo, o while mantém o menu funcionando até o usuário escolher sair e repete o pedido do preço até receber um valor válido. Rode o programa linha por linha no simulador.')
     }}
   ]
 },
@@ -4575,7 +4576,8 @@ const MODULES = [
         links:[
           { label:'Documentação Python — Mais sobre Listas (métodos)', url:'https://docs.python.org/pt-br/3/tutorial/datastructures.html#more-on-lists' },
           { label:'Referência da biblioteca padrão — tipo list', url:'https://docs.python.org/pt-br/3/library/stdtypes.html#list' }
-        ]
+        ],
+        atividade: ativS21('No sistema da Papelaria Ponto Certo, cada produto cadastrado é guardado com append na mesma lista, e a consulta percorre essa lista posição por posição até encontrar o nome procurado.')
     }}
   ]
 },
@@ -5574,7 +5576,8 @@ const MODULES = [
         links:[
           { label:'Documentação Python — Definindo Funções', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions' },
           { label:'Referência da linguagem — definição de função (def)', url:'https://docs.python.org/pt-br/3/reference/compound_stmts.html#function-definitions' }
-        ]
+        ],
+        atividade: ativS21('Veja um programa com menu ser organizado em funções: mostrar_menu(), cadastrar_produto() e consultar_produto(), cada uma com uma responsabilidade e chamada pela opção certa do menu.')
     }}
   ]
 },
@@ -5707,7 +5710,8 @@ const MODULES = [
         links:[
           { label:'Documentação Python — Definindo Funções (parâmetros)', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#defining-functions' },
           { label:'Documentação Python — Mais sobre Definição de Funções', url:'https://docs.python.org/pt-br/3/tutorial/controlflow.html#more-on-defining-functions' }
-        ]
+        ],
+        atividade: ativS21('No sistema da Papelaria Ponto Certo, a lista produtos é passada como parâmetro para as funções de cadastro e de consulta. Descubra por que isso conserva os produtos já cadastrados.')
     }}
   ]
 },
@@ -10637,7 +10641,30 @@ function renderQuiz(body, mod, screen) {
   updateScore();
 }
 
+// Atividade interativa da semana, publicada em atividades-interativas-logica
+function ativS21(porque) {
+  return {
+    quando: 'Semana 21 · 4º bimestre',
+    titulo: 'Programando com menu no terminal',
+    url: 'https://olisam2303-ux.github.io/atividades-interativas-logica/logica-21-s21-papelaria.html#como',
+    porque: porque
+  };
+}
+
+function renderAtividade(body, a) {
+  const card = el('div','card');
+  card.appendChild(el('h3','', '🧩 Atividade interativa — ' + a.quando));
+  const p = document.createElement('p');
+  p.innerHTML = '<b>' + esc(a.titulo) + '.</b> ' + esc(a.porque);
+  card.appendChild(p);
+  const row = el('div','btn-row');
+  row.innerHTML = '<a class="btn" style="text-decoration:none;display:inline-block" href="' + a.url + '" target="_blank" rel="noopener">Abrir a atividade</a>';
+  card.appendChild(row);
+  body.appendChild(card);
+}
+
 function renderRefs(body, mod, screen) {
+  if (screen.data.atividade) renderAtividade(body, screen.data.atividade);
   const card = el('div','card');
   card.appendChild(el('h3','', '📚 Referências oficiais'));
   const ul = el('ul','plain');
